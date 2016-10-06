@@ -9,3 +9,9 @@ Repo for CEN4020 2016 project
 * Julian Engel
 * Keaton Clements
 * Kris Stolarczyk
+
+## Compiling MET
+
+## Running MET
+
+## Running the Unit Test Cases
