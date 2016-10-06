@@ -15,3 +15,7 @@ Repo for CEN4020 2016 project
 ## Running MET
 
 ## Running the Unit Test Cases
+
+## Acceptance Tests
+### Inputs -> Expected Outputs
+* Foo -> Bar
