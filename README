@@ -1,0 +1,42 @@
+README documentation for Cipher library sample implementation code
+
+Author Thai Flowers
+Date 10-6-2016
+
+Part of the Labyrinthine project
+
+
+This incomplete sample implementation is written in vanilla Java and displays the creation of several simple ASCII only symmetric Ciphers
+It displays some core components and the core interface of the Cipher base class, and CipherSequence class.
+It shows a simple way to test the effectiveness of symmetric Ciphers
+Finally, it shows how to load a class dynamically by name
+
+HOW TO COMPILE AND RUN
+Assuming you have some kind of Java Development Kit (JDK) installed, then the following commands should work.
+(I used OpenJDK on a Linux machine)
+
+javac Cipher.java
+javac CipherTest.java
+
+java CipherTest dummy
+
+That is use javac (Java compiler) to compile the source files (.java), producing class files (.class) with the same base name
+Cipher.java must be compiled before CipherTest.java because it uses objects defined in Cipher.java
+Finally java can run executable code, but only for classes with a static main() method defined.
+Here CipherTest is the only object with such a method but it still must be specified.
+Dummy can be replaced with the name of any Cipher class with a no argument constructor
+
+
+Files Provided
+
+Cipher.java
+Cipher base class, and the Dummy, RotN, Rot13, and (alphabetic) Substitution ciphers (don't use the last one yet)
+
+CipherSequence.java
+Incomplete implementation of the CipherSequence class, for now only functions as a container of Cipher objects that can call the encrypt and decrypt sequences but can't save or load from file yet
+
+CoreCipherClassLibrary.java
+Place to store the dynamic instantiation code from the CipherTest.java file for more general use later on.  Note how it outmodes the majority of the expected functionality from the class diagram into just a few lines of code (Thanks Java reflection!)
+
+CipherTest.java
+A couple examples of one kind of simple Cipher test, namely a decrypt immediately following an encrypt.  Also a simple implementation of dynamic class instantiation to allow the testing of new Ciphers without having to copy, paste, and edit other test code.
