@@ -1,5 +1,8 @@
 
 import java.util.Vector;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 class CipherSequence {
 	private Vector<Cipher> sequence;
@@ -24,5 +27,18 @@ class CipherSequence {
 			temp = sequence.get(i).decrypt(temp);
 		}
 		return temp;
+	}
+	public void loadFromFile(String fileName) throws Exception {
+		FileReader fr = new FileReader(fileName);
+		BufferedReader reader = new BufferedReader(fr);
+		
+		String line;
+		Cipher curCipher;
+		while (( line = reader.readLine()) != null) {
+			System.out.println(line);
+			curCipher = CoreCipherClassLibrary.instantiateFromString(line);
+			sequence.add(curCipher);
+		}
+		reader.close();
 	}
 }

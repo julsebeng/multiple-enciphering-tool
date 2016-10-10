@@ -7,6 +7,7 @@ class CipherTest {
 		String input = new String();
 		String output = new String();
 
+		/*
 		System.out.println("Running Dummy");
 		Cipher dCipher = new DummyCipher();
 		input  = dCipher.encrypt("Hello Dummy");
@@ -24,6 +25,7 @@ class CipherTest {
 		input  = sCipher.encrypt("Running Substition qwertyiopasdfghjklzxcvbnm");
 		output = sCipher.decrypt(input);
 		System.out.println(output);
+		*/
 
 		if (args.length > 0) {
 			System.out.println("Running "+args[0]);
