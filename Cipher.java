@@ -107,10 +107,9 @@ class Rot13Cipher extends RotNCipher {
 }
 
 
-// The following is incomplete, and still buggy
-
-// 26-letter alphabetic substitution cipher, take assume source is abcd...xyz
-// and you provide the associated mapping ex abcd -> ghzi
+// 26-letter alphabetic substitution cipher, *only* handles alphabetic [a-z] characters, and ignores case
+// assume source is abcd...xyz and you provide the associated mapping (key)
+// ex abcd...wxyz -> qwerty...zxcvbnm  (map from alphabet to qwerty keyboard by position)
 class SubstitutionCipher extends Cipher {
 	private String key;
 	static private String alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -120,11 +119,15 @@ class SubstitutionCipher extends Cipher {
 	public String encrypt(String input) {
 		assert(alphabet.length() == key.length());
 
+		// Make a hash map, reserve enough room for upper and lower case of [a-z]
 		HashMap<Character,Character> encodeHash = new HashMap<Character,Character>(2*alphabet.length());
+
+		// Insert lowercase entries into the hashtable, (k,v)
 		for (int i=0; i<alphabet.length(); i++) {
 			encodeHash.put(alphabet.charAt(i), key.charAt(i));
 		}
 
+		// Insert uppercase entries into the hashtable, (k,v)
 		String upperAlphabet = (new String(alphabet)).toUpperCase();
 		String upperKey = (new String(key)).toUpperCase();
 		for (int i=0; i<alphabet.length(); i++) {
@@ -134,6 +137,8 @@ class SubstitutionCipher extends Cipher {
 		StringBuilder temp = new StringBuilder(input);
 		for (int i=0; i<input.length(); i++) {
 			char c = temp.charAt(i);
+			// if character isn't in the key (upper or lower) then it returns null pointer, catch this and return the given input
+			// the effect is ignoring all non-alphabetic chars, but without explicit testing of proper range
 			try {
 				c = encodeHash.get(c);
 			}
@@ -143,6 +148,8 @@ class SubstitutionCipher extends Cipher {
 		}
 		return temp.toString();
 	}
+	// See encrypt for detailed explanation of algorithm
+	// Only significant difference is reversal of key and value
 	public String decrypt(String input) {
 		assert(alphabet.length() == key.length());
 		HashMap<Character,Character> decodeHash = new HashMap<Character,Character>(alphabet.length());
@@ -153,7 +160,7 @@ class SubstitutionCipher extends Cipher {
 		String upperAlphabet = (new String(alphabet)).toUpperCase();
 		String upperKey = (new String(key)).toUpperCase();
 		for (int i=0; i<alphabet.length(); i++) {
-			decodeHash.put(upperAlphabet.charAt(i), upperKey.charAt(i));
+			decodeHash.put(upperKey.charAt(i), upperAlphabet.charAt(i));
 		}
 		
 		StringBuilder temp = new StringBuilder(input);
