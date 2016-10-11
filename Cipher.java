@@ -6,11 +6,25 @@ import java.util.HashMap;
 abstract class Cipher {
 	// need to add an init function that accepts the string to be parsed from cyph file
 
-	protected static String  name;		// name of the Cipher
-	protected static float   version;	// version of the Cipher
-	protected static Boolean unicode;	// true if this Cipher supports unicode data
+	protected String  name;		// name of the Cipher
+	protected float   version;	// version of the Cipher
+	protected Boolean unicode;	// true if this Cipher supports unicode data
+
 	public Cipher() {
 		unicode = false;
+	}
+	public Cipher(Cipher other) {
+		this.name = other.name;
+		this.version = other.version;
+		this.unicode = other.unicode;
+	}
+	public String getName() {
+		return new String(name);
+	}
+	public void init(String[] args) {
+	}
+	public String getArgsString() {
+		return new String("");
 	}
 	abstract String encrypt(String input);
 	abstract String decrypt(String input);
@@ -23,6 +37,9 @@ class DummyCipher extends Cipher {
 		name = "Dummy";
 		version = 1.0f;
 		unicode = true;
+	}
+	DummyCipher(DummyCipher other) {
+		super(other);
 	}
 	public String encrypt(String input) {
 		return input;
@@ -39,6 +56,20 @@ class RotNCipher extends Cipher {
 		rotN = N;
 		name = "RotN";
 		version = 1.0f;
+	}
+	RotNCipher(RotNCipher other) {
+		super(other);
+	}
+	RotNCipher() {
+		name = "RotN";
+		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+	}
+	public void init(String[] args) {
+		assert(args.length == 1);
+		rotN = Integer.parseInt(args[0]);
+	}
+	public String getArgsString() {
+		return new String(Integer.toString(rotN));
 	}
 	public String encrypt(String input) {
 		// regular strings are supposed to be immutable, and modifying them produces new string objects
@@ -80,9 +111,8 @@ class RotNCipher extends Cipher {
 	
 
 // Manual implementation of Rot13, leaves non alphabetic characters unchanged
-class Rot13Cipher extends RotNCipher {
+class Rot13Cipher extends Cipher {
 	Rot13Cipher() {
-		super(13);
 		name = "Rot13";
 		version = 1.0f;
 	}
@@ -114,7 +144,19 @@ class SubstitutionCipher extends Cipher {
 	private String key;
 	static private String alphabet = "abcdefghijklmnopqrstuvwxyz";
 	SubstitutionCipher(String keyArg) {
+		name = "Substitution";
 		key = keyArg;	
+	}
+	SubstitutionCipher() {
+		name = "Substitution";
+		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+	}
+	public void init(String[] args) {
+		assert(args.length == 1);
+		key = args[0];
+	}
+	public String getArgsString() {
+		return new String(key);
 	}
 	public String encrypt(String input) {
 		assert(alphabet.length() == key.length());
