@@ -46,7 +46,7 @@ public class lb_app {
 		//Since only one of -f or -F can be specified
 		boolean cyphSpecified = false;
 		//Can only have enc or dec specified
-		boolean dirSet = false;
+		int dirSet = -1;
 
 		//Temporary variables to hold paths; don't want to change
 		//the instance data until its been validated
@@ -65,6 +65,7 @@ public class lb_app {
 			if((args[i].substring(0, 1)).equals("-")) {
 
 				char ch = args[i].charAt(1);
+
 				switch (ch) {
 				//TODO: if -i, next arg should be filpath
 					case 'i':
@@ -87,15 +88,38 @@ public class lb_app {
 						locLibPath = args[i+1];
 						break;
 					default:
-						break;
+						error = "Invalid flag.";
+						return false;
 				}
 				
 			}
-			//TODO: if arg is encrypt or decrypt
-
+			else if(args[i].equals("enc") || args[i].equals("encode")) {
+				if(dirSet == -1) {
+					dirSet = 1;
+				}
+				else {
+					error = "Multiple encode/decode parameters given.";
+					return false;
+				}
+			}
+			else if(args[i].equals("dec") || args[i].equals("decode")) {
+				if(dirSet == -1) {
+					dirSet = 0;
+				}
+				else {
+					error = "Multiple encode/decode parameters given.";
+					return false;
+				}
+			}
+			
 		}
 
 		//TODO: check paths and files given to make sure files exist and are readable/writable
+		//If encode or decode isn't given, send error
+		if(dirSet == -1) {
+			error = "Please specify encode or decode.";
+			return false;
+		}
 
 		return true; 
 
