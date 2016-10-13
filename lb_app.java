@@ -296,6 +296,29 @@ public class lb_app {
 
 		//TODO: if made it this far, change class member data and create
 		//output file if necessary
+
+		//Encrypt is false by default, but explicitly set it anyways
+		if(dirSet == 1)
+			encrypt = true;
+		else
+			encrypt = false;
+
+		if(locOutput != null)
+			output = locOutput;
+
+		if(locInput != null)
+			input = locInput;
+
+		if(locCiphPath != null)
+			ciphPath = locCiphPath;
+
+		if(locCiphName != null)
+			ciphName = locCiphName;
+
+		if(locLibPath != null)
+			libPath = locLibPath;
+
+		//TODO: create file for output if it doesn't exist
 		return true;
 
 	}
