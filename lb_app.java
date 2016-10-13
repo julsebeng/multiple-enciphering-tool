@@ -32,11 +32,12 @@ public class lb_app {
 	//Generic error message holder
 	private static String error = "An error has occurred.";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		//If an error occurs when reading the command line, print the error
 		if(!parseCommandLine(args)) {
 			System.out.println(error);
+			throw new Exception(error);
 		}
 
 		//if(!runCipherSequence()) {
