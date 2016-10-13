@@ -27,7 +27,7 @@ public class lb_app {
 	private static String ciphPath = null;
 	private static String ciphName = null;
 
-	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/cipherlib";
+	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/";
 
 	//Generic error message holder
 	private static String error = "An error has occurred.";
@@ -36,7 +36,8 @@ public class lb_app {
 
 		//If an error occurs when reading the command line, print the error
 		if(!parseCommandLine(args)) {
-			System.out.println(error);
+            //Printing the error isn't necessary, but it looks nicer than the exception handling
+            //System.out.println(error);
 			throw new Exception(error);
 		}
 
@@ -70,7 +71,7 @@ public class lb_app {
 		String locCiphName = null;
 
 
-		/**************************************************************
+		/* ***********************************************************
 		 * Pull input from args
 		/*************************************************************/
 
@@ -195,7 +196,7 @@ public class lb_app {
 
 		}
 
-		/**************************************************************
+		/* ***********************************************************
 		 * Verify Input
 		/*************************************************************/
 		/* Implemented by Julian Engel */
