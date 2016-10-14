@@ -27,16 +27,18 @@ public class lb_app {
 	private static String ciphPath = null;
 	private static String ciphName = null;
 
-	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/cipherlib";
+	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/";
 
 	//Generic error message holder
 	private static String error = "An error has occurred.";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		//If an error occurs when reading the command line, print the error
 		if(!parseCommandLine(args)) {
-			System.out.println(error);
+            //Printing the error isn't necessary, but it looks nicer than the exception handling
+            //System.out.println(error);
+			throw new Exception(error);
 		}
 
 		//if(!runCipherSequence()) {
@@ -69,7 +71,7 @@ public class lb_app {
 		String locCiphName = null;
 
 
-		/**************************************************************
+		/* ***********************************************************
 		 * Pull input from args
 		/*************************************************************/
 
@@ -90,7 +92,7 @@ public class lb_app {
 				char ch = args[i].charAt(1);
 
 				switch (ch) {
-				//TODO: if -i, next arg should be filpath
+				//if -i, next arg should be filpath
 					case 'i':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -101,7 +103,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//TODO: if -o, next arg should be filepath
+				//if -o, next arg should be filepath
 					case 'o':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -112,7 +114,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//TODO: if -f, next arg should be filepath
+				//if -f, next arg should be filepath
 					case 'f':
 						//Make sure a cipher hasn't already been specified
 						if(!cyphSpecified) {
@@ -132,7 +134,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//TODO: if -F, next arg should be name
+				//if -F, next arg should be name
 					case 'F':
 						//Make sure a cipher hasn't already been specified
 						if(!cyphSpecified) {
@@ -151,7 +153,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//TODO: if -L, next arg should be path
+				//if -L, next arg should be path
 					case 'L':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -194,7 +196,7 @@ public class lb_app {
 
 		}
 
-		/**************************************************************
+		/* ***********************************************************
 		 * Verify Input
 		/*************************************************************/
 		/* Implemented by Julian Engel */
@@ -252,7 +254,7 @@ public class lb_app {
 			}
 		}
 
-		//TODO: check if the library given exists
+		//check if the library given exists
 		if(locLibPath != null) {
 			//Expand any relative paths
 			if(locLibPath.startsWith("~" + File.separator)) {
@@ -274,8 +276,12 @@ public class lb_app {
 			}
 		}
 
+		//TODO: make sure name given in CiphName is actually found in
+		//the library
 
-		//TODO: Check if output file exists; if it does, must be writable; else, make file
+
+
+		//Check if output file exists; if it does, must be writable; else, make file
 		//Note: do this after all the other input has been verified, so that
 		//it's not making a file and then erroring out from something else.
 		if(locOutput != null) {
@@ -294,8 +300,31 @@ public class lb_app {
 			}
 		}
 
-		//TODO: if made it this far, change class member data and create
+		//if made it this far, change class member data and create
 		//output file if necessary
+
+		//Encrypt is false by default, but explicitly set it anyways
+		if(dirSet == 1)
+			encrypt = true;
+		else
+			encrypt = false;
+
+		if(locOutput != null)
+			output = locOutput;
+
+		if(locInput != null)
+			input = locInput;
+
+		if(locCiphPath != null)
+			ciphPath = locCiphPath;
+
+		if(locCiphName != null)
+			ciphName = locCiphName;
+
+		if(locLibPath != null)
+			libPath = locLibPath;
+
+		//TODO: create file for output if it doesn't exist
 		return true;
 
 	}
