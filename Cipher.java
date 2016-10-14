@@ -29,8 +29,8 @@ abstract class Cipher {
 	public String toString() {
 		return String.format("%s %s%n", this.getName(), this.getArgsString());
 	}
-	abstract String encrypt(String input);
-	abstract String decrypt(String input);
+	abstract String encrypt(String input) throws Exception;
+	abstract String decrypt(String input) throws Exception;
 }
 
 // Dummy cipher, does nothing to input
