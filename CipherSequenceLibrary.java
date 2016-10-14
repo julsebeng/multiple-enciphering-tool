@@ -6,4 +6,12 @@ class CipherSequenceLibrary {
 	CipherSequenceLibrary(String directory) {
 		directoryPath = directory;
 	}
+	// copy constructor
+	CipherSequenceLibrary(CipherSequenceLibrary other) {
+	}
+	// fetch list of files in Library diectory
+	/*
+	String[] listFiles() {
+	}
+	*/
 }

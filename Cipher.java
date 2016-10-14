@@ -18,13 +18,16 @@ abstract class Cipher {
 		this.version = other.version;
 		this.unicode = other.unicode;
 	}
+	public void init(String[] args) {
+	}
 	public String getName() {
 		return new String(name);
 	}
-	public void init(String[] args) {
-	}
 	public String getArgsString() {
 		return new String("");
+	}
+	public String toString() {
+		return String.format("%s %s%n", this.getName(), this.getArgsString());
 	}
 	abstract String encrypt(String input);
 	abstract String decrypt(String input);

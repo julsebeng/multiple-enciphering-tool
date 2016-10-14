@@ -63,8 +63,23 @@ class CipherSequence {
 		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
 		for (Cipher c: sequence) {
 			//System.out.println(c.getName() + " " + c.getArgsString());
-			writer.write(String.format("%s %s%n", c.getName(), c.getArgsString()));
+			writer.write(c.toString());
 		}
 		writer.close();
+	}
+	public Cipher getAt(int i) {
+		return sequence.elementAt(i);
+	}
+	public void removeAt(int i) {
+		sequence.removeElementAt(i);
+	}
+	public void setAt(Cipher ciph, int i) {
+		sequence.setElementAt(ciph, i);
+	}
+	public void insertAt(Cipher ciph, int i) {
+		sequence.insertElementAt(ciph, i);
+	}
+	public int size() {
+		return sequence.size();
 	}
 }
