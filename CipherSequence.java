@@ -19,7 +19,7 @@ class CipherSequence {
 	public CipherSequence() {
 		sequence = new Vector<Cipher>();
 	}
-	public String encrypt(String input) {
+	public String encrypt(String input) throws Exception {
 		int i;
 		String temp = new String(input);
 		for (i=0; i<sequence.size(); i++) {
@@ -27,7 +27,7 @@ class CipherSequence {
 		}
 		return temp;
 	}
-	public String decrypt(String input) {
+	public String decrypt(String input) throws Exception {
 		int i;
 		String temp = new String(input);
 		for (i=sequence.size()-1; 0<i; i--) {
