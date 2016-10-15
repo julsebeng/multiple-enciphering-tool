@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 
 public class lb_app {
 
@@ -25,7 +28,6 @@ public class lb_app {
 	private static String output = null;
 	private static String input = null;
 	private static String ciphPath = null;
-	private static String ciphName = null;
 
 	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/";
 
@@ -41,9 +43,11 @@ public class lb_app {
 			throw new Exception(error);
 		}
 
-		//if(!runCipherSequence()) {
-		//	System.out.println(error);
-		//}
+		if(!runCipherSequence()) {
+      throw new Exception(error);
+
+			//System.out.println(error);
+		}
 
 	}
 
@@ -265,7 +269,7 @@ public class lb_app {
 				error = "Library path does not exist.";
 				return false;
 			}
-			//-L specifies a path, not a lib file
+			// -L should specify a directory, not a file
 			else if(!tempLibFile.isDirectory()) {
 				error = "Library path is not a directory.";
 				return false;
@@ -276,14 +280,26 @@ public class lb_app {
 			}
 		}
 
-		//TODO: make sure name given in CiphName is actually found in
+		//Make sure name given in CiphName is actually found in
 		//the library
-
-
+    if(locCiphName != null) {
+			File tempCiphName = new File(libPath + locCiphName);
+			if(!tempCiphName.exists()) {
+				error = "Ciph name not found in library.";
+				return false;
+			}
+			else if(tempCiphName.isDirectory()) {
+				error = "Ciph in library is a directory, not a file.";
+				return false;
+			}
+			else if(!tempCiphName.canRead()) {
+				error = "Ciph in library is not readable.";
+				return false;
+			}
+    }
+    
 
 		//Check if output file exists; if it does, must be writable; else, make file
-		//Note: do this after all the other input has been verified, so that
-		//it's not making a file and then erroring out from something else.
 		if(locOutput != null) {
 			//Expand any relative paths
 			if(locOutput.startsWith("~" + File.separator)) {
@@ -298,10 +314,22 @@ public class lb_app {
 				error = "Output path is a directory.";
 				return false;
 			}
+      else if(!tempOutFile.exists()) {
+        try {
+          PrintWriter writer = new PrintWriter("output", "UTF-8");
+        }
+        catch(FileNotFoundException e) {
+          error = e.getMessage();
+          return false;
+        }
+        catch(UnsupportedEncodingException e) {
+          error = e.getMessage();
+          return false;
+        }
+      }
 		}
 
-		//if made it this far, change class member data and create
-		//output file if necessary
+		//if made it this far, change class member data
 
 		//Encrypt is false by default, but explicitly set it anyways
 		if(dirSet == 1)
@@ -315,33 +343,39 @@ public class lb_app {
 		if(locInput != null)
 			input = locInput;
 
+    //If specific path given, use that, else use the library path
 		if(locCiphPath != null)
 			ciphPath = locCiphPath;
-
-		if(locCiphName != null)
-			ciphName = locCiphName;
+    else if(locCiphName != null)
+			ciphPath = libPath + locCiphName;
 
 		if(locLibPath != null)
 			libPath = locLibPath;
 
-		//TODO: create file for output if it doesn't exist
 		return true;
 
 	}
 
 	private static boolean runCipherSequence() {
+    String returnData = new String();      
 
-		//TODO: determine what cipher to run
 		//TODO: make sure the given file is encoded in a way that matches the cipher
+
 		//TODO: read input, run it through the cipher, and produce output
-			//TODO: determine whether files or stdio is used
+    try {
+      CipherSequence cSeq = new CipherSequence();
+    }
+    catch(Exception e) {
+      error = e.getMessage();
+      return false;
+    }
+
+		//TODO: determine whether files or stdio is used
+    //This ought to determine where returnData is going
 		return true; //Only here so it compiles!
 
 	}
 
-	private static void cleanup() {
+  //No cleanup function is necessary since Java has garbage collection...
 
-
-
-	}
 }
