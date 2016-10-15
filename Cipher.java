@@ -74,6 +74,12 @@ class RotNCipher extends Cipher {
 	public String getArgsString() {
 		return new String(Integer.toString(rotN));
 	}
+	public void setN(int n) {
+		rotN = n;
+	}
+	public int getN() {
+		return rotN;
+	}
 	public String encrypt(String input) {
 		// regular strings are supposed to be immutable, and modifying them produces new string objects
 		// StringBuilder on the other hand is mutable, and designed for rapid editing of strings
@@ -160,6 +166,12 @@ class SubstitutionCipher extends Cipher {
 	}
 	public String getArgsString() {
 		return new String(key);
+	}
+	public void setKey(String keyArg) {
+		key = keyArg;
+	}
+	public String getKey() {
+		return key;
 	}
 	public String encrypt(String input) {
 		assert(alphabet.length() == key.length());
