@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cen4020.multiple_enciphering_app.CipherActivity">
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="235dp"
+        android:name="cen4020.multiple_enciphering_app.ChosenCiphers"
+        android:id="@+id/fragment" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="cen4020.multiple_enciphering_app.CipherListFragment"
+        android:id="@+id/fragment2"
+        />
+</LinearLayout>

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">multiple-enciphering-app</string>
+
+    <string-array name="ciphers">
+        <item>Caesar Cipher</item>
+        <item>Substitution Cipher</item>
+        <item>Dummy Cipher</item>
+        <item>Example 1</item>
+        <item>Example 2</item>
+        <item>Example 3</item>
+        <item>Example 4</item>
+        <item>Example 5</item>
+        <item>Example 6</item>
+    </string-array>
+
 </resources>

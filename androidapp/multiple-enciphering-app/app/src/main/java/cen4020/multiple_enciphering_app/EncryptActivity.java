@@ -1,5 +1,6 @@
 package cen4020.multiple_enciphering_app;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,10 @@ public class EncryptActivity extends AppCompatActivity {
         cipherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent myIntent = new Intent(getApplicationContext(), CipherActivity.class);
                 String msgText = msgEditText.getText().toString();
+                myIntent.putExtra("msgText", msgText);
+                startActivity(myIntent);
             }
         });
 
