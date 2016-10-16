@@ -4,22 +4,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class DecryptActivity extends AppCompatActivity {
 
-    Button firstBtn;
+    Button cipherBtn;
+    TextView msgEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt);
 
-        firstBtn = (Button) findViewById(R.id.firstbtn);
+        cipherBtn = (Button) findViewById(R.id.cipherBtn);
+        msgEditText = (TextView) findViewById(R.id.msgEditText);
 
-        firstBtn.setOnClickListener(new View.OnClickListener() {
+        cipherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String msgText = msgEditText.getText().toString();
             }
         });
     }
