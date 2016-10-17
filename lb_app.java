@@ -15,9 +15,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
+import java.util.Scanner;
+
+//libs for reading stdio
+import java.io.Console;
+
+//Imported exceptions
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 public class lb_app {
 
@@ -356,22 +364,144 @@ public class lb_app {
 
 	}
 
+
+	/* ***********************************************************
+	 * Encrypt/decrypt process
+	/*************************************************************/
 	private static boolean runCipherSequence() {
     String returnData = new String();      
+    String inputData = new String();
 
 		//TODO: make sure the given file is encoded in a way that matches the cipher
 
 		//TODO: read input, run it through the cipher, and produce output
+
+
+		/* ***********************************************************
+		 * Create a new CipherSequence for the ciphering
+		/*************************************************************/
+    CipherSequence cSeq = null;
     try {
-      CipherSequence cSeq = new CipherSequence();
+      cSeq = new CipherSequence();
     }
     catch(Exception e) {
       error = e.getMessage();
       return false;
     }
 
+    //Load a cipher sequence from given file
+    try {
+      cSeq.loadFromFile(ciphPath);
+    }
+    catch (Exception e) {
+      error = e.getMessage();
+      return false;
+    }
+
+    //If input is from a file, load it into a string, else ask for input
+    if(input != null)  {
+
+      //To maximize compatibility, I want to avoid using any Apache or Java 7
+      //libs for reading the input file, in case they aren't available on Android
+      Scanner scanner = null;
+      try {
+        scanner = new Scanner(new File(input));
+      }
+      catch(FileNotFoundException e) {
+        error = e.getMessage();
+        return false;
+      }
+
+      inputData = scanner.useDelimiter("\\A").next();
+      scanner.close();
+    }
+
+    //Otherwise, prompt for input from stdin
+    else {
+      
+      Console c = System.console();
+      if(c == null) {
+        error = "Error: could not obtain console for standard I/O.";
+        return false;
+      }
+
+      inputData = c.readLine();
+  }
+
+  //Before enciphering or deciphering, make sure there is something to cipher.
+  if(inputData == null) {
+    error = "error: no input given.";
+    return false;
+  }
+
+
+		/* ***********************************************************
+		 * Encode or decode the file
+		/*************************************************************/
+    if(encrypt) {
+
+      try {
+        returnData = cSeq.encrypt(inputData);
+      }
+      catch(Exception e) {
+        error = e.getMessage();
+        return false;
+      }
+
+    }
+    else {
+           
+      try {
+        returnData = cSeq.decrypt(inputData);
+      }
+      catch(Exception e) {
+        error = e.getMessage();
+        return false;
+      }
+
+    }
+    
+
+		/* ***********************************************************
+		 * Output result
+		/*************************************************************/
 		//TODO: determine whether files or stdio is used
     //This ought to determine where returnData is going
+    if(returnData == null) {
+      error = "Error: no data to output.";
+      return false;
+    }
+
+    //If an output file was specified, write to that file
+    if(output != null) {
+
+      BufferedWriter writeBuf = null;
+
+      try {
+        File outFile = new File(output);
+        writeBuf = new BufferedWriter(new FileWriter(outFile));
+        writeBuf.write(returnData);
+      }
+      catch(IOException e) {
+         error = e.getMessage();
+         return false;   
+      }
+
+    }
+
+    //Else, print to stdout
+    else {
+
+      Console c = System.console();
+      if(c == null) {
+        error = "Error: could not obtain console for standard I/O.";
+        return false;
+      }
+
+     c.format(returnData); 
+
+    }
+
 		return true; //Only here so it compiles!
 
 	}

@@ -15,8 +15,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EncryptActivity" />
-        <activity android:name=".DecryptActivity"></activity>
+
+        <activity android:name=".EncryptActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".DecryptActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".CipherActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+
     </application>
 
 </manifest>
