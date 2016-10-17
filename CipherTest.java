@@ -38,6 +38,7 @@ class CipherTest {
 					myCipher.init(Arrays.copyOfRange(args, 1, args.length));
 				}
 				input  = myCipher.encrypt("Hello "+args[0]);
+				System.out.println(input);
 				output = myCipher.decrypt(input);
 				System.out.println(output);
 			}
