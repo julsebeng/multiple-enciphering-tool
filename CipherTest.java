@@ -2,6 +2,9 @@
 // The first section is hardcoded examples
 // The second section reads the name of a Cipher off of the command-line (args[0])
 // and instantiates it for the example
+
+import java.util.Arrays;
+
 class CipherTest {
 	public static void main(String[] args) {
 		String input = new String();
@@ -31,12 +34,18 @@ class CipherTest {
 			System.out.println("Running "+args[0]);
 			try {
 				Cipher myCipher = (Cipher)Class.forName(args[0]+"Cipher").newInstance();
+				if (args.length > 1) {
+					myCipher.init(Arrays.copyOfRange(args, 1, args.length));
+				}
 				input  = myCipher.encrypt("Hello "+args[0]);
 				output = myCipher.decrypt(input);
 				System.out.println(output);
 			}
-			catch (Exception ex) {
+			catch (ClassNotFoundException ex) {
 				System.out.println("Not a valid cipher");
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
 			}
 	
 		}
