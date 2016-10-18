@@ -64,36 +64,45 @@ public class lb_appTest {
 
     }
 
-    @Test
-    public void test_o() {
-        String[] testArgs = new String[] {"-o", "file"};
-
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            assertEquals("Invalid arguments.", testErr);
-        }
-
-    }
-
     /* ***********************************************************
      * Actually useful tests
     /*************************************************************/
 
-    public void test_j() {
-        String[] testArgs = new String[] {"-o", };
+    /* Created by Julian Engel */
+    @Test
+    public void test_1() {
+        String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
 
+        int error = 0;
         try {
             lb_app.main(testArgs);
         }
         catch(Exception e) {
             String testErr = e.getMessage();
-            assertEquals("Invalid arguments.", testErr);
+            error = 1;
+            System.out.println(testErr);
         }
+
+        assertEquals(0, error);
 
     }
 
+    @Test
+    public void test_2() {
+        String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
+
+        int error = 0;
+        try {
+            lb_app.main(testArgs);
+        }
+        catch(Exception e) {
+            String testErr = e.getMessage();
+            error = 1;
+            System.out.println(testErr);
+        }
+
+        assertEquals(0, error);
+
+    }
 
 }
