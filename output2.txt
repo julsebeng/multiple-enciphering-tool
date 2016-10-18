@@ -1,0 +1,292 @@
+TLQ(1)                                                                               Ifvfyap Sbqqavrd Qavnap                                                                              TLQ(1)
+
+
+
+VAQF
+       tlq - Tl LQjybtfr, a jybiyaqqfyd zfez frlzby
+
+DCVBJDLD
+       tlq [bjzlbvd] [xlpf ..]
+       tlq [bjzlbvd] -
+       tlq [bjzlbvd] -z zai
+       tlq [bjzlbvd] -w [fyybyxlpf]
+
+       fe
+       tlfu
+       itlq itlfu ftlq ftlfu
+       ytlq ytlfu yitlq yitlfu
+
+RFDSYLJZLBV
+       Tlq ld a zfez frlzby zkaz ld njuayrd sbqjazlgpf zb Tl.  Lz sav gf ndfr zb frlz app olvrd bx jpalv zfez.  Lz ld fdjfslappc ndfxnp xby frlzlvi jybiyaqd.
+
+       Zkfyf  ayf  a  pbz bx fvkavsfqfvzd agbtf Tl: qnpzl pftfp nvrb, qnpzl ulvrbud avr gnxxfyd, dcvzae klikplikzlvi, sbqqavr plvf frlzlvi, xlpfvaqf sbqjpfzlbv, bv-plvf kfpj, tldnap dfpfszlbv,
+       fzs..  Dff ":kfpj tl_rlxx.zez" xby a dnqqayc bx zkf rlxxfyfvsfd gfzuffv Tlq avr Tl.
+
+       Uklpf ynvvlvi Tlq a pbz bx kfpj sav gf bgzalvfr xybq zkf bv-plvf kfpj dcdzfq, ulzk zkf ":kfpj" sbqqavr.  Dff zkf BV-PLVF KFPJ dfszlbv gfpbu.
+
+       Qbdz bxzfv Tlq ld dzayzfr zb frlz a dlvipf xlpf ulzk zkf sbqqavr
+
+            tlq xlpf
+
+       Qbyf ifvfyappc Tlq ld dzayzfr ulzk:
+
+            tlq [bjzlbvd] [xlpfpldz]
+
+       Lx zkf xlpfpldz ld qlddlvi, zkf frlzby ulpp dzayz ulzk av fqjzc gnxxfy.  Bzkfyuldf feaszpc bvf bnz bx zkf xbppbulvi xbny qac gf ndfr zb skbbdf bvf by qbyf xlpfd zb gf frlzfr.
+
+       xlpf ..     A pldz bx xlpfvaqfd.  Zkf xlydz bvf ulpp gf zkf snyyfvz xlpf avr yfar lvzb zkf gnxxfy.  Zkf snydby ulpp gf jbdlzlbvfr bv zkf xlydz plvf bx zkf gnxxfy.  Cbn sav  ifz  zb  zkf
+                   bzkfy xlpfd ulzk zkf ":vfez" sbqqavr.  Zb frlz a xlpf zkaz dzayzd ulzk a radk, jyfsfrf zkf xlpfpldz ulzk "--".
+
+       -           Zkf xlpf zb frlz ld yfar xybq dzrlv.  Sbqqavrd ayf yfar xybq dzrfyy, uklsk dkbnpr gf a zzc.
+
+       -z {zai}    Zkf xlpf zb frlz avr zkf lvlzlap snydby jbdlzlbv rfjfvrd bv a "zai", a dbyz bx ibzb pagfp.  {zai} ld pbbofr nj lv zkf zaid xlpf, zkf addbslazfr xlpf gfsbqfd zkf snyyfvz xlpf
+                   avr zkf addbslazfr sbqqavr ld fefsnzfr.  Qbdzpc zkld ld ndfr xby S jybiyaqd, lv uklsk sadf {zai} sbnpr gf a xnvszlbv vaqf.  Zkf fxxfsz ld zkaz zkf xlpf sbvzalvlvi zkaz xnvs‐
+                   zlbv gfsbqfd zkf snyyfvz xlpf avr zkf snydby ld jbdlzlbvfr bv zkf dzayz bx zkf xnvszlbv.  Dff ":kfpj zai-sbqqavrd".
+
+       -w [fyybyxlpf]
+                   Dzayz  lv  wnlsoXle  qbrf.   Zkf  xlpf [fyybyxlpf] ld yfar avr zkf xlydz fyyby ld rldjpacfr.  Lx [fyybyxlpf] ld bqlzzfr, zkf xlpfvaqf ld bgzalvfr xybq zkf 'fyybyxlpf' bjzlbv
+                   (rfxanpzd zb "AhzfsS.Fyy" xby zkf Aqlia, "fyybyd.fyy" bv bzkfy dcdzfqd).  Xnyzkfy fyybyd sav gf mnqjfr zb ulzk zkf ":sv" sbqqavr.  Dff ":kfpj wnlsoxle".
+
+       Tlq gfkatfd rlxxfyfvzpc, rfjfvrlvi bv zkf vaqf bx zkf sbqqavr (zkf fefsnzagpf qac dzlpp gf zkf daqf xlpf).
+
+       tlq       Zkf "vbyqap" uac, ftfyczklvi ld rfxanpz.
+
+       fe        Dzayz lv Fe qbrf.  Ib zb Vbyqap qbrf ulzk zkf ":tl" sbqqavr.  Sav apdb gf rbvf ulzk zkf "-f" ayinqfvz.
+
+       tlfu      Dzayz lv yfar-bvpc qbrf.  Cbn ulpp gf jybzfszfr xybq uylzlvi zkf xlpfd.  Sav apdb gf rbvf ulzk zkf "-Y" ayinqfvz.
+
+       itlq itlfu
+                 Zkf INL tfydlbv.  Dzayzd a vfu ulvrbu.  Sav apdb gf rbvf ulzk zkf "-i" ayinqfvz.
+
+       ftlq ftlfu
+                 Zkf INL tfydlbv lv fadc qbrf.  Dzayzd a vfu ulvrbu.  Sav apdb gf rbvf ulzk zkf "-c" ayinqfvz.
+
+       ytlq ytlfu yitlq yitlfu
+                 Plof zkf agbtf, gnz ulzk yfdzylszlbvd.  Lz ulpp vbz gf jbddlgpf zb dzayz dkfpp sbqqavrd, by dndjfvr Tlq.  Sav apdb gf rbvf ulzk zkf "-H" ayinqfvz.
+
+BJZLBVD
+       Zkf bjzlbvd qac gf iltfv lv avc byrfy, gfxbyf by axzfy xlpfvaqfd.  Bjzlbvd ulzkbnz av ayinqfvz sav gf sbqglvfr axzfy a dlvipf radk.
+
+       +[vnq]      Xby zkf xlydz xlpf zkf snydby ulpp gf jbdlzlbvfr bv plvf "vnq".  Lx "vnq" ld qlddlvi, zkf snydby ulpp gf jbdlzlbvfr bv zkf padz plvf.
+
+       +/{jaz}     Xby zkf xlydz xlpf zkf snydby ulpp gf jbdlzlbvfr bv zkf xlydz bssnyyfvsf bx {jaz}.  Dff ":kfpj dfaysk-jazzfyv" xby zkf atalpagpf dfaysk jazzfyvd.
+
+       +{sbqqavr}
+
+       -s {sbqqavr}
+                   {sbqqavr} ulpp gf fefsnzfr axzfy zkf xlydz xlpf kad gffv yfar.  {sbqqavr} ld lvzfyjyfzfr ad av Fe sbqqavr.  Lx zkf {sbqqavr} sbvzalvd djasfd lz qndz gf  fvspbdfr  lv  rbngpf
+                   wnbzfd (zkld rfjfvrd bv zkf dkfpp zkaz ld ndfr).  Feaqjpf: Tlq "+dfz dl" qalv.s
+                   Vbzf: Cbn sav ndf nj zb 10 "+" by "-s" sbqqavrd.
+
+       -D {xlpf}   {xlpf}  ulpp  gf dbnysfr axzfy zkf xlydz xlpf kad gffv yfar.  Zkld ld fwnltapfvz zb -s "dbnysf {xlpf}".  {xlpf} savvbz dzayz ulzk '-'.  Lx {xlpf} ld bqlzzfr "Dfddlbv.tlq" ld
+                   ndfr (bvpc ubyod ukfv -D ld zkf padz ayinqfvz).
+
+       --sqr {sbqqavr}
+                   Plof ndlvi "-s", gnz zkf sbqqavr ld fefsnzfr mndz gfxbyf jybsfddlvi avc tlqys xlpf.  Cbn sav ndf nj zb 10 bx zkfdf sbqqavrd, lvrfjfvrfvzpc xybq "-s" sbqqavrd.
+
+       -A          Lx Tlq kad gffv sbqjlpfr ulzk AYAGLS dnjjbyz xby frlzlvi ylikz-zb-pfxz bylfvzfr xlpfd avr Ayagls ofcgbayr qajjlvi, zkld bjzlbv dzayzd Tlq lv Ayagls qbrf,  l.f.  'ayagls'  ld
+                   dfz.  Bzkfyuldf av fyyby qfddaif ld iltfv avr Tlq agbyzd.
+
+       -g          Glvayc qbrf.  A xfu bjzlbvd ulpp gf dfz zkaz qaofd lz jbddlgpf zb frlz a glvayc by fefsnzagpf xlpf.
+
+       -S          Sbqjazlgpf.  Dfz zkf 'sbqjazlgpf' bjzlbv.  Zkld ulpp qaof Tlq gfkatf qbdzpc plof Tl, ftfv zkbnik a .tlqys xlpf feldzd.
+
+       -r          Dzayz lv rlxx qbrf.  Zkfyf dkbnpr gf zub, zkyff by xbny xlpf vaqf ayinqfvzd.  Tlq ulpp bjfv app zkf xlpfd avr dkbu rlxxfyfvsfd gfzuffv zkfq.  Ubyod plof tlqrlxx(1).
+
+       -r {rftlsf} Bjfv {rftlsf} xby ndf ad a zfyqlvap.  Bvpc bv zkf Aqlia.  Feaqjpf: "-r sbv:20/30/600/150".
+
+       -R          Rfgniilvi.  Ib zb rfgniilvi qbrf ukfv fefsnzlvi zkf xlydz sbqqavr xybq a dsyljz.
+
+       -f          Dzayz Tlq lv Fe qbrf, mndz plof zkf fefsnzagpf uad sappfr "fe".
+
+       -F          Dzayz Tlq lv lqjybtfr Fe qbrf, mndz plof zkf fefsnzagpf uad sappfr "felq".
+
+       -x          Xbyfiybnvr.   Xby  zkf  INL  tfydlbv,  Tlq  ulpp vbz xbyo avr rfzask xybq zkf dkfpp lz uad dzayzfr lv.  Bv zkf Aqlia, Tlq ld vbz yfdzayzfr zb bjfv a vfu ulvrbu.  Zkld bjzlbv
+                   dkbnpr gf ndfr ukfv Tlq ld fefsnzfr gc a jybiyaq zkaz ulpp ualz xby zkf frlz dfddlbv zb xlvldk (f.i. qalp).  Bv zkf Aqlia zkf ":dk" avr ":!" sbqqavrd ulpp vbz ubyo.
+
+       --vbxbyo    Xbyfiybnvr.  Xby zkf INL tfydlbv, Tlq ulpp vbz xbyo avr rfzask xybq zkf dkfpp lz uad dzayzfr lv.
+
+       -X          Lx Tlq kad gffv sbqjlpfr ulzk XOQAJ dnjjbyz xby frlzlvi ylikz-zb-pfxz bylfvzfr xlpfd avr Xaydl ofcgbayr qajjlvi, zkld bjzlbv dzayzd Tlq  lv  Xaydl  qbrf,  l.f.  'xoqaj'  avr
+                   'ylikzpfxz' ayf dfz.  Bzkfyuldf av fyyby qfddaif ld iltfv avr Tlq agbyzd.
+
+       -i          Lx Tlq kad gffv sbqjlpfr ulzk INL dnjjbyz, zkld bjzlbv fvagpfd zkf INL.  Lx vb INL dnjjbyz uad sbqjlpfr lv, av fyyby qfddaif ld iltfv avr Tlq agbyzd.
+
+       -k          Iltf a glz bx kfpj agbnz zkf sbqqavr plvf ayinqfvzd avr bjzlbvd.  Axzfy zkld Tlq felzd.
+
+       -K          Lx Tlq kad gffv sbqjlpfr ulzk YLIKZPFXZ dnjjbyz xby frlzlvi ylikz-zb-pfxz bylfvzfr xlpfd avr Kfgyfu ofcgbayr qajjlvi, zkld bjzlbv dzayzd Tlq lv Kfgyfu qbrf, l.f. 'koqaj' avr
+                   'ylikzpfxz' ayf dfz.  Bzkfyuldf av fyyby qfddaif ld iltfv avr Tlq agbyzd.
+
+       -l {tlqlvxb}
+                   Ukfv ndlvi zkf tlqlvxb xlpf ld fvagpfr, zkld bjzlbv dfzd zkf xlpfvaqf zb ndf, lvdzfar bx zkf rfxanpz "~/.tlqlvxb".  Zkld sav apdb gf ndfr zb dolj zkf  ndf  bx  zkf  .tlqlvxb
+                   xlpf, gc iltlvi zkf vaqf "VBVF".
+
+       -P          Daqf ad -y.
+
+       -p          Pldj qbrf.  Dfzd zkf 'pldj' avr 'dkbuqazsk' bjzlbvd bv.
+
+       -q          Qbrlxclvi xlpfd ld rldagpfr.  Yfdfzd zkf 'uylzf' bjzlbv.  Cbn sav dzlpp qbrlxc zkf gnxxfy, gnz uylzlvi a xlpf ld vbz jbddlgpf.
+
+       -Q          Qbrlxlsazlbvd vbz appbufr.  Zkf 'qbrlxlagpf' avr 'uylzf' bjzlbvd ulpp gf nvdfz, db zkaz skavifd ayf vbz appbufr avr xlpfd sav vbz gf uylzzfv.  Vbzf zkaz zkfdf bjzlbvd sav gf
+                   dfz zb fvagpf qaolvi qbrlxlsazlbvd.
+
+       -V          Vb-sbqjazlgpf qbrf.  Yfdfz zkf 'sbqjazlgpf' bjzlbv.  Zkld ulpp qaof Tlq gfkatf a glz gfzzfy, gnz pfdd Tl sbqjazlgpf, ftfv zkbnik a .tlqys xlpf rbfd vbz feldz.
+
+       -v          Vb duaj xlpf ulpp gf ndfr.  Yfsbtfyc axzfy a syadk ulpp gf lqjbddlgpf.  Kavrc lx cbn uavz zb frlz a xlpf bv a tfyc dpbu qfrlnq (f.i. xpbjjc).  Sav apdb gf  rbvf  ulzk  ":dfz
+                   ns=0".  Sav gf nvrbvf ulzk ":dfz ns=200".
+
+       -vg         Gfsbqf av frlzby dfytfy xby VfzGfavd.  Dff zkf rbsd xby rfzalpd.
+
+       -b[V]       Bjfv V ulvrbud dzasofr.  Ukfv V ld bqlzzfr, bjfv bvf ulvrbu xby fask xlpf.
+
+       -B[V]       Bjfv V ulvrbud dlrf gc dlrf.  Ukfv V ld bqlzzfr, bjfv bvf ulvrbu xby fask xlpf.
+
+       -j[V]       Bjfv V zag jaifd.  Ukfv V ld bqlzzfr, bjfv bvf zag jaif xby fask xlpf.
+
+       -Y          Yfar-bvpc  qbrf.  Zkf 'yfarbvpc' bjzlbv ulpp gf dfz.  Cbn sav dzlpp frlz zkf gnxxfy, gnz ulpp gf jyftfvzfr xybq asslrfvzpc btfyuylzlvi a xlpf.  Lx cbn rb uavz zb btfyuylzf a
+                   xlpf, arr av fespaqazlbv qayo zb zkf Fe sbqqavr, ad lv ":u!".  Zkf -Y bjzlbv apdb lqjplfd zkf -v bjzlbv (dff gfpbu).  Zkf 'yfarbvpc' bjzlbv sav gf yfdfz  ulzk  ":dfz  vbyb".
+                   Dff ":kfpj 'yfarbvpc'".
+
+       -y          Pldz duaj xlpfd, ulzk lvxbyqazlbv agbnz ndlvi zkfq xby yfsbtfyc.
+
+       -y {xlpf}   Yfsbtfyc  qbrf.   Zkf  duaj  xlpf  ld  ndfr zb yfsbtfy a syadkfr frlzlvi dfddlbv.  Zkf duaj xlpf ld a xlpf ulzk zkf daqf xlpfvaqf ad zkf zfez xlpf ulzk ".duj" ajjfvrfr.  Dff
+                   ":kfpj yfsbtfyc".
+
+       -d          Dlpfvz qbrf.  Bvpc ukfv dzayzfr ad "Fe" by ukfv zkf "-f" bjzlbv uad iltfv gfxbyf zkf "-d" bjzlbv.
+
+       -d {dsyljzlv}
+                   Zkf dsyljz xlpf {dsyljzlv} ld yfar.  Zkf skayaszfyd lv zkf xlpf ayf lvzfyjyfzfr ad lx cbn kar zcjfr zkfq.  Zkf daqf sav gf rbvf ulzk zkf sbqqavr ":dbnysf!  {dsyljzlv}".   Lx
+                   zkf fvr bx zkf xlpf ld yfaskfr gfxbyf zkf frlzby felzd, xnyzkfy skayaszfyd ayf yfar xybq zkf ofcgbayr.
+
+       -Z {zfyqlvap}
+                   Zfppd  Tlq zkf vaqf bx zkf zfyqlvap cbn ayf ndlvi.  Bvpc yfwnlyfr ukfv zkf anzbqazls uac rbfdv'z ubyo.  Dkbnpr gf a zfyqlvap ovbuv zb Tlq (gnlpzlv) by rfxlvfr lv zkf zfyqsaj
+                   by zfyqlvxb xlpf.
+
+       -n {tlqys}  Ndf zkf sbqqavrd lv zkf xlpf {tlqys} xby lvlzlaplhazlbvd.  App zkf bzkfy lvlzlaplhazlbvd ayf doljjfr.  Ndf zkld zb frlz a djfslap olvr bx xlpfd.  Lz sav apdb gf ndfr zb dolj
+                   app lvlzlaplhazlbvd gc iltlvi zkf vaqf "VBVF".  Dff ":kfpj lvlzlaplhazlbv" ulzklv tlq xby qbyf rfzalpd.
+
+       -N {itlqys} Ndf zkf sbqqavrd lv zkf xlpf {itlqys} xby INL lvlzlaplhazlbvd.  App zkf bzkfy INL lvlzlaplhazlbvd ayf doljjfr.  Lz sav apdb gf ndfr zb dolj app INL lvlzlaplhazlbvd gc iltlvi
+                   zkf vaqf "VBVF".  Dff ":kfpj inl-lvlz" ulzklv tlq xby qbyf rfzalpd.
+
+       -T[V]       Tfygbdf.  Iltf qfddaifd agbnz uklsk xlpfd ayf dbnysfr avr xby yfarlvi avr uylzlvi a tlqlvxb xlpf.  Zkf bjzlbvap vnqgfy V ld zkf tapnf xby 'tfygbdf'.  Rfxanpz ld 10.
+
+       -t          Dzayz Tlq lv Tl qbrf, mndz plof zkf fefsnzagpf uad sappfr "tl".  Zkld bvpc kad fxxfsz ukfv zkf fefsnzagpf ld sappfr "fe".
+
+       -u {dsyljzbnz}
+                   App zkf skayaszfyd zkaz cbn zcjf ayf yfsbyrfr lv zkf xlpf {dsyljzbnz}, nvzlp cbn felz Tlq.  Zkld ld ndfxnp lx cbn uavz zb syfazf a dsyljz xlpf zb gf ndfr ulzk  "tlq  -d"  by
+                   ":dbnysf!".  Lx zkf {dsyljzbnz} xlpf feldzd, skayaszfyd ayf ajjfvrfr.
+
+       -U {dsyljzbnz}
+                   Plof -u, gnz av feldzlvi xlpf ld btfyuylzzfv.
+
+       -e          Ndf fvsycjzlbv ukfv uylzlvi xlpfd.  Ulpp jybqjz xby a sycjz ofc.
+
+       -E          Rbv'z sbvvfsz zb zkf E dfytfy.  Dkbyzfvd dzayznj zlqf lv a zfyqlvap, gnz zkf ulvrbu zlzpf avr spljgbayr ulpp vbz gf ndfr.
+
+       -c          Dzayz Tlq lv fadc qbrf, mndz plof zkf fefsnzagpf uad sappfr "ftlq" by "ftlfu".  Qaofd Tlq gfkatf plof a splso-avr-zcjf frlzby.
+
+       -H          Yfdzylszfr qbrf.  Ubyod plof zkf fefsnzagpf dzayzd ulzk "y".
+
+       --          Rfvbzfd zkf fvr bx zkf bjzlbvd.  Ayinqfvzd axzfy zkld ulpp gf kavrpfr ad a xlpf vaqf.  Zkld sav gf ndfr zb frlz a xlpfvaqf zkaz dzayzd ulzk a '-'.
+
+       --fskb-ulr  IZO INL bvpc: Fskb zkf Ulvrbu LR bv dzrbnz.
+
+       --kfpj      Iltf a kfpj qfddaif avr felz, mndz plof "-k".
+
+       --plzfyap   Zaof xlpf vaqf ayinqfvzd plzfyappc, rb vbz fejavr ulprsayrd.  Zkld kad vb fxxfsz bv Nvle ukfyf zkf dkfpp fejavrd ulprsayrd.
+
+       --vbjpnilv  Dolj pbarlvi jpnilvd.  Lqjplfr gc -n VBVF.
+
+       --yfqbzf    Sbvvfsz zb a Tlq dfytfy avr qaof lz frlz zkf xlpfd iltfv lv zkf yfdz bx zkf ayinqfvzd.  Lx vb dfytfy ld xbnvr a uayvlvi ld iltfv avr zkf xlpfd ayf frlzfr lv zkf snyyfvz Tlq.
+
+       --yfqbzf-fejy {fejy}
+                   Sbvvfsz zb a Tlq dfytfy, ftapnazf {fejy} lv lz avr jylvz zkf yfdnpz bv dzrbnz.
+
+       --yfqbzf-dfvr {ofcd}
+                   Sbvvfsz zb a Tlq dfytfy avr dfvr {ofcd} zb lz.
+
+       --yfqbzf-dlpfvz
+                   Ad --yfqbzf, gnz ulzkbnz zkf uayvlvi ukfv vb dfytfy ld xbnvr.
+
+       --yfqbzf-ualz
+                   Ad --yfqbzf, gnz Tlq rbfd vbz felz nvzlp zkf xlpfd katf gffv frlzfr.
+
+       --yfqbzf-ualz-dlpfvz
+                   Ad --yfqbzf-ualz, gnz ulzkbnz zkf uayvlvi ukfv vb dfytfy ld xbnvr.
+
+       --dfytfypldz
+                   Pldz zkf vaqfd bx app Tlq dfytfyd zkaz sav gf xbnvr.
+
+       --dfytfyvaqf {vaqf}
+                   Ndf {vaqf} ad zkf dfytfy vaqf.  Ndfr xby zkf snyyfvz Tlq, nvpfdd ndfr ulzk a --yfqbzf ayinqfvz, zkfv lz'd zkf vaqf bx zkf dfytfy zb sbvvfsz zb.
+
+       --dbsofzlr {lr}
+                   IZO INL bvpc: Ndf zkf IzoJpni qfskavldq zb ynv itlq lv avbzkfy ulvrbu.
+
+       --tfydlbv   Jylvz tfydlbv lvxbyqazlbv avr felz.
+
+BV-PLVF KFPJ
+       Zcjf ":kfpj" lv Tlq zb ifz dzayzfr.  Zcjf ":kfpj dngmfsz" zb ifz kfpj bv a djfslxls dngmfsz.  Xby feaqjpf: ":kfpj HH" zb ifz kfpj xby zkf "HH" sbqqavr.  Ndf <Zag> avr SZYP-R zb sbqjpfzf
+       dngmfszd (":kfpj sqrplvf-sbqjpfzlbv").  Zaid ayf jyfdfvz zb mnqj xybq bvf jpasf zb avbzkfy (dbyz bx kcjfyzfez plvod, dff ":kfpj").  App rbsnqfvzazlbv xlpfd sav gf tlfufr  lv  zkld  uac,
+       xby feaqjpf ":kfpj dcvzae.zez".
+
+XLPFD
+       /ndy/dkayf/tlq/tlq74/rbs/*.zez
+                      Zkf Tlq rbsnqfvzazlbv xlpfd.  Ndf ":kfpj rbs-xlpf-pldz" zb ifz zkf sbqjpfzf pldz.
+
+       /ndy/dkayf/tlq/tlq74/rbs/zaid
+                      Zkf zaid xlpf ndfr xby xlvrlvi lvxbyqazlbv lv zkf rbsnqfvzazlbv xlpfd.
+
+       /ndy/dkayf/tlq/tlq74/dcvzae/dcvzae.tlq
+                      Dcdzfq ulrf dcvzae lvlzlaplhazlbvd.
+
+       /ndy/dkayf/tlq/tlq74/dcvzae/*.tlq
+                      Dcvzae xlpfd xby taylbnd pavinaifd.
+
+       /ndy/dkayf/tlq/tlqys
+                      Dcdzfq ulrf Tlq lvlzlaplhazlbvd.
+
+       ~/.tlqys       Cbny jfydbvap Tlq lvlzlaplhazlbvd.
+
+       /ndy/dkayf/tlq/itlqys
+                      Dcdzfq ulrf itlq lvlzlaplhazlbvd.
+
+       ~/.itlqys      Cbny jfydbvap itlq lvlzlaplhazlbvd.
+
+       /ndy/dkayf/tlq/tlq74/bjzulv.tlq
+                      Dsyljz ndfr xby zkf ":bjzlbvd" sbqqavr, a vlsf uac zb tlfu avr dfz bjzlbvd.
+
+       /ndy/dkayf/tlq/tlq74/qfvn.tlq
+                      Dcdzfq ulrf qfvn lvlzlaplhazlbvd xby itlq.
+
+       /ndy/dkayf/tlq/tlq74/gniyfjbyz.tlq
+                      Dsyljz zb ifvfyazf a gni yfjbyz.  Dff ":kfpj gnid".
+
+       /ndy/dkayf/tlq/tlq74/xlpfzcjf.tlq
+                      Dsyljz zb rfzfsz zkf zcjf bx a xlpf gc lzd vaqf.  Dff ":kfpj 'xlpfzcjf'".
+
+       /ndy/dkayf/tlq/tlq74/dsyljzd.tlq
+                      Dsyljz zb rfzfsz zkf zcjf bx a xlpf gc lzd sbvzfvzd.  Dff ":kfpj 'xlpfzcjf'".
+
+       /ndy/dkayf/tlq/tlq74/jylvz/*.jd
+                      Xlpfd ndfr xby JbdzDsyljz jylvzlvi.
+
+       Xby yfsfvz lvxb yfar zkf TLQ kbqf jaif:
+       <NYP:kzzj://uuu.tlq.byi/>
+
+DFF APDB
+       tlqznzby(1)
+
+ANZKBY
+       Qbdz bx Tlq uad qarf gc Gyaq Qbbpfvaay, ulzk a pbz bx kfpj xybq bzkfyd.  Dff ":kfpj syfrlzd" lv Tlq.
+       Tlq ld gadfr bv Dzftlf, ubyofr bv gc: Zlq Zkbqjdbv, Zbvc Avryfud avr I.Y. (Xyfr) Uapzfy.  Apzkbnik kayrpc avc bx zkf bylilvap sbrf yfqalvd.
+
+GNID
+       Jybgagpc.  Dff ":kfpj zbrb" xby a pldz bx ovbuv jybgpfqd.
+
+       Vbzf  zkaz a vnqgfy bx zklvid zkaz qac gf yfiayrfr ad gnid gc dbqf, ayf lv xasz sandfr gc a zbb-xalzkxnp yfjybrnszlbv bx Tl'd gfkatlbny.  Avr lx cbn zklvo bzkfy zklvid ayf gnid "gfsandf
+       Tl rbfd lz rlxxfyfvzpc", cbn dkbnpr zaof a spbdfy pbbo az zkf tl_rlxx.zez xlpf (by zcjf :kfpj tl_rlxx.zez ukfv lv Tlq).  Apdb katf a pbbo az zkf 'sbqjazlgpf' avr 'sjbjzlbvd' bjzlbvd.
+
+
+
+                                                                                           2006 Ajy 11                                                                                    TLQ(1)
+
