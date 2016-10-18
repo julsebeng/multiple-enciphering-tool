@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.lang.StringBuilder;
 
 //libs for reading stdio
 import java.io.Console;
@@ -418,13 +420,35 @@ private static boolean runCipherSequence() {
     //Otherwise, prompt for input from stdin
     else {
       
-      Console c = System.console();
-      if(c == null) {
-        error = "Error: could not obtain console for standard I/O.";
-        return false;
-      }
+      //Console c = System.console();
+      //if(c == null) {
+      //  error = "Error: could not obtain console for standard I/O.";
+      //  return false;
+      //}
 
-      inputData = c.readLine();
+      //inputData = c.readLine();
+
+      InputStreamReader isReader = new InputStreamReader(System.in);
+      BufferedReader bufReader = new BufferedReader(isReader);
+
+      StringBuilder builder = new StringBuilder();
+      while (true) {
+        try {
+            String input = null;
+            if((input = bufReader.readLine()) != null) {
+                builder.append(input);
+                builder.append("\n");
+            }
+            else {
+                break;
+            }
+        }
+        catch(Exception e) {
+            error = e.getMessage();
+            return false;
+        }
+      }
+      inputData = builder.toString();
   }
 
 
