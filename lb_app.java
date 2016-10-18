@@ -52,7 +52,7 @@ public class lb_app {
 		}
 
 		if(!runCipherSequence()) {
-      throw new Exception(error);
+			throw new Exception(error);
 
 			//System.out.println(error);
 		}
@@ -365,21 +365,19 @@ public class lb_app {
 	}
 
 
-	/* ***********************************************************
-	 * Encrypt/decrypt process
-	/*************************************************************/
-	private static boolean runCipherSequence() {
+/* ***********************************************************
+ * Encrypt/decrypt process
+/*************************************************************/
+private static boolean runCipherSequence() {
+
     String returnData = new String();      
     String inputData = new String();
 
-		//TODO: make sure the given file is encoded in a way that matches the cipher
+	//TODO: make sure the given file is encoded in a way that matches the cipher
 
-		//TODO: read input, run it through the cipher, and produce output
-
-
-		/* ***********************************************************
-		 * Create a new CipherSequence for the ciphering
-		/*************************************************************/
+    /* ***********************************************************
+	 * Create a new CipherSequence for the ciphering
+	/*************************************************************/
     CipherSequence cSeq = null;
     try {
       cSeq = new CipherSequence();
@@ -388,6 +386,7 @@ public class lb_app {
       error = e.getMessage();
       return false;
     }
+
 
     //Load a cipher sequence from given file
     try {
@@ -428,6 +427,8 @@ public class lb_app {
       inputData = c.readLine();
   }
 
+
+
   //Before enciphering or deciphering, make sure there is something to cipher.
   if(inputData == null) {
     error = "error: no input given.";
@@ -435,9 +436,10 @@ public class lb_app {
   }
 
 
-		/* ***********************************************************
-		 * Encode or decode the file
-		/*************************************************************/
+	/* ***********************************************************
+	 * Encode or decode the file
+	/*************************************************************/
+  
     if(encrypt) {
 
       try {
@@ -462,10 +464,10 @@ public class lb_app {
     }
     
 
-		/* ***********************************************************
-		 * Output result
-		/*************************************************************/
-		//TODO: determine whether files or stdio is used
+	/* ***********************************************************
+	 * Output result
+	/*************************************************************/
+	//TODO: determine whether files or stdio is used
     //This ought to determine where returnData is going
     if(returnData == null) {
       error = "Error: no data to output.";
@@ -478,9 +480,9 @@ public class lb_app {
       BufferedWriter writeBuf = null;
 
       try {
-        File outFile = new File(output);
-        writeBuf = new BufferedWriter(new FileWriter(outFile));
-        writeBuf.write(returnData);
+        PrintWriter writer = new PrintWriter(output, "UTF-8");
+        writer.println(returnData);
+        writer.close();
       }
       catch(IOException e) {
          error = e.getMessage();
@@ -502,7 +504,7 @@ public class lb_app {
 
     }
 
-		return true; //Only here so it compiles!
+		return true; 
 
 	}
 
