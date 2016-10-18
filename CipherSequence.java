@@ -19,6 +19,9 @@ class CipherSequence {
 	public CipherSequence() {
 		sequence = new Vector<Cipher>();
 	}
+	public CipherSequence(CipherSequence other) {
+		this.sequence = new Vector<Cipher>(other.sequence);
+	}
 	public String encrypt(String input) throws Exception {
 		int i;
 		String temp = new String(input);
@@ -30,7 +33,7 @@ class CipherSequence {
 	public String decrypt(String input) throws Exception {
 		int i;
 		String temp = new String(input);
-		for (i=sequence.size()-1; 0<i; i--) {
+		for (i=sequence.size()-1; 0<=i; i--) {
 			temp = sequence.get(i).decrypt(temp);
 		}
 		return temp;
@@ -64,6 +67,7 @@ class CipherSequence {
 		for (Cipher c: sequence) {
 			//System.out.println(c.getName() + " " + c.getArgsString());
 			writer.write(c.toString());
+			writer.write(String.format("%n"));
 		}
 		writer.close();
 	}
@@ -78,6 +82,9 @@ class CipherSequence {
 	}
 	public void insertAt(Cipher ciph, int i) {
 		sequence.insertElementAt(ciph, i);
+	}
+	public void add(Cipher ciph) {
+		sequence.addElement(ciph);
 	}
 	public int size() {
 		return sequence.size();

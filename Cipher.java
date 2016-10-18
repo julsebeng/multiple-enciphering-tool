@@ -18,6 +18,7 @@ abstract class Cipher {
 		this.version = other.version;
 		this.unicode = other.unicode;
 	}
+	abstract public Cipher clone();
 	public void init(String[] args) {
 	}
 	public String getName() {
@@ -27,7 +28,11 @@ abstract class Cipher {
 		return new String("");
 	}
 	public String toString() {
-		return String.format("%s %s%n", this.getName(), this.getArgsString());
+		String args = this.getArgsString();
+		if (args.equals(""))
+			return String.format("%s", this.getName());
+		else
+			return String.format("%s %s", this.getName(), args);
 	}
 	abstract String encrypt(String input) throws Exception;
 	abstract String decrypt(String input) throws Exception;
@@ -43,6 +48,9 @@ class DummyCipher extends Cipher {
 	}
 	DummyCipher(DummyCipher other) {
 		super(other);
+	}
+	public Cipher clone() {
+		return new DummyCipher(this);
 	}
 	public String encrypt(String input) {
 		return input;
@@ -62,6 +70,10 @@ class RotNCipher extends Cipher {
 	}
 	RotNCipher(RotNCipher other) {
 		super(other);
+		this.rotN = other.rotN;
+	}
+	public Cipher clone() {
+		return new RotNCipher(this);
 	}
 	RotNCipher() {
 		name = "RotN";
@@ -125,6 +137,12 @@ class Rot13Cipher extends Cipher {
 		name = "Rot13";
 		version = 1.0f;
 	}
+	Rot13Cipher(Rot13Cipher other) {
+		super(other);
+	}
+	public Cipher clone() {
+		return new Rot13Cipher(this);
+	}
 	public String encrypt(String input) {
 		StringBuilder temp = new StringBuilder(input);
 		for (int i=0; i<temp.length(); i++) {
@@ -155,6 +173,13 @@ class SubstitutionCipher extends Cipher {
 	SubstitutionCipher(String keyArg) {
 		name = "Substitution";
 		key = keyArg;	
+	}
+	SubstitutionCipher(SubstitutionCipher other) {
+		super(other);
+		this.key = other.key;
+	}
+	public Cipher clone() {
+		return new SubstitutionCipher(this);
 	}
 	SubstitutionCipher() {
 		name = "Substitution";
