@@ -467,7 +467,6 @@ private static boolean runCipherSequence() {
 	/* ***********************************************************
 	 * Output result
 	/*************************************************************/
-	//TODO: determine whether files or stdio is used
     //This ought to determine where returnData is going
     if(returnData == null) {
       error = "Error: no data to output.";
@@ -494,13 +493,14 @@ private static boolean runCipherSequence() {
     //Else, print to stdout
     else {
 
-      Console c = System.console();
-      if(c == null) {
-        error = "Error: could not obtain console for standard I/O.";
-        return false;
-      }
+     // Console c = System.console();
+     // if(c == null) {
+     //   error = "Error: could not obtain console for standard I/O.";
+     //   return false;
+     // }
 
-     c.format(returnData); 
+     //c.format(returnData); 
+     System.out.println(returnData);
 
     }
 
