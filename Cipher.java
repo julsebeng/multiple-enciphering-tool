@@ -77,7 +77,7 @@ class RotNCipher extends Cipher {
 	}
 	RotNCipher() {
 		name = "RotN";
-		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	public void init(String[] args) {
 		assert(args.length == 1);
@@ -183,7 +183,7 @@ class SubstitutionCipher extends Cipher {
 	}
 	SubstitutionCipher() {
 		name = "Substitution";
-		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	public void init(String[] args) {
 		assert(args.length == 1);
