@@ -71,3 +71,9 @@ java lb_app enc -i input.txt -f -o out.txt test.cyph
 ```
 
 Should output a lengthy amount of code to the file `out.txt`. `out.txt` does not need to exist prior to running the command. The output should match that of the provided `output2.txt`.
+-
+Using the provided `test.cyph`:
+```
+java lb_app enc -f test.cyph
+```
+Will wait for input from `stdin` and output the encrypted sequence to `stdout`.
