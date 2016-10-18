@@ -70,4 +70,4 @@ Using the provided `input2.txt`, which is a large amount of text, and `test.cyph
 java lb_app enc -i input.txt -f -o out.txt test.cyph
 ```
 
-Should output a lengthy amount of code to the file `out.txt`. The output should match that of the provided `output2.txt`.
+Should output a lengthy amount of code to the file `out.txt`. `out.txt` does not need to exist prior to running the command. The output should match that of the provided `output2.txt`.
