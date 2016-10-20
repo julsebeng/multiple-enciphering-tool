@@ -1,842 +1,649 @@
-
-
-
-<!DOCTYPE html>
-<html lang="en" >
-
-<head>
-
-	
-	<script>
-window.ts_endpoint_url = "https:\/\/slack.com\/beacon\/timing";
-
-(function(e) {
-	var n=Date.now?Date.now():+new Date,r=e.performance||{},t=[],a={},i=function(e,n){for(var r=0,a=t.length,i=[];a>r;r++)t[r][e]==n&&i.push(t[r]);return i},o=function(e,n){for(var r,a=t.length;a--;)r=t[a],r.entryType!=e||void 0!==n&&r.name!=n||t.splice(a,1)};r.now||(r.now=r.webkitNow||r.mozNow||r.msNow||function(){return(Date.now?Date.now():+new Date)-n}),r.mark||(r.mark=r.webkitMark||function(e){var n={name:e,entryType:"mark",startTime:r.now(),duration:0};t.push(n),a[e]=n}),r.measure||(r.measure=r.webkitMeasure||function(e,n,r){n=a[n].startTime,r=a[r].startTime,t.push({name:e,entryType:"measure",startTime:n,duration:r-n})}),r.getEntriesByType||(r.getEntriesByType=r.webkitGetEntriesByType||function(e){return i("entryType",e)}),r.getEntriesByName||(r.getEntriesByName=r.webkitGetEntriesByName||function(e){return i("name",e)}),r.clearMarks||(r.clearMarks=r.webkitClearMarks||function(e){o("mark",e)}),r.clearMeasures||(r.clearMeasures=r.webkitClearMeasures||function(e){o("measure",e)}),e.performance=r,"function"==typeof define&&(define.amd||define.ajs)&&define("performance",[],function(){return r}) // eslint-disable-line
-})(window);
-
-</script>
-<script>;(function() {
-
-'use strict';
-
-
-window.TSMark = function(mark_label) {
-	if (!window.performance || !window.performance.mark) return;
-	performance.mark(mark_label);
-};
-window.TSMark('start_load');
-
-
-window.TSMeasureAndBeacon = function(measure_label, start_mark_label) {
-	if (start_mark_label === 'start_nav' && window.performance && window.performance.timing) {
-		window.TSBeacon(measure_label, (new Date()).getTime() - performance.timing.navigationStart);
-		return;
-	}
-	if (!window.performance || !window.performance.mark || !window.performance.measure) return;
-	performance.mark(start_mark_label + '_end');
-	try {
-		performance.measure(measure_label, start_mark_label, start_mark_label + '_end');
-		window.TSBeacon(measure_label, performance.getEntriesByName(measure_label)[0].duration);
-	} catch(e) { return; }
-};
-
-
-window.TSBeacon = function(label, value) {
-	var endpoint_url = window.ts_endpoint_url || 'https://slack.com/beacon/timing';
-	(new Image()).src = endpoint_url + '?data=' + encodeURIComponent(label + ':' + value);
-};
-
-})();
-</script>
- 
-
-<script>
-window.TSMark('step_load');
-</script>	<noscript><meta http-equiv="refresh" content="0; URL=/?redir=%2Ffiles-pri%2FT2F1R1P71-F2GB4D15M%2Flabyrinthine.xmi&amp;nojsmode=1" /></noscript>
-<script>(function() {
-        'use strict';
-
-	var start_time = Date.now();
-	var logs = [];
-	var connecting = true;
-	var ever_connected = false;
-	var log_namespace;
-
-	var logWorker = function(ob) {
-		var log_str = ob.secs+' start_label:'+ob.start_label+' measure_label:'+ob.measure_label+' description:'+ob.description;
-
-		if (TS.metrics.getLatestMark(ob.start_label)) {
-			TS.metrics.measure(ob.measure_label, ob.start_label);
-			TS.log(88, log_str);
-
-			if (ob.do_reset) {
-				window.TSMark(ob.start_label);
-			}
-		} else {
-			TS.maybeWarn(88, 'not timing: '+log_str);
-		}
-	}
-
-	var log = function(k, description) {
-		var secs = (Date.now()-start_time)/1000;
-
-		logs.push({
-			k: k,
-			d: description,
-			t: secs,
-			c: !!connecting
-		})
-
-		if (!window.boot_data) return;
-		if (!window.TS) return;
-		if (!TS.metrics) return;
-		if (!connecting) return;
-
-		
-		log_namespace = log_namespace || (function() {
-			if (boot_data.app == 'client') return 'client';
-			if (boot_data.app == 'space') return 'post';
-			if (boot_data.app == 'api') return 'apisite';
-			if (boot_data.app == 'mobile') return 'mobileweb';
-			if (boot_data.app == 'web' || boot_data.app == 'oauth') return 'web';
-			return 'unknown';
-		})();
-
-		var modifier = (TS.boot_data.feature_no_rollups) ? '_no_rollups' : '';
-
-		logWorker({
-			k: k,
-			secs: secs,
-			description: description,
-			start_label: ever_connected ? 'start_reconnect' : 'start_load',
-			measure_label: 'v2_'+log_namespace+modifier+(ever_connected ? '_reconnect__' : '_load__')+k,
-			do_reset: false,
-		});
-	}
-
-	var setConnecting = function(val) {
-		val = !!val;
-		if (val == connecting) return;
-
-		if (val) {
-			log('start');
-			if (ever_connected) {
-				
-				window.TSMark('start_reconnect');
-				window.TSMark('step_reconnect');
-				window.TSMark('step_load');
-			}
-
-			connecting = val;
-			log('start');
-		} else {
-			log('over');
-			ever_connected = true;
-			connecting = val;
-		}
-	}
-
-	window.TSConnLogger = {
-		log: log,
-		logs: logs,
-		start_time: start_time,
-		setConnecting: setConnecting
-	}
-})();</script>
-
-<script type="text/javascript">
-if(self!==top)window.document.write("\u003Cstyle>body * {display:none !important;}\u003C\/style>\u003Ca href=\"#\" onclick="+
-"\"top.location.href=window.location.href\" style=\"display:block !important;padding:10px\">Go to Slack.com\u003C\/a>");
-
-(function() {
-	var timer;
-	if (self !== top) {
-		timer = window.setInterval(function() {
-			if (window.$) {
-				try {
-					$('#page').remove();
-					$('#client-ui').remove();
-					window.TS = null;
-					window.clearInterval(timer);
-				} catch(e) {}
-			}
-		}, 200);
-	}
-}());
-
-</script>
-
-<script>(function() {
-        'use strict';
-
-        window.callSlackAPIUnauthed = function(method, args, callback) {
-                var timestamp = Date.now() / 1000;  
-                var version = (window.TS && TS.boot_data) ? TS.boot_data.version_uid.substring(0, 8) : 'noversion';
-                var url = '/api/' + method + '?_x_id=' + version + '-' + timestamp;
-                var req = new XMLHttpRequest();
-
-                req.onreadystatechange = function() {
-                        if (req.readyState == 4) {
-                                req.onreadystatechange = null;
-                                var obj;
-
-                                if (req.status == 200 || req.status == 429) {
-                                        try {
-                                                obj = JSON.parse(req.responseText);
-                                        } catch (err) {
-                                                console.warn('unable to do anything with api rsp');
-                                        }
-                                }
-
-                                obj = obj || {
-                                        ok: false
-                                }
-
-                                callback(obj.ok, obj, args);
-                        }
-                }
-
-                var async = true;
-                req.open('POST', url, async);
-
-                var form_data = new FormData();
-                var has_data = false;
-                Object.keys(args).map(function(k) {
-                        if (k[0] === '_') return;
-                        form_data.append(k, args[k]);
-                        has_data = true;
-                });
-
-                if (has_data) {
-                        req.send(form_data);
-                } else {
-                        req.send();
-                }
-        }
-})();</script>
-
-						
-	
-		<script>
-			if (window.location.host == 'slack.com' && window.location.search.indexOf('story') < 0) {
-				document.cookie = '__cvo_skip_doc=' + escape(document.URL) + '|' + escape(document.referrer) + ';path=/';
-			}
-		</script>
-	
-
-	
-		<script type="text/javascript">
-		
-		try {
-			if(window.location.hash && !window.location.hash.match(/^(#?[a-zA-Z0-9_]*)$/)) {
-				window.location.hash = '';
-			}
-		} catch(e) {}
-		
-	</script>
-
-	<script type="text/javascript">
-				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		ga('create', "UA-106458-17", 'slack.com');
-
-				
-		ga('send', 'pageview');
-	
-		(function(e,c,b,f,d,g,a){e.SlackBeaconObject=d;
-		e[d]=e[d]||function(){(e[d].q=e[d].q||[]).push([1*new Date(),arguments])};
-		e[d].l=1*new Date();g=c.createElement(b);a=c.getElementsByTagName(b)[0];
-		g.async=1;g.src=f;a.parentNode.insertBefore(g,a)
-		})(window,document,"script","https://a.slack-edge.com/dcf8/js/libs/beacon.js","sb");
-		sb('set', 'token', '3307f436963e02d4f9eb85ce5159744c');
-
-				sb('track', 'pageview');
-
-		function track(a){ga('send','event','web',a);sb('track',a);}
-
-	</script>
-
-
-
-<script type='text/javascript'>
-	
-	/* safety stub */
-	window.mixpanel = {
-		track: function() {},
-		track_links: function() {},
-		track_forms: function() {}
-	};
-
-	function mixpanel_track(){}
-	function mixpanel_track_forms(){}
-	function mixpanel_track_links(){}
-	
-</script>
-	
-	<meta name="referrer" content="no-referrer">
-		<meta name="superfish" content="nofish">
-
-	<script type="text/javascript">
-
-
-
-var TS_last_log_date = null;
-var TSMakeLogDate = function() {
-	var date = new Date();
-
-	var y = date.getFullYear();
-	var mo = date.getMonth()+1;
-	var d = date.getDate();
-
-	var time = {
-	  h: date.getHours(),
-	  mi: date.getMinutes(),
-	  s: date.getSeconds(),
-	  ms: date.getMilliseconds()
-	};
-
-	Object.keys(time).map(function(moment, index) {
-		if (moment == 'ms') {
-			if (time[moment] < 10) {
-				time[moment] = time[moment]+'00';
-			} else if (time[moment] < 100) {
-				time[moment] = time[moment]+'0';
-			}
-		} else if (time[moment] < 10) {
-			time[moment] = '0' + time[moment];
-		}
-	});
-
-	var str = y + '/' + mo + '/' + d + ' ' + time.h + ':' + time.mi + ':' + time.s + '.' + time.ms;
-	if (TS_last_log_date) {
-		var diff = date-TS_last_log_date;
-		//str+= ' ('+diff+'ms)';
-	}
-	TS_last_log_date = date;
-	return str+' ';
-}
-
-var parseDeepLinkRequest = function(code) {
-	var m = code.match(/"id":"([CDG][A-Z0-9]{8})"/);
-	var id = m ? m[1] : null;
-
-	m = code.match(/"team":"(T[A-Z0-9]{8})"/);
-	var team = m ? m[1] : null;
-
-	m = code.match(/"message":"([0-9]+\.[0-9]+)"/);
-	var message = m ? m[1] : null;
-
-	return { id: id, team: team, message: message };
-}
-
-if ('rendererEvalAsync' in window) {
-	var origRendererEvalAsync = window.rendererEvalAsync;
-	window.rendererEvalAsync = function(blob) {
-		try {
-			var data = JSON.parse(decodeURIComponent(atob(blob)));
-			if (data.code.match(/handleDeepLink/)) {
-				var request = parseDeepLinkRequest(data.code);
-				if (!request.id || !request.team || !request.message) return;
-
-				request.cmd = 'channel';
-				TSSSB.handleDeepLinkWithArgs(JSON.stringify(request));
-				return;
-			} else {
-				origRendererEvalAsync(blob);
-			}
-		} catch (e) {
-		}
-	}
-}
-</script>
-
-
-
-<script type="text/javascript">
-
-	var TSSSB = {
-		call: function() {
-			return false;
-		}
-	};
-
-</script>
-<script>TSSSB.env = (function() {
-	'use strict';
-
-	var v = {
-		win_ssb_version: null,
-		win_ssb_version_minor: null,
-		mac_ssb_version: null,
-		mac_ssb_version_minor: null,
-		mac_ssb_build: null,
-		lin_ssb_version: null,
-		lin_ssb_version_minor: null,
-		desktop_app_version: null
-	};
-	
-	var is_win = (navigator.appVersion.indexOf("Windows") !== -1);
-	var is_lin = (navigator.appVersion.indexOf("Linux") !== -1);
-	var is_mac = !!(navigator.userAgent.match(/(OS X)/g));
-
-	if (navigator.userAgent.match(/(Slack_SSB)/g) || navigator.userAgent.match(/(Slack_WINSSB)/g)) {
-		
-		var parts = navigator.userAgent.split('/');
-		var version_str = parts[parts.length-1];
-		var version_float = parseFloat(version_str);
-		var version_parts = version_str.split('.');
-		var version_minor = (version_parts.length == 3) ? parseInt(version_parts[2]) : 0;
-
-		if (navigator.userAgent.match(/(AtomShell)/g)) {
-			
-			if (is_lin) {
-				v.lin_ssb_version = version_float;
-				v.lin_ssb_version_minor = version_minor;
-			} else if (is_win) {
-				v.win_ssb_version = version_float;
-				v.win_ssb_version_minor = version_minor;
-			} else if (is_mac) {
-				v.mac_ssb_version = version_float;
-				v.mac_ssb_version_minor = version_minor;
-			}
-			
-			if (version_parts.length >= 3) {
-				v.desktop_app_version = {
-					major: parseInt(version_parts[0]),
-					minor: parseInt(version_parts[1]),
-					patch: parseInt(version_parts[2])
-				}
-			}
-		} else {
-			
-			v.mac_ssb_version = version_float;
-			v.mac_ssb_version_minor = version_minor;
-			
-			
-			
-			var app_ver = window.macgap && macgap.app && macgap.app.buildVersion && macgap.app.buildVersion();
-			var matches = String(app_ver).match(/(?:\()(.*)(?:\))/);
-			v.mac_ssb_build = (matches && matches.length == 2) ? parseInt(matches[1] || 0) : 0;
-		}
-	}
-
-	return v;
-})();
-</script>
-
-
-	<script type="text/javascript">
-		
-		var was_TS = window.TS;
-		delete window.TS;
-		TSSSB.call('didFinishLoading');
-		if (was_TS) window.TS = was_TS;
-	</script>
-	    <title>Slack</title>
-    <meta name="author" content="Slack">
-    <meta name="robots" content="noindex,nofollow">
-
-	
-		
-	
-	
-					
-	
-				
-																
-	
-	
-	
-			<!-- output_css "core" -->
-    <link href="https://a.slack-edge.com/584ab/style/rollup-plastic.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
-
-		<!-- output_css "before_file_pages" -->
-
-	<!-- output_css "file_pages" -->
-
-	<!-- output_css "regular" -->
-    <link href="https://a.slack-edge.com/f2bff/style/index.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
-    <link href="https://a.slack-edge.com/1d9c/style/libs/lato-1-compressed.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
-    <link href="https://a.slack-edge.com/951c7/style/sticky_nav.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
-    <link href="https://a.slack-edge.com/5bd25/style/footer.css" rel="stylesheet" type="text/css" crossorigin="anonymous">
-
-	
-
-	
-	
-		<meta name="robots" content="noindex, nofollow" />
-	
-
-	
-<link id="favicon" rel="shortcut icon" href="https://a.slack-edge.com/66f9/img/icons/favicon-32.png" sizes="16x16 32x32 48x48" type="image/png" />
-
-<link rel="icon" href="https://a.slack-edge.com/0180/img/icons/app-256.png" sizes="256x256" type="image/png" />
-
-<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://a.slack-edge.com/66f9/img/icons/ios-152.png" />
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://a.slack-edge.com/66f9/img/icons/ios-144.png" />
-<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://a.slack-edge.com/66f9/img/icons/ios-120.png" />
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://a.slack-edge.com/66f9/img/icons/ios-114.png" />
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://a.slack-edge.com/0180/img/icons/ios-72.png" />
-<link rel="apple-touch-icon-precomposed" href="https://a.slack-edge.com/66f9/img/icons/ios-57.png" />
-
-<meta name="msapplication-TileColor" content="#FFFFFF" />
-<meta name="msapplication-TileImage" content="https://a.slack-edge.com/66f9/img/icons/app-144.png" />
-	
-	<!--[if lt IE 9]>
-	<script src="https://a.slack-edge.com/ef0d/js/libs/html5shiv.js"></script>
-	<![endif]-->
-
-</head>
-
-<body class="	index		">
-
-		  			<script>
-		
-			var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-			if (w > 1440) document.querySelector('body').classList.add('widescreen');
-		
-		</script>
-	
-  	
-	
-
-	
-	
-							
-
-
-
-<nav class="top persistent">
-
-	
-	<a href="https://slack.com/" class="logo" data-qa="logo" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=logo" aria-label="Slack homepage"></a>
-
-	
-						<ul>
-				<li><a  href="https://slack.com/is" data-qa="product" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_product">Product</a></li>
-				<li><a  href="https://slack.com/pricing" data-qa="pricing" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_pricing">Pricing</a></li>				<li><a  href="https://get.slack.help/hc/en-us" data-qa="support" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_support">Support</a></li>
-				<li><a  href="http://slackhq.com" data-qa="blog" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_blog">Blog</a></li>
-				<li class="sign_in"><a href="https://slack.com/signin" class="opt_nav_signin" data-qa="sign_in" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_sign_in">Sign in</a></li>
-				<li class="sign_in mobile_btn"><a href="https://slack.com/signin" class="opt_nav_signin" data-qa="sign_in" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_sign_in">Sign in</a></li>
-				<li class="create_team"><a href="https://slack.com/create" class="opt_nav_create btn_sticky ga_track_signup btn_sticky_filled " data-qa="create_team" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_create_team">Create a new team</a></li>				<li class="mobile_btn mobile_menu_btn">
-					<a href="#" class="btn_sticky" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_mobile_menu_btn">Menu</a>
-				</li>
-			</ul>
-			</nav>
-
-<nav class="mobile_menu loading " aria-hidden="true">
-			<a href="https://slack.com/" class="logo" data-qa="logo" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_logo" aria-label="Slack homepage"></a>
-			<a href="#" class="close" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_menu_close" aria-label="close"><ts-icon class="ts_icon ts_icon_times"></ts-icon></a>
-									<ul>
-					<li><a  href="https://slack.com/is" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_product">Product</a></li>
-					<li><a  href="https://slack.com/pricing" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_pricing">Pricing</a></li>					<li><a  href="https://get.slack.help/hc/en-us" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_support">Support</a></li>
-					<li><a  href="http://slackhq.com" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_blog">Blog</a></li>
-					<li><a href="https://slack.com/signin" class="opt_nav_signin" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_sign_in">Sign in</a></li>
-				</ul>
-				<a href="https://slack.com/create" class="opt_nav_create sign_up ga_track_signup " data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=nav_create_team">Create a new team</a>						</nav>
-
-	
-	<div id="page" >
-
-		<div id="page_contents" data-qa="page_contents" class="">
-
-<div class="span_4_of_6 col float_none margin_auto no_right_padding">
-			<p class="alert alert_info"><i class="ts_icon ts_icon_info_circle"></i> You need to sign in to see this page.</p>
-
-	<p id="error_ratelimit" class="alert alert_warning" style="display: none;"><i class="ts_icon ts_icon_warning"></i> <strong>Too many login failures!</strong><br class="hide_on_mobile" />
-			For your team’s security complete the reCAPTCHA.
-	</p>
-<p id="error_unknown" class="alert alert_error" style="display: none;"><i class="ts_icon ts_icon_warning"></i> Hmmm... something went wrong. Please try again.</p></div>
-
-	<div class="real_content card align_center span_4_of_6 col float_none margin_auto large_bottom_margin right_padding large_bottom_padding">
-	<h1 id="signin_header"> Sign in to <span class="break_word">multiple-enciphering.slack.com</span></h1>
-
-	
-	<div class="col span_4_of_6 float_none margin_auto large_bottom_margin">
-
-		<form id="signin_form" action="/" method="post" accept-encoding="UTF-8">
-			<input type="hidden" name="signin" value="1">
-			<input type="hidden" name="redir" value="/files-pri/T2F1R1P71-F2GB4D15M/labyrinthine.xmi">
-						<input type="hidden" name="crumb" value="s-1474979936-f6c1c76b6b-☃" />
-
-			<p>Enter your <strong>email address</strong> and <strong>password</strong>.</p>
-
-			<p class=" no_bottom_margin">
-				<input type="email" id="email" name="email" size="40" value="" placeholder="you@domain.com">
-			</p>
-
-			<p class=" small_bottom_margin">
-				<input type="password" id="password" name="password" size="40" placeholder="password">
-			</p>
-			
-			
-						
-
-			<p><button id="signin_btn" type="submit" class="btn btn_large full_width ladda-button" data-style="expand-right"><span class="ladda-label">Sign in</span></button></p>
-
-			<p><label class="checkbox"><input type="checkbox" name="remember" checked> Keep me signed in</label></p>
-
-							<p class="small"><a id="forgot-pw" href="/forgot" class="bold">I forgot my password</a></p>
-			
-		</form>
-	</div>
-
-	<p class="subtle_silver small">
-			</p>
-</div>
-	<div class="real_content align_center">
-				<p>Unsure which email address? <a href="https://slack.com/signin/find">We can help</a>.</p>
-		
-	
-			<p>
-			Trying to create a team?
-				<a data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=inc_download_app_or_sign_in_cta_sign_up_link" href="https://slack.com/" class="bold">Sign up on the home page</a> to get started.
-		</p>
-	</div>
-
-					
-	</div>
-	<div id="overlay"></div>
-</div>
-
-
-	
-<footer  data-qa="footer">
-	<section class="links">
-		<div class="grid">
-			<div class="col span_1_of_4 nav_col">
-				<ul>
-					<li class="cat_1">Using Slack</li>
-					<li><a href="/is" data-qa="product_footer" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_product">Product</a></li>
-					<li><a href="/pricing" data-qa="pricing_footer" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_pricing">Pricing</a></li>
-					<li><a href="https://get.slack.help/hc/en-us" data-qa="support_footer" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_support">Support</a></li>
-					<li><a href="/guides" data-qa="getting_started" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_getting_started">Slack Guides</a></li>
-					<li><a href="/videoguides" data-qa="video_guides" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_video_guides">Video Guides</a></li>
-					<li><a href="/apps" data-qa="app_directory" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_app_directory">App Directory</a></li>
-					<li><a href="https://api.slack.com/" data-qa="api" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_api">API</a></li>
-				</ul>
-			</div>
-			<div class="col span_1_of_4 nav_col">
-				<ul>
-					<li class="cat_2">Slack <ts-icon class="ts_icon_heart"></ts-icon></li>
-					<li><a href="/jobs" data-qa="jobs" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_jobs">Jobs</a></li>
-					<li><a href="/customers" data-qa="customers" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_customers">Customers</a></li>
-					<li><a href="/developers" data-qa="developers" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_developers">Developers</a></li>
-					<li><a href="/events" data-qa="events" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_events">Events</a></li>
-					<li><a href="http://slackhq.com/" data-qa="blog_footer" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_blog">Blog</a></li>
-					<li><a href="/varietypack" data-qa="podcast" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_podcast">Podcast</a></li>
-					<li><a href="https://slack-shop.myshopify.com" data-qa="slack_shop" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_slack_shop">Slack Shop</a></li>
-				</ul>
-			</div>
-			<div class="col span_1_of_4 nav_col">
-				<ul>
-					<li class="cat_3">Legal</li>
-					<li><a href="/privacy-policy" data-qa="privacy" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_privacy">Privacy</a></li>
-					<li><a href="/security" data-qa="security" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_security">Security</a></li>
-					<li><a href="/terms-of-service" data-qa="tos" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_tos">Terms of Service</a></li>
-					<li><a href="/policies" data-qa="policies" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_policies">Policies</a></li>
-				</ul>
-			</div>
-			<div class="col span_1_of_4 nav_col">
-				<ul>
-					<li class="cat_4">Handy Links</li>
-					<li><a href="/downloads" data-qa="downloads" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_downloads">Download desktop app</a></li>
-					<li><a href="/downloads" data-qa="downloads_mobile" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_downloads_mobile">Download mobile app</a></li>
-					<li><a href="/brand-guidelines" data-qa="brand_guidelines" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_brand_guidelines">Brand Guidelines</a></li>
-					<li><a href="http://slackatwork.com" data-qa="slack_at_work" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_slack_at_work">Slack at Work</a></li>
-					<li><a href="https://status.slack.com/" data-qa="status" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_status">Status</a></li>
-				</ul>
-			</div>
-		</div>
-	</section>
-
-	<div class="footnote">
-		<section>
-			<a href="https://slack.com" aria-label="Slack homepage" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_slack_icon"><ts-icon class="ts_icon_slack_pillow" aria-hidden="true"></ts-icon></a>
-			<ul>
-				<li>
-					<a href="/help/contact" data-qa="contact_us" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_contact_us">Contact Us</a>
-				</li>
-				<li>
-					<a href="https://twitter.com/SlackHQ" data-qa="slack_twitter" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_slack_twitter" aria-label="Slack on Twitter"><ts-icon class="ts_icon_twitter" aria-hidden="true"></ts-icon></a>
-				</li>
-				<li class="yt">
-					<a href="https://www.youtube.com/channel/UCY3YECgeBcLCzIrFLP4gblw" data-qa="slack_youtube" data-clog-event="WEBSITE_CLICK" data-clog-params="click_target=footer_slack_youtube" aria-label="Slack on YouTube"><ts-icon class="ts_icon_youtube" aria-hidden="true"></ts-icon></a>
-				</li>
-			</ul>
-		</section>
-	</div>
-</footer>
-
-
-
-
-
-<script type="text/javascript">
-
-	function vvv(v) {
-
-		var vvv_warning = 'You cannot use vvv on dynamic values. Please make sure you only pass in static file paths.';
-		if (TS && TS.warn) {
-			TS.warn(vvv_warning);
-		} else {
-			console.warn(vvv_warning);
-		}
-
-		return v;
-	}
-
-	var cdn_url = "https:\/\/slack.global.ssl.fastly.net";
-	var inc_js_setup_data = {
-		emoji_sheets: {
-			apple: 'https://a.slack-edge.com/f360/img/emoji_2016_06_08/sheet_apple_64_indexed_256colors.png',
-			google: 'https://a.slack-edge.com/f360/img/emoji_2016_06_08/sheet_google_64_indexed_128colors.png',
-			twitter: 'https://a.slack-edge.com/f360/img/emoji_2016_06_08/sheet_twitter_64_indexed_128colors.png',
-			emojione: 'https://a.slack-edge.com/f360/img/emoji_2016_06_08/sheet_emojione_64_indexed_128colors.png',
-		},
-	};
-</script>
-
-								<!-- output_js "core" -->
-<script type="text/javascript" src="https://a.slack-edge.com/0fed/js/libs/jquery.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/1ce1d/js/TS.min.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/0ecb/js/TS.clog.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/3f58/js/libs/signals.js" crossorigin="anonymous"></script>
-
-		<!-- output_js "core_web" -->
-<script type="text/javascript" src="https://a.slack-edge.com/125e0/js/rollup-core_web.js" crossorigin="anonymous"></script>
-
-		<!-- output_js "secondary" -->
-
-					
-	<!-- output_js "regular" -->
-<script type="text/javascript" src="https://a.slack-edge.com/81d23/js/sticky_nav.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/78f3/js/libs/warn_capslock.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/99d9/js/libs/spin.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/9aa4/js/libs/ladda.js" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://a.slack-edge.com/c546/js/footer.js" crossorigin="anonymous"></script>
-
-		<script type="text/javascript">
-					
-				$('input[name="email"]').val() ? $('input[name="password"]').focus() : $('input[name="email"]').focus();
-			
-						
-			if (navigator.userAgent.match(/windows phone/i)) {
-				$('input[name="password"]').css('font-family', 'sans-serif,arial,verdana,tahoma');
-			}
-		
-
-		
-
-		var $signin_btn = $('#signin_btn');
-		$signin_btn.data('ladda', Ladda.create(document.querySelector('#signin_btn')));
-
-		var no_sso = false;
-		var team_id = 'T2F1R1P71';
-		var email_regex = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", 'i');
-
-		// signin form
-		$('#signin_form').on('submit', function(e) {
-
-			var email = $.trim($('#email').val());
-			var password = $.trim($('#password').val());
-
-			// no email or invalid email
-			if (!email || !email_regex.test(email)) {
-				$('#email').focus().closest('p').addClass('error');
-				e.preventDefault();
-				return;
-			}
-
-			// no password
-			if (!password) {
-				$('#password').focus().closest('p').addClass('error');
-				e.preventDefault();
-				return;
-			}
-
-			// Prevent the form from submitting twice, which causes the following SSB signin bug:
-			// https://slack-bugs.tinyspeck.com/14961
-			$signin_btn.attr('disabled', true);
-			$signin_btn.attr('aria-disabled', true);
-			$signin_btn.data('ladda').start();
-		});
-
-		// magic login signin form
-		$('#signin_form_magic').on('submit', function(e) {
-
-			e.preventDefault();
-			var email = $.trim($('#email').val());
-
-			// no email or invalid email
-			if (!email || !email_regex.test(email)) {
-				$('#email').focus().closest('p').addClass('error');
-			} else {
-				$('[name=email]').val(email);
-				$('#magic_login_options .js_insert_email').text(email);
-				$('#signin_form_magic, #signin_header').addClass('hidden');
-				$('#magic_login_options').removeClass('hidden');
-				$('#magic_login_use_password').focus();
-                        }
-
-                });
-
-		// user given magic login, but wants to enter email/password
-		$('#magic_login_use_password').on('click', function(e){
-
-			e.preventDefault();
-			$('.error').removeClass('error');
-			$('#magic_login_options').addClass('hidden');
-			$('#signin_form, #signin_header').removeClass('hidden');
-			$('#password').focus();
-
-		});
-
-		$('.code_problem').on('click', function (e) {
-			e.preventDefault();
-			$('.send_code_block').slideToggle();
-		});
-
-		$('.view_more_email_domains_button').on('click', function() {
-			var $team_email_domains = $('.team_email_domains');
-			$team_email_domains.text($team_email_domains.data('team-email-domains-formatted'));
-		});
-
-		$(document).ready(function() {
-			$forgot_pw = $('#forgot-pw');
-			if ($forgot_pw.length) {
-				/**
-				 * Grab the current email that the user has entered before going to the
-				 * 'forgot password' page so that we can prefill the email field.
-				 */
-				function grabEmail(e) {
-					var $el = $(e.target);
-					var new_url = $el.attr('href');
-					var email = $('#email').val();
-
-					/**
-					 * Simple check to make sure that the user actually typed in what looks like an email.
-					 * If what the user entered doesn't look like an email, don't prefill.
-					 */
-					if (email.length > 0 && email.indexOf('@') != -1) {
-						new_url += '?email=' + encodeURIComponent(email);
-					}
-
-					$el.attr('href', new_url);
-				}
-				$forgot_pw.on('click', grabEmail);
-			}
-		});
-
-		
-	</script>
-
-	
-<style>.color_9f69e7:not(.nuc) {color:#9F69E7;}.color_4bbe2e:not(.nuc) {color:#4BBE2E;}.color_e7392d:not(.nuc) {color:#E7392D;}.color_3c989f:not(.nuc) {color:#3C989F;}.color_674b1b:not(.nuc) {color:#674B1B;}.color_e96699:not(.nuc) {color:#E96699;}.color_e0a729:not(.nuc) {color:#E0A729;}.color_684b6c:not(.nuc) {color:#684B6C;}.color_5b89d5:not(.nuc) {color:#5B89D5;}.color_2b6836:not(.nuc) {color:#2B6836;}.color_99a949:not(.nuc) {color:#99A949;}.color_df3dc0:not(.nuc) {color:#DF3DC0;}.color_4cc091:not(.nuc) {color:#4CC091;}.color_9b3b45:not(.nuc) {color:#9B3B45;}.color_d58247:not(.nuc) {color:#D58247;}.color_bb86b7:not(.nuc) {color:#BB86B7;}.color_5a4592:not(.nuc) {color:#5A4592;}.color_db3150:not(.nuc) {color:#DB3150;}.color_235e5b:not(.nuc) {color:#235E5B;}.color_9e3997:not(.nuc) {color:#9E3997;}.color_53b759:not(.nuc) {color:#53B759;}.color_c386df:not(.nuc) {color:#C386DF;}.color_385a86:not(.nuc) {color:#385A86;}.color_a63024:not(.nuc) {color:#A63024;}.color_5870dd:not(.nuc) {color:#5870DD;}.color_ea2977:not(.nuc) {color:#EA2977;}.color_50a0cf:not(.nuc) {color:#50A0CF;}.color_d55aef:not(.nuc) {color:#D55AEF;}.color_d1707d:not(.nuc) {color:#D1707D;}.color_43761b:not(.nuc) {color:#43761B;}.color_e06b56:not(.nuc) {color:#E06B56;}.color_8f4a2b:not(.nuc) {color:#8F4A2B;}.color_902d59:not(.nuc) {color:#902D59;}.color_de5f24:not(.nuc) {color:#DE5F24;}.color_a2a5dc:not(.nuc) {color:#A2A5DC;}.color_827327:not(.nuc) {color:#827327;}.color_3c8c69:not(.nuc) {color:#3C8C69;}.color_8d4b84:not(.nuc) {color:#8D4B84;}.color_84b22f:not(.nuc) {color:#84B22F;}.color_4ec0d6:not(.nuc) {color:#4EC0D6;}.color_e23f99:not(.nuc) {color:#E23F99;}.color_e475df:not(.nuc) {color:#E475DF;}.color_619a4f:not(.nuc) {color:#619A4F;}.color_a72f79:not(.nuc) {color:#A72F79;}.color_7d414c:not(.nuc) {color:#7D414C;}.color_aba727:not(.nuc) {color:#ABA727;}.color_965d1b:not(.nuc) {color:#965D1B;}.color_4d5e26:not(.nuc) {color:#4D5E26;}.color_dd8527:not(.nuc) {color:#DD8527;}.color_bd9336:not(.nuc) {color:#BD9336;}.color_e85d72:not(.nuc) {color:#E85D72;}.color_dc7dbb:not(.nuc) {color:#DC7DBB;}.color_bc3663:not(.nuc) {color:#BC3663;}.color_9d8eee:not(.nuc) {color:#9D8EEE;}.color_8469bc:not(.nuc) {color:#8469BC;}.color_73769d:not(.nuc) {color:#73769D;}.color_b14cbc:not(.nuc) {color:#B14CBC;}</style>
-
-<!-- slack-www-hhvm170 / 2016-09-27 05:38:56 / v2c5a6a8cf4b1dbb7910bf745425897fa1990808e / B:H -->
-
-</body>
-</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI verified="false" xmi.version="1.2" timestamp="2016-10-19T21:06:39" xmlns:UML="http://schema.omg.org/spec/UML/1.3">
+ <XMI.header>
+  <XMI.documentation>
+   <XMI.exporter>umbrello uml modeller http://umbrello.kde.org</XMI.exporter>
+   <XMI.exporterVersion>1.6.9</XMI.exporterVersion>
+   <XMI.exporterEncoding>UnicodeUTF8</XMI.exporterEncoding>
+  </XMI.documentation>
+  <XMI.metamodel xmi.version="1.3" href="UML.xml" xmi.name="UML"/>
+ </XMI.header>
+ <XMI.content>
+  <UML:Model isSpecification="false" isAbstract="false" isLeaf="false" xmi.id="m1" isRoot="false" name="UML Model">
+   <UML:Namespace.ownedElement>
+    <UML:Stereotype visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="folder" name="folder"/>
+    <UML:Stereotype visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="datatype" name="datatype"/>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Logical View" name="Logical View">
+     <UML:Namespace.ownedElement>
+      <UML:Package stereotype="folder" visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Datatypes" name="Datatypes">
+       <UML:Namespace.ownedElement>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="8WeVo2x1WuU6" name="int"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="RvOlQuUve8pJ" name="char"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="9lTlCfVursQd" name="bool"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="B6rhSTWBl7Yh" name="float"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="fVYrhmUo3Htp" name="double"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="pw1LJvANkvy0" name="short"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="LT2IHH2J0lSc" name="long"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="sfgFpuxHEpBu" name="unsigned int"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="apmCACCZdT6s" name="unsigned short"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="t4Wk8Xtg6UVf" name="unsigned long"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="N1EkNxyjlL80" name="string"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="FVy4jTHsoJbr" name="encrypt_string"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="G9Ft9V9ZYuZT" name="clear_string"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" elementReference="RVIGWFFPNQrp" isRoot="false" xmi.id="hY2uqXuEXLHW" name="vector&lt;Cipher>"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" elementReference="RVIGWFFPNQrp" isRoot="false" xmi.id="JV5h8UHqM8rE" name="vector&lt;string>"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" elementReference="N1EkNxyjlL80" isRoot="false" xmi.id="T6mQTsFmWKwO" name="string[2]"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" elementReference="RvOlQuUve8pJ" isRoot="false" xmi.id="YJY3ar8Aaz7f" name="char[][]"/>
+       </UML:Namespace.ownedElement>
+      </UML:Package>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="oeubnkBnBSr6" name="Cipher">
+       <UML:GeneralizableElement.generalization>
+        <UML:Generalization xmi.idref="CVBowvfwyqE7"/>
+        <UML:Generalization xmi.idref="6AMjwpxIx5Qe"/>
+        <UML:Generalization xmi.idref="cnNqNjXQ1RdZ"/>
+        <UML:Generalization xmi.idref="NOpqRzsXCPGX"/>
+        <UML:Generalization xmi.idref="Hq42GquxkowQ"/>
+        <UML:Generalization xmi.idref="hrecnjIFGHX3"/>
+        <UML:Generalization xmi.idref="GPGHLsoofUUd"/>
+       </UML:GeneralizableElement.generalization>
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="Ea4MukscQc6a" type="N1EkNxyjlL80" name="name"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="amUKIeJmJotZ" type="B6rhSTWBl7Yh" initialValue="1.0" name="version"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="mrMPXcbSxVHD" name="Cipher"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="MYw5daHnSMWQ" name="Cipher">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="Pxh2AcOUrOdX" type="oeubnkBnBSr6" value="" name="other"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="y0etXiQMCWZ6" name="Clone">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="F2gCrxas91YS" type="oeubnkBnBSr6"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="3N8NHsbWKObg" name="init">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="iNS45OFAXvCq" type="CxCR74Cnw1kk" value="" name="args"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="eg11R4JAIm28" name="getName">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="2Ax86s7UmP4s" type="N1EkNxyjlL80"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Srax1a1r8576" name="getArgsString">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="9NOtVT9OuTQB" type="N1EkNxyjlL80"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="74ri849ytAlI" name="toString">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="UYYaxVj7Xc7p" type="N1EkNxyjlL80"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="pcBzhhX00oHV" name="encrypt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="y34UHAOe7QtF" type="FVy4jTHsoJbr"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="s1aQ9VgpLQLd" type="G9Ft9V9ZYuZT" value="" name="input"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="6f0Ew5M2udA0" name="decrypt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="H40Mu5F5EZep" type="G9Ft9V9ZYuZT"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="IQhZeEYv3eKw" type="FVy4jTHsoJbr" value="" name="input"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="RavfPl0qKVfi" name="DummyCipher"/>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="CVBowvfwyqE7" parent="RavfPl0qKVfi" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="VJXUm3hDuTOI" name="RotNCipher">
+       <UML:GeneralizableElement.generalization>
+        <UML:Generalization xmi.idref="r63FvkdGip4s"/>
+       </UML:GeneralizableElement.generalization>
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="i5YvSm49NRS9" type="8WeVo2x1WuU6" name="RotN"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="6AMjwpxIx5Qe" parent="VJXUm3hDuTOI" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="1Xmxl7fVQO5w" name="Rot13Cipher"/>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="VJXUm3hDuTOI" xmi.id="r63FvkdGip4s" parent="1Xmxl7fVQO5w" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="TcwnKqO8O3Bo" comment="key is a stored string that is the placewise association with the alphabet.&#xa;&#xa;Example:  The fragment &quot;qwerty&quot; associates q with a, w with b, and e with c.&#xa;&#xa;Might expland later to handle Unicode, and/or more specialized substitution ciphering, such as ASCII code association." name="SubstitutionCipher">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="ah4u2bwmHD2M" type="N1EkNxyjlL80" initialValue="abcd...wxyz" name="key"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="cnNqNjXQ1RdZ" parent="TcwnKqO8O3Bo" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="pqpfCQl3dZCt" name="CipherSequence">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="1vy2GldSaqaH" type="hY2uqXuEXLHW" name="sequence"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="TTUX1oQ5lOSD" type="N1EkNxyjlL80" name="name"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="1zw2opMgHXfv" type="N1EkNxyjlL80" name="author"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="NtQpYbIZv2qh" type="fVYrhmUo3Htp" name="version"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="NZ2ITLjN6FGd" name="CipherSequence"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="CYrjqtaOC9Wx" name="CipherSequence">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="8BKnsHLFV1uX" type="pqpfCQl3dZCt" value="" name="other"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="DFoT2hI5qfRl" name="encrypt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="6rTamVjRO8Zv" type="FVy4jTHsoJbr"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="C0cyu3EzCkni" type="G9Ft9V9ZYuZT" value="" name="input"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="pfbRlidVzVlM" name="decrypt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="Dqg8Xj0Nk24c" type="G9Ft9V9ZYuZT"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="6zBvOeoOmjNS" type="FVy4jTHsoJbr" value="" name="input"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="G9mzCmHcXdtv" name="loadFromFile">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="dHZsKXhWimqs" type="N1EkNxyjlL80" value="" name="filename"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="gpIwwRZhhGwN" name="saveToFile">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="2GS3VfJkyeuv" type="N1EkNxyjlL80" value="" name="filename"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="jGFdfcoq0nLn" name="getAt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="2pKcAzH7Z9LU" type="oeubnkBnBSr6"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="w4NzUHr5SmDP" type="8WeVo2x1WuU6" value="" name="i"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="QHcNrBY9haPU" name="removeAt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="9911YMQJRonK" type="8WeVo2x1WuU6" value="" name="i"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="n4fbCVtSNQGo" name="setAt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="komDGQz02NHE" type="oeubnkBnBSr6" value="" name="ciph"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="BYJ2UJ78pznc" type="8WeVo2x1WuU6" value="" name="i"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="WQtxMBTHYUI5" name="insertAt">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="lmG40QmmD427" type="oeubnkBnBSr6" value="" name="ciph"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="KCSo7nFYi3rJ" type="8WeVo2x1WuU6" value="" name="i"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hzGHYbHAsE6R" name="add">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="qwSGFDPZWbQG" type="oeubnkBnBSr6" value="" name="ciph"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="cqlGrndjNAwz" name="size">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="oeAKQ2cm3RnM" type="8WeVo2x1WuU6"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="RVIGWFFPNQrp" name="vector"/>
+      <UML:Dependency visibility="public" isSpecification="false" namespace="Logical View" supplier="oeubnkBnBSr6" xmi.id="jax7j5gXWpay" client="pqpfCQl3dZCt" name=""/>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="f8uduZoHzwSK" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="tuKlPiRhZaDL" type="oeubnkBnBSr6" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="aX1uCGFsYIjw" type="pqpfCQl3dZCt" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="wZJt5MQISjE1" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="2vl3JyZ5luGh" type="pqpfCQl3dZCt" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="tt9jMSYuWdIQ" type="oeubnkBnBSr6" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="XVBPwIKqZ9iG" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="HwmwrBlODQ9K" type="oeubnkBnBSr6" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="fx0gfwH3rsKz" type="pqpfCQl3dZCt" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="CmaAj7l3XKyz" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="gjTfXmWyHo3w" type="pqpfCQl3dZCt" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="QMwcvKcgsfVx" type="oeubnkBnBSr6" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="EZpD3yIY33lm" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="YLyd2zjcjLMv" type="pqpfCQl3dZCt" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="N9ljVJLGU92L" type="oeubnkBnBSr6" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="ex5XnaoEsxU3" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="t4vYcOGL4h0k" type="oeubnkBnBSr6" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="Mxl22obWh0yi" type="pqpfCQl3dZCt" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="rHLOBBweRQ9x" name="-sequence">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="iD2VFkJb7ugN" type="pqpfCQl3dZCt" name="" aggregation="composite"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="3cUf0r02JpHu" type="oeubnkBnBSr6" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hZw06fIfXqWg" comment="Manages saved cipher sequences from a library (directory on disk).  Allows saving, deleting, and loading them in .cyph script format.&#xa;&#xa;Associated with CipherSequence.&#xa;&#xa;Filenames will be stored internally, and accessed via name within methods, where name is filename minus extension." name="CipherSequenceLibrary">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="hHLwQHNMNSRm" type="JV5h8UHqM8rE" name="sequenceFilenames"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="DoXYpoyMGa11" type="N1EkNxyjlL80" name="directoryPath"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ria9kKfyRVzk" name="CipherSequenceLibrary">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="CzLPrrTP2I0x" type="N1EkNxyjlL80" value="" name="directory"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="gGJAx3PngF2S" name="CipherSequenceLibrary">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="idawWo6qDExq" type="hZw06fIfXqWg" value="" name="other"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="vQlE3DYCSQhz" name="installCipherSequence">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="nGJsAWx27VzS" type="N1EkNxyjlL80" value="" name="filepath"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="WPTci8K5Bcvb" name="removeCipherSequence">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="kGXAwv6Tdx71" type="pqpfCQl3dZCt" value="" name="name"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ltANEXocsJB3" name="loadCipherSequence">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="kJNlrn5NhFVd" type="pqpfCQl3dZCt"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="4g6rYfx0vFZq" type="N1EkNxyjlL80" value="" name="name"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="72WM8yWoW6s9" comment="Retrieves the path to the cypth file storing this given (named) cipher sequence from the library&#xa;&#xa;Used for a copying procedure that duplicates the file into the current directory" name="retrieveCipherSequence">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="LA4qxhuUbB3Y" type="N1EkNxyjlL80"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="rV6IdeH5kIJ4" type="N1EkNxyjlL80" value="" name="name"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Package visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="r3vivNwiQi5T" name="Core">
+       <UML:Namespace.ownedElement/>
+      </UML:Package>
+      <UML:Package visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="E8qkzlxljBAa" name="core">
+       <UML:Namespace.ownedElement/>
+      </UML:Package>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="xTebmcsBZljW" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="jqJuxa2Fxo71" type="pqpfCQl3dZCt" name="" aggregation="none"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="j5N9gCwey2dz" type="hZw06fIfXqWg" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ZpwYpkW58RL5" name="NestedSequenceCipher">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="piw9CLRVEEHa" type="pqpfCQl3dZCt" name="nestedSequence"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="NOpqRzsXCPGX" parent="ZpwYpkW58RL5" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Pn4nqZVAHnSO" comment="Boilerplate for transforming a name for a cipher class into an instance of that class (returned as Cipher reference or pointer)&#xa;&#xa;Also should process cipher options&#xa;Also functions as list of all valid Cipher classes" name="CoreCipherClassLibrary">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="tI078bEazSOV" type="JV5h8UHqM8rE" name="classNames"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="mVcP4tkPYZCW" name="instantiateFromString">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="56C5QpBFdgMW" type="oeubnkBnBSr6"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="lWMrFKDvx41Z" type="N1EkNxyjlL80" value="" name="cipherName"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="7t5TEFe1qhcA" type="CxCR74Cnw1kk" value="" name="args"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="zWlOFMo0zChV" name="isValidCipher">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="z186P3xObPW1" type="9lTlCfVursQd"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="zNT4XLtZtHqd" type="N1EkNxyjlL80" value="" name="cipherName"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="s68f6qUowUYA" name="instantiateFromString">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter kind="return" xmi.id="cHqWTWIDmgaP" type="oeubnkBnBSr6"/>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="DHIK9uLuoE4Y" type="N1EkNxyjlL80" value="" name="cipherName"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Dependency visibility="public" isSpecification="false" namespace="Logical View" supplier="Pn4nqZVAHnSO" xmi.id="QajzzriUdGT9" client="pqpfCQl3dZCt" name=""/>
+      <UML:Dependency visibility="public" isSpecification="false" namespace="Logical View" supplier="Pn4nqZVAHnSO" xmi.id="gUKUeJs9FXkf" client="pqpfCQl3dZCt" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ySy6zTrmMyMi" name="OptionsParser">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="hAqY1qgYqZCR" type="N1EkNxyjlL80" name="libraryDirectory"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Fs3IFghySvAF" name="init">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="xL37jEgU7ksM" type="JV5h8UHqM8rE" value="" name="options"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="DXrL3rND1t07" name="setInputStream">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="oWZz1gfwJxKW" type="N1EkNxyjlL80" value="" name="filename"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="MQa8gg22IJ1W" name="setOutputStream">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="djAyM2mnLj8c" type="N1EkNxyjlL80" value="" name="filename"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="rv0y5TaoWCMt" name="setLibraryDirectory">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="6D6mnG9ucQ9p" type="N1EkNxyjlL80" value="" name="path"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="D6VqTQLgnPNu" name="Main">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="zFWtJ0fgJQ0B" type="pqpfCQl3dZCt" name="MainCipherSequence"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="ATZ8adF3zXHl" type="hZw06fIfXqWg" name="MainSequenceLibrary"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="CmBwd5gNWooD" type="9lTlCfVursQd" comment="T = Encrypt&#xa;F = Decrypt" name="Encrypt"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="TcQGqcIptdaB" name="parseCommandLine"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="AcxkQk9dMruQ" name="runCipherSequence"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="htM30uI8fSLM" name="cleanup"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ifhUnmOQxR4w" name="Admin">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="zZQLuAMC4xSX" type="hZw06fIfXqWg" name="AdminSequenceLibrary"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="1Z41SBacB5LX" name="parseCommandLine"/>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="x8dNnTRJK8b0" name="installCyphFile">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="swjCjXCWDiJa" type="N1EkNxyjlL80" value="" name="cyph_file"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="JhpTT7nxGwGg" name="getCyphFile">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="ZG0MjGf0hOGT" type="N1EkNxyjlL80" value="" name="cyph_name"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+        <UML:Operation visibility="public" isSpecification="false" isQuery="false" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="pejj20uZRDaE" name="removeCyphFile">
+         <UML:BehavioralFeature.parameter>
+          <UML:Parameter visibility="private" isSpecification="false" xmi.id="2k14rDooca0H" type="N1EkNxyjlL80" value="" name="cyph_name"/>
+         </UML:BehavioralFeature.parameter>
+        </UML:Operation>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="CxCR74Cnw1kk" name="string[]"/>
+      <UML:Association visibility="public" isSpecification="false" namespace="Logical View" xmi.id="ySJeBTrvAo2V" name="">
+       <UML:Association.connection>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="false" isSpecification="false" xmi.id="9xBgZuYlxyve" type="oeubnkBnBSr6" name="" aggregation="none"/>
+        <UML:AssociationEnd changeability="changeable" visibility="public" isNavigable="true" isSpecification="false" xmi.id="CBpX2uE543dP" type="1Xmxl7fVQO5w" name="" aggregation="none"/>
+       </UML:Association.connection>
+      </UML:Association>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="Hq42GquxkowQ" parent="1Xmxl7fVQO5w" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ILLV40WFg3ro" name="BookCipher">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="DKduwJL9xCND" type="N1EkNxyjlL80" name="filepath"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="9XHsEx3tH1Pu" type="8WeVo2x1WuU6" initialValue="80" name="numCollumns"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="ZltidzGpK8po" type="8WeVo2x1WuU6" initialValue="100" name="numRows"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="hrecnjIFGHX3" parent="ILLV40WFg3ro" name=""/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="cWelF98kOkDJ" name="FourSquareCipher">
+       <UML:Classifier.feature>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="jadP6JJ1ZkQU" type="T6mQTsFmWKwO" name="keys"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="oC5hTSTyytFi" type="YJY3ar8Aaz7f" name="gridOneOne"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="gf8AdpCjGe3S" type="YJY3ar8Aaz7f" name="gridOneTwo"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="ufky2EwQ4DYW" type="YJY3ar8Aaz7f" name="gridTwoOne"/>
+        <UML:Attribute visibility="private" isSpecification="false" xmi.id="EtNHsZKH7Bmi" type="YJY3ar8Aaz7f" name="gridTwoTwo"/>
+       </UML:Classifier.feature>
+      </UML:Class>
+      <UML:Generalization discriminator="" visibility="public" isSpecification="false" namespace="Logical View" child="oeubnkBnBSr6" xmi.id="GPGHLsoofUUd" parent="cWelF98kOkDJ" name=""/>
+     </UML:Namespace.ownedElement>
+     <XMI.extension xmi.extender="umbrello">
+      <diagrams>
+       <diagram showopsig="1" linecolor="#ff0000" snapx="25" showattribassocs="1" snapy="25" linewidth="0" showattsig="1" textcolor="#000000" isopen="1" showpackage="1" showpubliconly="0" showstereotype="1" name="class diagram" font="Sans Serif,9,-1,0,50,0,0,0,0,0" canvasheight="920.3846435546875" canvaswidth="1445.240287010823" localid="-1" snapcsgrid="0" showgrid="0" showops="1" griddotcolor="#d3d3d3" backgroundcolor="#ffffff" usefillcolor="1" fillcolor="#ffff00" zoom="109" xmi.id="hjX6MhUlglCp" documentation="" showscope="1" snapgrid="0" showatts="1" type="1">
+        <widgets>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1352.552213616327" showattsigs="601" showstereotype="1" y="-752.6513761467889" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" drawascircle="0" localid="coz1kQSUFr9z" width="299" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="oeubnkBnBSr6" showscope="1" height="168" showopsigs="601"/>
+         <datatypewidget width="135" showstereotype="1" x="-1372.038452148438" usesdiagramusefillcolor="0" y="-848" usesdiagramfillcolor="0" isinstance="0" localid="Xjn7JBPUtqK0" fillcolor="#ffff00" height="30" linecolor="none" xmi.id="FVy4jTHsoJbr" textcolor="#000000" usefillcolor="1" linewidth="0" font="Sans Serif,9,-1,0,50,0,0,0,0,0"/>
+         <datatypewidget width="136" showstereotype="1" x="-1372.038452148438" usesdiagramusefillcolor="0" y="-808" usesdiagramfillcolor="0" isinstance="0" localid="UT9WTTsbYoFa" fillcolor="#ffff00" height="30" linecolor="none" xmi.id="G9Ft9V9ZYuZT" textcolor="#000000" usefillcolor="1" linewidth="0" font="Sans Serif,9,-1,0,50,0,0,0,0,0"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1405.377901689722" showattsigs="601" showstereotype="1" y="-566.9633027522935" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="zlihLtHkS6mD" width="107" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="RavfPl0qKVfi" showscope="1" height="28" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1251.864140221832" showattsigs="601" showstereotype="1" y="-565.9633027522937" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="PapvleFwMgpP" width="90" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="VJXUm3hDuTOI" showscope="1" height="35" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1146.020103524584" showattsigs="601" showstereotype="1" y="-534.6697247706422" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="VIfBpukh1uaK" width="96" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="1Xmxl7fVQO5w" showscope="1" height="28" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1034.038452148438" showattsigs="601" showstereotype="1" y="-459" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="uDwPuMpvKWwL" width="174" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="TcwnKqO8O3Bo" showscope="1" height="37" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-723.0346035738604" showattsigs="601" showstereotype="1" y="-643.3235943995484" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="MO4TSYiglCbo" width="299" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="pqpfCQl3dZCt" showscope="1" height="238" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-735.199341380268" showattsigs="601" showstereotype="1" y="-852.9703833903742" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="offFdPR7LxSA" width="368" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="hZw06fIfXqWg" showscope="1" height="126" showopsigs="601"/>
+         <floatingtext linecolor="none" usesdiagramfillcolor="0" linewidth="0" textcolor="#000000" usesdiagramusefillcolor="0" x="-1363.615356445312" showstereotype="1" y="-868.3461303710938" text="Aliases of string" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="mnNTHQBIqAVJ" pretext="" role="700" width="109" isinstance="0" posttext="" usefillcolor="1" fillcolor="#ffff00" xmi.id="USbhYQRW0Vig" height="19"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1033.13936957963" showattsigs="601" showstereotype="1" y="-551.6146788990826" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="pEhJ55GGwV4N" width="240" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="ZpwYpkW58RL5" showscope="1" height="35" showopsigs="601"/>
+         <boxwidget width="1000" showstereotype="1" x="-1402.884643554688" usesdiagramusefillcolor="0" y="-891.3461303710938" usesdiagramfillcolor="0" isinstance="0" localid="QNdSUBjzl8cx" fillcolor="#ffff00" height="502.9887014966492" linecolor="#000000" xmi.id="B2LwEzNxyrlw" textcolor="#000000" usefillcolor="1" linewidth="0" font="Sans Serif,9,-1,0,50,0,0,0,0,0"/>
+         <floatingtext linecolor="none" usesdiagramfillcolor="0" linewidth="0" textcolor="#000000" usesdiagramusefillcolor="0" x="-1403.84619140625" showstereotype="1" y="-915.3846435546875" text="Core" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="y53KT761kIIP" pretext="" role="700" width="38" isinstance="0" posttext="" usefillcolor="1" fillcolor="#ffff00" xmi.id="7NNEhRDjGoFt" height="19"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1219.910011781465" showattsigs="601" showstereotype="1" y="-883.4332863343965" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="GOgAgDsR2Jhq" width="438" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="Pn4nqZVAHnSO" showscope="1" height="70" showopsigs="601"/>
+         <boxwidget width="1000" showstereotype="1" x="-1400.961547851562" usesdiagramusefillcolor="0" y="-355.7692260742188" usesdiagramfillcolor="0" isinstance="0" localid="HGNHNuCxRtm2" fillcolor="#ffff00" height="236.7307739257812" linecolor="#000000" xmi.id="q3cUvDLTZ7AZ" textcolor="#000000" usefillcolor="1" linewidth="0" font="Sans Serif,9,-1,0,50,0,0,0,0,0"/>
+         <floatingtext linecolor="none" usesdiagramfillcolor="0" linewidth="0" textcolor="#000000" usesdiagramusefillcolor="0" x="-1399.038452148438" showstereotype="1" y="-379.8076782226562" text="CLI Implementation" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="bmlp7yqwhnpv" pretext="" role="700" width="132" isinstance="0" posttext="" usefillcolor="1" fillcolor="#ffff00" xmi.id="5w41TluHGO5I" height="19"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1352.884643554688" showattsigs="601" showstereotype="1" y="-328.8461608886719" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="dZdwOvGww9aY" width="308" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="D6VqTQLgnPNu" showscope="1" height="105" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-980.7692260742188" showattsigs="601" showstereotype="1" y="-321.1538391113281" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="LuYRCK1EjDAr" width="317" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="ifhUnmOQxR4w" showscope="1" height="90" showopsigs="601"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1403.669724770642" showattsigs="601" showstereotype="1" y="-517.4311926605504" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="PHzJra91Mtmb" width="163" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="ILLV40WFg3ro" showscope="1" height="63" showopsigs="601"/>
+         <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" textcolor="none" usesdiagramusefillcolor="1" x="-821.7692260742188" showstereotype="1" y="-724.9703979492188" text="AdminSequenceLibrary" font="Sans,10,-1,5,50,0,0,0,0,0" localid="WZtNUQwgYR13" pretext="-" role="710" width="161" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="J293cwHOq06Y" height="19"/>
+         <classwidget linecolor="none" usesdiagramfillcolor="0" linewidth="0" showoperations="1" textcolor="#000000" usesdiagramusefillcolor="0" showpubliconly="0" showpackage="1" x="-1223.853211009174" showattsigs="601" showstereotype="1" y="-490.8256880733945" showattributes="1" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="6QKQTdKeqOPS" width="152" isinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="cWelF98kOkDJ" showscope="1" height="91" showopsigs="601"/>
+        </widgets>
+        <messages/>
+        <associations>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="CVBowvfwyqE7" widgetbid="RavfPl0qKVfi" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1333.240287010823" starty="-584.6513761467889"/>
+           <endpoint endx="-1333.240287010823" endy="-566.9633027522935"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="6AMjwpxIx5Qe" widgetbid="VJXUm3hDuTOI" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1208.65313104752" starty="-584.6513761467889"/>
+           <endpoint endx="-1208.65313104752" endy="-565.9633027522937"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="cnNqNjXQ1RdZ" widgetbid="TcwnKqO8O3Bo" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1053.552213616327" starty="-584.6513761467889"/>
+           <endpoint endx="-1034.038452148438" endy="-459"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="pqpfCQl3dZCt" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="#ff0000" seqnum="" totalcounta="2" xmi.id="rHLOBBweRQ9x" widgetbid="oeubnkBnBSr6" totalcountb="2" type="510" textcolor="#000000" usefillcolor="1" linewidth="0" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-723.0346035738604" starty="-620.9449541284404"/>
+           <endpoint endx="-1053.552213616327" endy="-620.9449541284404"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" textcolor="none" usesdiagramusefillcolor="1" x="-920.5" showstereotype="1" y="-616.8846435546875" text="-sequence" font="Sans Serif,9,-1,0,50,0,0,0,0,0" localid="OIs5d7JSHShR" pretext="" role="703" width="75" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="HRXkeN313ft2" height="19"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="pqpfCQl3dZCt" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="xTebmcsBZljW" widgetbid="hZw06fIfXqWg" totalcountb="2" type="503" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-612.9615478515625" starty="-643.3235943995484"/>
+           <endpoint endx="-612.9615478515625" endy="-726.9703833903742"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="NOpqRzsXCPGX" widgetbid="ZpwYpkW58RL5" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1053.552213616327" starty="-584.6513761467889"/>
+           <endpoint endx="-1033.13936957963" endy="-551.6146788990826"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget linecolor="none" indexa="1" usesdiagramfillcolor="0" widgetbid="pqpfCQl3dZCt" indexb="1" linewidth="none" seqnum="" textcolor="none" usesdiagramusefillcolor="0" totalcounta="2" totalcountb="2" widgetaid="ZpwYpkW58RL5" font="Sans Serif,9,-1,0,50,0,0,0,0,0" visibilityA="1" visibilityB="1" usefillcolor="1" fillcolor="#ffff00" changeabilityA="900" xmi.id="piw9CLRVEEHa" changeabilityB="900" type="510">
+          <linepath layout="Polyline">
+           <startpoint startx="-793.1393695796301" starty="-519.3669724770642"/>
+           <endpoint endx="-723.0346035738604" endy="-519.3669724770642"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" textcolor="none" usesdiagramusefillcolor="1" x="-938.895657460624" showstereotype="1" y="-575.8669724770642" text="nestedSequence" font="Sans,10,-1,5,50,0,0,0,0,0" localid="S47GORpD5pfD" pretext="-" role="710" width="121" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="owdgQdT7Kymq" height="19"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="pqpfCQl3dZCt" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="gUKUeJs9FXkf" widgetbid="Pn4nqZVAHnSO" totalcountb="2" type="502" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-723.0346035738604" starty="-643.3235943995484"/>
+           <endpoint endx="-781.9100117814651" endy="-813.4332863343965"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="Hq42GquxkowQ" widgetbid="1Xmxl7fVQO5w" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1126.460470497061" starty="-584.6513761467889"/>
+           <endpoint endx="-1126.460470497061" endy="-534.6697247706422"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="255" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="127" fillcolor="none" linecolor="none" seqnum="" totalcounta="2" xmi.id="hrecnjIFGHX3" widgetbid="ILLV40WFg3ro" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1271.559633027523" starty="-584.6513761467889"/>
+           <endpoint endx="-1271.559633027523" endy="-517.4311926605504"/>
+          </linepath>
+         </assocwidget>
+         <assocwidget linecolor="none" indexa="1" usesdiagramfillcolor="0" widgetbid="hZw06fIfXqWg" indexb="1" linewidth="none" seqnum="" textcolor="none" usesdiagramusefillcolor="0" totalcounta="2" totalcountb="2" widgetaid="ifhUnmOQxR4w" font="Sans Serif,9,-1,0,50,0,0,0,0,0" visibilityA="1" visibilityB="1" usefillcolor="1" fillcolor="#ffff00" changeabilityA="900" xmi.id="zZQLuAMC4xSX" changeabilityB="900" type="510">
+          <linepath layout="Polyline">
+           <startpoint startx="-663.7692260742188" starty="-321.1538391113281"/>
+           <endpoint endx="-663.7692260742188" endy="-726.9703833903742"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" textcolor="none" usesdiagramusefillcolor="1" x="-821.7692260742188" showstereotype="1" y="-724.9703833903742" text="AdminSequenceLibrary" font="Sans,10,-1,5,50,0,0,0,0,0" localid="WFQQquL63063" pretext="-" role="710" width="161" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="F9Cof6lv2rM4" height="19"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" usesdiagramusefillcolor="0" widgetaid="oeubnkBnBSr6" usesdiagramfillcolor="0" fillcolor="#ffff00" linecolor="none" seqnum="" totalcounta="2" xmi.id="GPGHLsoofUUd" widgetbid="cWelF98kOkDJ" totalcountb="2" type="500" textcolor="none" usefillcolor="1" linewidth="none" font="Sans Serif,9,-1,0,50,0,0,0,0,0">
+          <linepath layout="Polyline">
+           <startpoint startx="-1154.422018348624" starty="-584.6513761467889"/>
+           <endpoint endx="-1154.422018348624" endy="-490.8256880733945"/>
+          </linepath>
+         </assocwidget>
+        </associations>
+       </diagram>
+      </diagrams>
+     </XMI.extension>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Use Case View" name="Use Case View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Component View" name="Component View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Deployment View" name="Deployment View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Entity Relationship Model" name="Entity Relationship Model">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+   </UML:Namespace.ownedElement>
+  </UML:Model>
+ </XMI.content>
+ <XMI.extensions xmi.extender="umbrello">
+  <docsettings viewid="hjX6MhUlglCp" uniqueid="nAe0VRQcVxMF" documentation=""/>
+  <listview>
+   <listitem open="1" type="800" id="Views">
+    <listitem open="1" type="821" id="Component View"/>
+    <listitem open="1" type="827" id="Deployment View"/>
+    <listitem open="1" type="836" id="Entity Relationship Model"/>
+    <listitem open="1" type="801" id="Logical View">
+     <listitem open="1" type="813" id="ifhUnmOQxR4w">
+      <listitem open="0" type="814" id="zZQLuAMC4xSX"/>
+      <listitem open="0" type="815" id="JhpTT7nxGwGg"/>
+      <listitem open="0" type="815" id="x8dNnTRJK8b0"/>
+      <listitem open="0" type="815" id="1Z41SBacB5LX"/>
+      <listitem open="0" type="815" id="pejj20uZRDaE"/>
+     </listitem>
+     <listitem open="1" type="813" id="ILLV40WFg3ro">
+      <listitem open="0" type="814" id="DKduwJL9xCND"/>
+      <listitem open="0" type="814" id="9XHsEx3tH1Pu"/>
+      <listitem open="0" type="814" id="ZltidzGpK8po"/>
+     </listitem>
+     <listitem open="1" type="813" id="oeubnkBnBSr6">
+      <listitem open="0" type="815" id="mrMPXcbSxVHD"/>
+      <listitem open="0" type="815" id="MYw5daHnSMWQ"/>
+      <listitem open="0" type="815" id="y0etXiQMCWZ6"/>
+      <listitem open="0" type="815" id="6f0Ew5M2udA0"/>
+      <listitem open="0" type="815" id="pcBzhhX00oHV"/>
+      <listitem open="0" type="815" id="Srax1a1r8576"/>
+      <listitem open="0" type="815" id="eg11R4JAIm28"/>
+      <listitem open="0" type="815" id="3N8NHsbWKObg"/>
+      <listitem open="0" type="814" id="Ea4MukscQc6a"/>
+      <listitem open="0" type="815" id="74ri849ytAlI"/>
+      <listitem open="0" type="814" id="amUKIeJmJotZ"/>
+     </listitem>
+     <listitem open="1" type="813" id="pqpfCQl3dZCt">
+      <listitem open="0" type="815" id="hzGHYbHAsE6R"/>
+      <listitem open="0" type="814" id="1zw2opMgHXfv"/>
+      <listitem open="0" type="815" id="NZ2ITLjN6FGd"/>
+      <listitem open="0" type="815" id="CYrjqtaOC9Wx"/>
+      <listitem open="0" type="815" id="pfbRlidVzVlM"/>
+      <listitem open="0" type="815" id="DFoT2hI5qfRl"/>
+      <listitem open="0" type="815" id="jGFdfcoq0nLn"/>
+      <listitem open="0" type="815" id="WQtxMBTHYUI5"/>
+      <listitem open="0" type="815" id="G9mzCmHcXdtv"/>
+      <listitem open="0" type="814" id="TTUX1oQ5lOSD"/>
+      <listitem open="0" type="815" id="QHcNrBY9haPU"/>
+      <listitem open="0" type="815" id="gpIwwRZhhGwN"/>
+      <listitem open="0" type="814" id="1vy2GldSaqaH"/>
+      <listitem open="0" type="815" id="n4fbCVtSNQGo"/>
+      <listitem open="0" type="815" id="cqlGrndjNAwz"/>
+      <listitem open="0" type="814" id="NtQpYbIZv2qh"/>
+     </listitem>
+     <listitem open="1" type="813" id="hZw06fIfXqWg">
+      <listitem open="0" type="815" id="ria9kKfyRVzk"/>
+      <listitem open="0" type="815" id="gGJAx3PngF2S"/>
+      <listitem open="0" type="814" id="DoXYpoyMGa11"/>
+      <listitem open="0" type="815" id="vQlE3DYCSQhz"/>
+      <listitem open="0" type="815" id="ltANEXocsJB3"/>
+      <listitem open="0" type="815" id="WPTci8K5Bcvb"/>
+      <listitem open="0" type="815" id="72WM8yWoW6s9"/>
+      <listitem open="0" type="814" id="hHLwQHNMNSRm"/>
+     </listitem>
+     <listitem open="0" type="807" id="hjX6MhUlglCp" label="class diagram"/>
+     <listitem open="1" type="818" id="E8qkzlxljBAa"/>
+     <listitem open="1" type="818" id="r3vivNwiQi5T"/>
+     <listitem open="1" type="813" id="Pn4nqZVAHnSO">
+      <listitem open="0" type="814" id="tI078bEazSOV"/>
+      <listitem open="0" type="815" id="s68f6qUowUYA"/>
+      <listitem open="0" type="815" id="mVcP4tkPYZCW"/>
+      <listitem open="0" type="815" id="zWlOFMo0zChV"/>
+     </listitem>
+     <listitem open="1" type="830" id="Datatypes">
+      <listitem open="1" type="829" id="9lTlCfVursQd"/>
+      <listitem open="1" type="829" id="RvOlQuUve8pJ"/>
+      <listitem open="1" type="829" id="YJY3ar8Aaz7f"/>
+      <listitem open="1" type="829" id="G9Ft9V9ZYuZT"/>
+      <listitem open="1" type="829" id="fVYrhmUo3Htp"/>
+      <listitem open="1" type="829" id="FVy4jTHsoJbr"/>
+      <listitem open="1" type="829" id="B6rhSTWBl7Yh"/>
+      <listitem open="1" type="829" id="8WeVo2x1WuU6"/>
+      <listitem open="1" type="829" id="LT2IHH2J0lSc"/>
+      <listitem open="1" type="829" id="pw1LJvANkvy0"/>
+      <listitem open="1" type="829" id="N1EkNxyjlL80"/>
+      <listitem open="1" type="829" id="T6mQTsFmWKwO"/>
+      <listitem open="1" type="829" id="sfgFpuxHEpBu"/>
+      <listitem open="1" type="829" id="t4Wk8Xtg6UVf"/>
+      <listitem open="1" type="829" id="apmCACCZdT6s"/>
+      <listitem open="1" type="829" id="hY2uqXuEXLHW"/>
+      <listitem open="1" type="829" id="JV5h8UHqM8rE"/>
+     </listitem>
+     <listitem open="1" type="813" id="RavfPl0qKVfi"/>
+     <listitem open="1" type="813" id="cWelF98kOkDJ">
+      <listitem open="0" type="814" id="oC5hTSTyytFi"/>
+      <listitem open="0" type="814" id="gf8AdpCjGe3S"/>
+      <listitem open="0" type="814" id="ufky2EwQ4DYW"/>
+      <listitem open="0" type="814" id="EtNHsZKH7Bmi"/>
+      <listitem open="0" type="814" id="jadP6JJ1ZkQU"/>
+     </listitem>
+     <listitem open="1" type="813" id="D6VqTQLgnPNu">
+      <listitem open="0" type="815" id="htM30uI8fSLM"/>
+      <listitem open="0" type="814" id="CmBwd5gNWooD"/>
+      <listitem open="0" type="814" id="zFWtJ0fgJQ0B"/>
+      <listitem open="0" type="814" id="ATZ8adF3zXHl"/>
+      <listitem open="0" type="815" id="TcQGqcIptdaB"/>
+      <listitem open="0" type="815" id="AcxkQk9dMruQ"/>
+     </listitem>
+     <listitem open="1" type="813" id="ZpwYpkW58RL5">
+      <listitem open="0" type="814" id="piw9CLRVEEHa"/>
+     </listitem>
+     <listitem open="1" type="813" id="ySy6zTrmMyMi">
+      <listitem open="0" type="815" id="Fs3IFghySvAF"/>
+      <listitem open="0" type="814" id="hAqY1qgYqZCR"/>
+      <listitem open="0" type="815" id="DXrL3rND1t07"/>
+      <listitem open="0" type="815" id="rv0y5TaoWCMt"/>
+      <listitem open="0" type="815" id="MQa8gg22IJ1W"/>
+     </listitem>
+     <listitem open="1" type="813" id="1Xmxl7fVQO5w"/>
+     <listitem open="1" type="813" id="VJXUm3hDuTOI">
+      <listitem open="0" type="814" id="i5YvSm49NRS9"/>
+     </listitem>
+     <listitem open="1" type="813" id="CxCR74Cnw1kk"/>
+     <listitem open="1" type="813" id="TcwnKqO8O3Bo">
+      <listitem open="0" type="814" id="ah4u2bwmHD2M"/>
+     </listitem>
+     <listitem open="1" type="813" id="RVIGWFFPNQrp"/>
+    </listitem>
+    <listitem open="1" type="802" id="Use Case View"/>
+   </listitem>
+  </listview>
+  <codegeneration>
+   <codegenerator language="C++"/>
+  </codegeneration>
+ </XMI.extensions>
+</XMI>
