@@ -13,12 +13,7 @@ public class FourSquareCipher extends Cipher {
     private Character[][] gridTwoOne = new Character[5][5];
     private Character[][] gridTwoTwo = new Character[5][5];
 
-    /*public FourSquareCipher() {
-        name = "FourSquareCipher";
-        System.out.println("Warning: Invalid Use ");
-    }*/
-
-    public FourSquareCipher(String key1, String key2){
+    private void commonConstructor(String key1, String key2) {
         keys[0] = key1.toUpperCase();
         keys[1] = key2.toUpperCase();
         name = "FourSquareCipher";
@@ -98,11 +93,27 @@ public class FourSquareCipher extends Cipher {
             }
         }
     }
-
+    public FourSquareCipher(String key1, String key2) {
+	    commonConstructor(key1,key2);
+    }
+    public FourSquareCipher() {
+	    name = "FourSquareCipher";
+	    unicode = false;
+	    version = 1.0f;
+	    System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+    }
+    @Override
+    public void init(String[] args){
+	    assert(args.length == 2);
+	    commonConstructor(args[0],args[1]);
+    }
     public FourSquareCipher(Cipher other) {
         super(other);
     }
-
+    @Override
+    public Cipher clone() {
+	    return new FourSquareCipher(this);
+    }
     @Override
     String encrypt(String input) throws Exception {
         StringBuilder cipherOutput = new StringBuilder();
@@ -166,7 +177,6 @@ public class FourSquareCipher extends Cipher {
         }
         return cipherOutput.toString();
     }
-
     @Override
     String decrypt(String input) throws Exception {
         StringBuilder cipherOutput = new StringBuilder();

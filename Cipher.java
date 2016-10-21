@@ -49,12 +49,15 @@ class DummyCipher extends Cipher {
 	DummyCipher(DummyCipher other) {
 		super(other);
 	}
+	@Override
 	public Cipher clone() {
 		return new DummyCipher(this);
 	}
+	@Override
 	public String encrypt(String input) {
 		return input;
 	}
+	@Override
 	public String decrypt(String input) {
 		return input;
 	}
@@ -72,6 +75,7 @@ class RotNCipher extends Cipher {
 		super(other);
 		this.rotN = other.rotN;
 	}
+	@Override
 	public Cipher clone() {
 		return new RotNCipher(this);
 	}
@@ -79,10 +83,12 @@ class RotNCipher extends Cipher {
 		name = "RotN";
 		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
+	@Override
 	public void init(String[] args) {
 		assert(args.length == 1);
 		rotN = Integer.parseInt(args[0]);
 	}
+	@Override
 	public String getArgsString() {
 		return new String(Integer.toString(rotN));
 	}
@@ -92,6 +98,7 @@ class RotNCipher extends Cipher {
 	public int getN() {
 		return rotN;
 	}
+	@Override
 	public String encrypt(String input) {
 		// regular strings are supposed to be immutable, and modifying them produces new string objects
 		// StringBuilder on the other hand is mutable, and designed for rapid editing of strings
@@ -111,6 +118,7 @@ class RotNCipher extends Cipher {
 
 		return temp.toString();
 	}
+	@Override
 	public String decrypt(String input) {
 		StringBuilder temp = new StringBuilder(input);
 		for (int i=0; i<temp.length(); i++) {
@@ -140,9 +148,11 @@ class Rot13Cipher extends Cipher {
 	Rot13Cipher(Rot13Cipher other) {
 		super(other);
 	}
+	@Override
 	public Cipher clone() {
 		return new Rot13Cipher(this);
 	}
+	@Override
 	public String encrypt(String input) {
 		StringBuilder temp = new StringBuilder(input);
 		for (int i=0; i<temp.length(); i++) {
@@ -158,6 +168,7 @@ class Rot13Cipher extends Cipher {
 		
 		return temp.toString();
 	}
+	@Override
 	public String decrypt(String input) {
 		return encrypt(input); // in Rot13 encrypt==decrypt
 	}
@@ -178,6 +189,7 @@ class SubstitutionCipher extends Cipher {
 		super(other);
 		this.key = other.key;
 	}
+	@Override
 	public Cipher clone() {
 		return new SubstitutionCipher(this);
 	}
@@ -185,10 +197,12 @@ class SubstitutionCipher extends Cipher {
 		name = "Substitution";
 		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
+	@Override
 	public void init(String[] args) {
 		assert(args.length == 1);
 		key = args[0];
 	}
+	@Override
 	public String getArgsString() {
 		return new String(key);
 	}
@@ -198,6 +212,7 @@ class SubstitutionCipher extends Cipher {
 	public String getKey() {
 		return key;
 	}
+	@Override
 	public String encrypt(String input) {
 		assert(alphabet.length() == key.length());
 
@@ -232,6 +247,7 @@ class SubstitutionCipher extends Cipher {
 	}
 	// See encrypt for detailed explanation of algorithm
 	// Only significant difference is reversal of key and value
+	@Override
 	public String decrypt(String input) {
 		assert(alphabet.length() == key.length());
 		HashMap<Character,Character> decodeHash = new HashMap<Character,Character>(alphabet.length());
