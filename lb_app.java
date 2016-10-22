@@ -48,8 +48,8 @@ public class lb_app {
 
 		//If an error occurs when reading the command line, print the error
 		if(!parseCommandLine(args)) {
-            //Printing the error isn't necessary, but it looks nicer than the exception handling
-            //System.out.println(error);
+			//Printing the error isn't necessary, but it looks nicer than the exception handling
+			//System.out.println(error);
 			throw new Exception(error);
 		}
 
@@ -106,7 +106,7 @@ public class lb_app {
 				char ch = args[i].charAt(1);
 
 				switch (ch) {
-				//if -i, next arg should be filpath
+					//if -i, next arg should be filpath
 					case 'i':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -117,7 +117,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//if -o, next arg should be filepath
+						//if -o, next arg should be filepath
 					case 'o':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -128,7 +128,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//if -f, next arg should be filepath
+						//if -f, next arg should be filepath
 					case 'f':
 						//Make sure a cipher hasn't already been specified
 						if(!cyphSpecified) {
@@ -148,7 +148,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//if -F, next arg should be name
+						//if -F, next arg should be name
 					case 'F':
 						//Make sure a cipher hasn't already been specified
 						if(!cyphSpecified) {
@@ -167,7 +167,7 @@ public class lb_app {
 							return false;
 						}
 						break;
-				//if -L, next arg should be path
+						//if -L, next arg should be path
 					case 'L':
 						//Avoid out-of-bounds error
 						if(args.length > (i + 1)) {
@@ -292,7 +292,7 @@ public class lb_app {
 
 		//Make sure name given in CiphName is actually found in
 		//the library
-    if(locCiphName != null) {
+		if(locCiphName != null) {
 			File tempCiphName = new File(libPath + locCiphName);
 			if(!tempCiphName.exists()) {
 				error = "Ciph name not found in library.";
@@ -306,8 +306,8 @@ public class lb_app {
 				error = "Ciph in library is not readable.";
 				return false;
 			}
-    }
-    
+		}
+
 
 		//Check if output file exists; if it does, must be writable; else, make file
 		if(locOutput != null) {
@@ -324,19 +324,19 @@ public class lb_app {
 				error = "Output path is a directory.";
 				return false;
 			}
-      else if(!tempOutFile.exists()) {
-        try {
-          PrintWriter writer = new PrintWriter("output", "UTF-8");
-        }
-        catch(FileNotFoundException e) {
-          error = e.getMessage();
-          return false;
-        }
-        catch(UnsupportedEncodingException e) {
-          error = e.getMessage();
-          return false;
-        }
-      }
+			else if(!tempOutFile.exists()) {
+				try {
+					PrintWriter writer = new PrintWriter("output", "UTF-8");
+				}
+				catch(FileNotFoundException e) {
+					error = e.getMessage();
+					return false;
+				}
+				catch(UnsupportedEncodingException e) {
+					error = e.getMessage();
+					return false;
+				}
+			}
 		}
 
 		//if made it this far, change class member data
@@ -353,10 +353,10 @@ public class lb_app {
 		if(locInput != null)
 			input = locInput;
 
-    //If specific path given, use that, else use the library path
+		//If specific path given, use that, else use the library path
 		if(locCiphPath != null)
 			ciphPath = locCiphPath;
-    else if(locCiphName != null)
+		else if(locCiphName != null)
 			ciphPath = libPath + locCiphName;
 
 		if(locLibPath != null)
@@ -367,171 +367,170 @@ public class lb_app {
 	}
 
 
-/* ***********************************************************
- * Encrypt/decrypt process
-/*************************************************************/
-private static boolean runCipherSequence() {
-
-    String returnData = new String();      
-    String inputData = new String();
-
-	//TODO: make sure the given file is encoded in a way that matches the cipher
-
-    /* ***********************************************************
-	 * Create a new CipherSequence for the ciphering
-	/*************************************************************/
-    CipherSequence cSeq = null;
-    try {
-      cSeq = new CipherSequence();
-    }
-    catch(Exception e) {
-      error = e.getMessage();
-      return false;
-    }
-
-
-    //Load a cipher sequence from given file
-    try {
-      cSeq.loadFromFile(ciphPath);
-    }
-    catch (Exception e) {
-      error = e.getMessage();
-      return false;
-    }
-
-    //If input is from a file, load it into a string, else ask for input
-    if(input != null)  {
-
-      //To maximize compatibility, I want to avoid using any Apache or Java 7
-      //libs for reading the input file, in case they aren't available on Android
-      Scanner scanner = null;
-      try {
-        scanner = new Scanner(new File(input));
-      }
-      catch(FileNotFoundException e) {
-        error = e.getMessage();
-        return false;
-      }
-
-      inputData = scanner.useDelimiter("\\A").next();
-      scanner.close();
-    }
-
-    //Otherwise, prompt for input from stdin
-    else {
-      
-      //Console c = System.console();
-      //if(c == null) {
-      //  error = "Error: could not obtain console for standard I/O.";
-      //  return false;
-      //}
-
-      //inputData = c.readLine();
-
-      InputStreamReader isReader = new InputStreamReader(System.in);
-      BufferedReader bufReader = new BufferedReader(isReader);
-
-      StringBuilder builder = new StringBuilder();
-      while (true) {
-        try {
-            String input = null;
-            if((input = bufReader.readLine()) != null) {
-                builder.append(input);
-                builder.append("\n");
-            }
-            else {
-                break;
-            }
-        }
-        catch(Exception e) {
-            error = e.getMessage();
-            return false;
-        }
-      }
-      inputData = builder.toString();
-  }
-
-
-
-  //Before enciphering or deciphering, make sure there is something to cipher.
-  if(inputData == null) {
-    error = "error: no input given.";
-    return false;
-  }
-
-
 	/* ***********************************************************
-	 * Encode or decode the file
+	 * Encrypt/decrypt process
 	/*************************************************************/
-  
-    if(encrypt) {
+	private static boolean runCipherSequence() {
 
-      try {
-        returnData = cSeq.encrypt(inputData);
-      }
-      catch(Exception e) {
-        error = e.getMessage();
-        return false;
-      }
+		String returnData = new String();      
+		String inputData = new String();
 
-    }
-    else {
-           
-      try {
-        returnData = cSeq.decrypt(inputData);
-      }
-      catch(Exception e) {
-        error = e.getMessage();
-        return false;
-      }
+		//TODO: make sure the given file is encoded in a way that matches the cipher
 
-    }
-    
+		/* ***********************************************************
+		 * Create a new CipherSequence for the ciphering
+		/*************************************************************/
+		CipherSequence cSeq = null;
+		try {
+			cSeq = new CipherSequence();
+		}
+		catch(Exception e) {
+			error = e.getMessage();
+			return false;
+		}
 
-	/* ***********************************************************
-	 * Output result
-	/*************************************************************/
-    //This ought to determine where returnData is going
-    if(returnData == null) {
-      error = "Error: no data to output.";
-      return false;
-    }
 
-    //If an output file was specified, write to that file
-    if(output != null) {
+		//Load a cipher sequence from given file
+		try {
+			cSeq.loadFromFile(ciphPath);
+		}
+		catch (Exception e) {
+			error = e.getMessage();
+			return false;
+		}
 
-      BufferedWriter writeBuf = null;
+		//If input is from a file, load it into a string, else ask for input
+		if(input != null)  {
 
-      try {
-        PrintWriter writer = new PrintWriter(output, "UTF-8");
-        writer.println(returnData);
-        writer.close();
-      }
-      catch(IOException e) {
-         error = e.getMessage();
-         return false;   
-      }
+			//To maximize compatibility, I want to avoid using any Apache or Java 7
+			//libs for reading the input file, in case they aren't available on Android
+			Scanner scanner = null;
+			try {
+				scanner = new Scanner(new File(input));
+			}
+			catch(FileNotFoundException e) {
+				error = e.getMessage();
+				return false;
+			}
 
-    }
+			inputData = scanner.useDelimiter("\\A").next();
+			scanner.close();
+		}
 
-    //Else, print to stdout
-    else {
+		//Otherwise, prompt for input from stdin
+		else {
 
-     // Console c = System.console();
-     // if(c == null) {
-     //   error = "Error: could not obtain console for standard I/O.";
-     //   return false;
-     // }
+			//Console c = System.console();
+			//if(c == null) {
+			//  error = "Error: could not obtain console for standard I/O.";
+			//  return false;
+			//}
 
-     //c.format(returnData); 
-     System.out.println(returnData);
+			//inputData = c.readLine();
 
-    }
+			InputStreamReader isReader = new InputStreamReader(System.in);
+			BufferedReader bufReader = new BufferedReader(isReader);
+
+			StringBuilder builder = new StringBuilder();
+			while (true) {
+				try {
+					String input = null;
+					if((input = bufReader.readLine()) != null) {
+						builder.append(input);
+						builder.append("\n");
+					}
+					else {
+						break;
+					}
+				}
+				catch(Exception e) {
+					error = e.getMessage();
+					return false;
+				}
+			}
+			inputData = builder.toString();
+		}
+
+
+
+		//Before enciphering or deciphering, make sure there is something to cipher.
+		if(inputData == null) {
+			error = "error: no input given.";
+			return false;
+		}
+
+
+		/* ***********************************************************
+		 * Encode or decode the file
+		/*************************************************************/
+
+		if(encrypt) {
+
+			try {
+				returnData = cSeq.encrypt(inputData);
+			}
+			catch(Exception e) {
+				error = e.getMessage();
+				return false;
+			}
+
+		}
+		else {
+
+			try {
+				returnData = cSeq.decrypt(inputData);
+			}
+			catch(Exception e) {
+				error = e.getMessage();
+				return false;
+			}
+
+		}
+
+
+		/* ***********************************************************
+		 * Output result
+		/*************************************************************/
+		//This ought to determine where returnData is going
+		if(returnData == null) {
+			error = "Error: no data to output.";
+			return false;
+		}
+
+		//If an output file was specified, write to that file
+		if(output != null) {
+
+			BufferedWriter writeBuf = null;
+
+			try {
+				PrintWriter writer = new PrintWriter(output, "UTF-8");
+				writer.println(returnData);
+				writer.close();
+			}
+			catch(IOException e) {
+				error = e.getMessage();
+				return false;   
+			}
+
+		}
+
+		//Else, print to stdout
+		else {
+
+			// Console c = System.console();
+			// if(c == null) {
+			//   error = "Error: could not obtain console for standard I/O.";
+			//   return false;
+			// }
+
+			//c.format(returnData); 
+			System.out.println(returnData);
+
+		}
 
 		return true; 
 
 	}
 
-  //No cleanup function is necessary since Java has garbage collection...
-
+	//No cleanup function is necessary since Java has garbage collection...
 }

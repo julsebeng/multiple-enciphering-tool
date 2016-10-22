@@ -1,18 +1,53 @@
-app: lib
-	javac lb_app.java
+JFLAGS = -g
+JC = javac
 
-lib:
-	javac Cipher.java CipherSequence.java CipherSequenceLibrary.java CoreCipherClassLibrary.java
+# clear default targets for building .java and .class files
+.SUFFIXES: .java .class
+
+# set our own default targets
+# map from .java files to .class files, $* is basename of current target
+.java.class:
+	$(JC) $(JFLAGS) $*.java
+
+LIB-CLASSES = \
+	Cipher.java \
+	CipherSequence.java \
+	CipherSequenceLibrary.java \
+	CoreCipherClassLibrary.java
+
+# typing 'make' will compile app, otherwise first listed target is used
+default: app
+
+app: lib lb_app.java
+	$(JC) lb_app.java
+
+# Make sure each .class associated with each .java is present
+# Take class names in LIB-CLASSES and substitute .java for .class
+# No body, b/c it uses the default target defined above
+lib: $(LIB-CLASSES:.java=.class)
 
 buildtest:
-	javac -cp .:junit.jar:hamcrest-core.jar lb_appTest.java
+	$(JC) -cp .:junit.jar:hamcrest-core.jar lb_appTest.java
 	
 runtest:
 	java -cp .:junit.jar:hamcrest-core.jar org.junit.runner.JUnitCore lb_appTest
 	
 testprep:
-	wget http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar && mv junit-4.12.jar junit.jar
-	wget http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar && mv hamcrest-core-1.3.jar hamcrest-core.jar
+	wget 'http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar' -O  junit.jar
+	wget 'http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar' -O 'hamcrest-core.jar'
+
+
+# Ad-hoc tests
+AHT-CLASSES = \
+	CipherTest.java \
+	CipherSequenceTest.java
+	#CipherSequenceLibraryTest.java
+
+ad-hoc-tests: $(AHT-CLASSES:.java=.class)
+	@echo "These tests generally require input, or recommend viewing source while running"
+	@echo "Run these manually like so:"
+	@echo "	java CipherTest <Cipher Name> <Cipher args>"
+	@echo "	java CipherSequenceTest"
 
 clean:
-	rm *.class
+	$(RM) *.class

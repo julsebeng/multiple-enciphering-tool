@@ -8,6 +8,7 @@ class CipherSequenceLibrary {
 	}
 	// copy constructor
 	CipherSequenceLibrary(CipherSequenceLibrary other) {
+		this.directoryPath = other.directoryPath;
 	}
 	// fetch list of files in Library diectory
 	/*

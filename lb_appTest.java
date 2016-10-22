@@ -7,102 +7,98 @@ import static org.junit.Assert.*;
  */
 public class lb_appTest {
 
-    /* ***********************************************************
-     * Single parameter tests
-    /*************************************************************/
+	/* ***********************************************************
+	 * Single parameter tests
+	/*************************************************************/
 
-    @Test
-    public void testEnc() {
-        String[] testArgs = new String[] {"enc"};
+	@Test
+	public void testEnc() {
+		String[] testArgs = new String[] {"enc"};
 
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            assertEquals("No cipher was given.", testErr);
-        }
-    }
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			assertEquals("No cipher was given.", testErr);
+		}
+	}
 
-    @Test
-    public void testEncode() {
-        String[] testArgs = new String[] {"encode"};
+	@Test
+	public void testEncode() {
+		String[] testArgs = new String[] {"encode"};
 
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            assertEquals("No cipher was given.", testErr);
-        }
-    }
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			assertEquals("No cipher was given.", testErr);
+		}
+	}
 
-    @Test
-    public void testDec() {
-        String[] testArgs = new String[] {"dec"};
+	@Test
+	public void testDec() {
+		String[] testArgs = new String[] {"dec"};
 
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            assertEquals("No cipher was given.", testErr);
-        }
-    }
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			assertEquals("No cipher was given.", testErr);
+		}
+	}
 
-    @Test
-    public void testDecode() {
-        String[] testArgs = new String[] {"decode"};
+	@Test
+	public void testDecode() {
+		String[] testArgs = new String[] {"decode"};
 
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            assertEquals("No cipher was given.", testErr);
-        }
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			assertEquals("No cipher was given.", testErr);
+		}
+	}
 
-    }
+	/* ***********************************************************
+	 * Actually useful tests
+	/*************************************************************/
 
-    /* ***********************************************************
-     * Actually useful tests
-    /*************************************************************/
+	/* Created by Julian Engel */
+	@Test
+	public void test_1() {
+		String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
 
-    /* Created by Julian Engel */
-    @Test
-    public void test_1() {
-        String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
+		int error = 0;
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			error = 1;
+			System.out.println(testErr);
+		}
 
-        int error = 0;
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            error = 1;
-            System.out.println(testErr);
-        }
+		assertEquals(0, error);
+	}
 
-        assertEquals(0, error);
+	@Test
+	public void test_2() {
+		String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
 
-    }
+		int error = 0;
+		try {
+			lb_app.main(testArgs);
+		}
+		catch(Exception e) {
+			String testErr = e.getMessage();
+			error = 1;
+			System.out.println(testErr);
+		}
 
-    @Test
-    public void test_2() {
-        String[] testArgs = new String[] {"enc", "-o", "output.txt", "-i", "input.txt", "-f", "test.cyph"};
-
-        int error = 0;
-        try {
-            lb_app.main(testArgs);
-        }
-        catch(Exception e) {
-            String testErr = e.getMessage();
-            error = 1;
-            System.out.println(testErr);
-        }
-
-        assertEquals(0, error);
-
-    }
-
+		assertEquals(0, error);
+	}
 }
