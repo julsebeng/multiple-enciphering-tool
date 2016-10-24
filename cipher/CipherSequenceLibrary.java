@@ -1,6 +1,7 @@
+package cipher;
 import java.util.Vector;
 
-class CipherSequenceLibrary {
+public class CipherSequenceLibrary {
 	private Vector<String> fileNames;
 	private String directoryPath;
 	CipherSequenceLibrary(String directory) {

@@ -10,10 +10,16 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 LIB-CLASSES = \
-	Cipher.java \
-	CipherSequence.java \
-	CipherSequenceLibrary.java \
-	CoreCipherClassLibrary.java
+	./cipher/Cipher.java \
+	./cipher/BookCipher.java \
+	./cipher/DummyCipher.java \
+	./cipher/FourSquareCipher.java \
+	./cipher/Rot13Cipher.java \
+	./cipher/RotNCipher.java \
+	./cipher/SubstitutionCipher.java \
+	./cipher/CipherSequence.java \
+	./cipher/CipherSequenceLibrary.java \
+	./cipher/CoreCipherClassLibrary.java
 
 # typing 'make' will compile app, otherwise first listed target is used
 default: app
@@ -51,3 +57,4 @@ ad-hoc-tests: $(AHT-CLASSES:.java=.class)
 
 clean:
 	$(RM) *.class
+	$(RM) ./cipher/*.class

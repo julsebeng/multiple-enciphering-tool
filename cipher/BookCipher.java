@@ -1,3 +1,4 @@
+package cipher;
 
 import java.util.Vector;
 import java.io.IOException;
@@ -7,27 +8,33 @@ import java.util.regex.Matcher;
 
 //Pair programming session: Joseph Auguste, Thai Flowers
 
-class BookCipher extends Cipher{
+public class BookCipher extends Cipher{
 	private String filepath;	// path to file / filename
 	private int numCollumns=80;	// collumns per page/rows
 	private int numRows=100;	// rows per page
-	BookCipher() {
+	public BookCipher() {
 		name = "BookCipher";
 		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
-	BookCipher(String arg) {
+	public BookCipher(String arg) {
 		name = "BookCipher";
 		version = 1.0f;
 		unicode = false;
 		filepath = new String(arg);
 	}
-	BookCipher(BookCipher other) {
+	public BookCipher(BookCipher other) {
 		super(other);
 		filepath = new String(other.filepath);
 	}
+	@Override
+	public Cipher clone() {
+		return new BookCipher(this);
+	}
+	@Override
 	public void init(String[] args) {
 		filepath = new String(args[0]);
 	}
+	@Override
 	public String encrypt(String input) throws Exception {
 		RandomAccessFile reader = new RandomAccessFile(filepath, "r");
 		
@@ -61,6 +68,7 @@ class BookCipher extends Cipher{
 		reader.close();
 		return output.toString().substring(0,output.length()-1);
 	}
+	@Override
 	public String decrypt(String input) throws Exception {
 		RandomAccessFile reader = new RandomAccessFile(filepath, "r");
 		String output = new String();

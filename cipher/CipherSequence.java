@@ -1,3 +1,4 @@
+package cipher;
 
 import java.util.Vector;
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
-class CipherSequence {
+public class CipherSequence {
 	private Vector<Cipher> sequence;
 	String name;
 	String author;

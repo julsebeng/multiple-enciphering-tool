@@ -1,3 +1,4 @@
+package cipher;
 
 // Instantiates a Cipher subclass from the name of the Cipher
 // at this point it only calls the 0 argument default constructor

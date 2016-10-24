@@ -3,6 +3,7 @@
 // The second section reads the name of a Cipher off of the command-line (args[0])
 // and instantiates it for the example
 
+import cipher.*;
 import java.util.Arrays;
 
 class CipherTest {

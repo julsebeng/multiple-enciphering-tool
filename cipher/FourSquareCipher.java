@@ -1,3 +1,5 @@
+package cipher;
+
 import java.util.*;
 import java.lang.Character;
 
@@ -115,7 +117,7 @@ public class FourSquareCipher extends Cipher {
 	    return new FourSquareCipher(this);
     }
     @Override
-    String encrypt(String input) throws Exception {
+    public String encrypt(String input) throws Exception {
         StringBuilder cipherOutput = new StringBuilder();
         // replace J's in the input as they are not supported by the cipher
         input = input.replace('J', 'I');
@@ -178,7 +180,7 @@ public class FourSquareCipher extends Cipher {
         return cipherOutput.toString();
     }
     @Override
-    String decrypt(String input) throws Exception {
+    public String decrypt(String input) throws Exception {
         StringBuilder cipherOutput = new StringBuilder();
 
         for(int x = 0; x < input.length(); x+=2){

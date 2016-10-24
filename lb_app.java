@@ -11,6 +11,8 @@
  * If no -i or -o is given, will default to stdio.
  */
 
+import cipher.*;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
