@@ -1,0 +1,51 @@
+main {
+	if args size is 0
+		throw exception "no arguments given"
+	else
+		call parseargs(args)
+}
+
+parseargs(args) {
+	//if args[2] begins with ~
+	//	expand
+	//else if begins with .
+	//	expand
+	//else if begins with ..
+	//	expand
+
+
+	if args[2] does not exist
+		throw exception
+	else if args[2] is not readable
+		throw exception
+	
+	if args[1] == "--install"
+		call installciph(filename)
+	else if args[1] == "--get"
+		call getciph(filename)
+	else if args[1] == "--remove"
+		call removeciph(filename)
+	else
+		throw exception "not a command"
+
+}
+
+installciph(filename) {
+	copy ciph file from path to ~/labyrinthine
+	if copy fails
+		throw exception
+}
+
+getciph(filename) {
+	copy ciph from ~/labyrinthine to current directory
+	if copy fails
+		throw exception
+}
+
+removeciph(filename) {
+	if doesnt exist
+		return
+	else remove file
+		if remove fails
+			throw exception
+			}
