@@ -207,6 +207,7 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
 	/* Class to use as a tag for our message Views. This allows the information
 	 * about each message's unique layout elements (the ivProfileOther,
 	 * ivProfileMe, tvBody) to be saved along with the item.
+	 */
     final class ViewHolder {
         public ImageView imageOther;
         public ImageView imageMe;
