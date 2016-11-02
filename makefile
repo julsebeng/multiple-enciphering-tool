@@ -24,6 +24,9 @@ LIB-CLASSES = \
 # typing 'make' will compile app, otherwise first listed target is used
 default: app
 
+.phony: all;
+all: app ad-hoc-tests
+
 app: lib lb_app.java
 	$(JC) lb_app.java
 
@@ -46,10 +49,11 @@ testprep:
 # Ad-hoc tests
 AHT-CLASSES = \
 	CipherTest.java \
-	CipherSequenceTest.java
-	#CipherSequenceLibraryTest.java
+	CipherSequenceTest.java \
+	CipherSequenceLibraryTest.java
 
 ad-hoc-tests: $(AHT-CLASSES:.java=.class)
+	@echo "Building ad-hoc tests"
 	@echo "These tests generally require input, or recommend viewing source while running"
 	@echo "Run these manually like so:"
 	@echo "	java CipherTest <Cipher Name> <Cipher args>"

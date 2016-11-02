@@ -7,7 +7,7 @@ import cipher.*;
 import java.util.Arrays;
 
 class CipherTest {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		String demoString = new String("Hello "+args[0]);
 		String cipherText = new String();
 		String output = new String();
@@ -37,55 +37,40 @@ class CipherTest {
 
 			Cipher myCipher = null; // here to allow access outside try block
 			// load the cipher
-			try {
-				myCipher = (Cipher)Class.forName(args[0]+"Cipher").newInstance();
-				if (args.length > 1) {
-					myCipher.init(Arrays.copyOfRange(args, 1, args.length));
-				}
+			myCipher = CoreCipherClassLibrary.instantiateFromString(args[0], Arrays.copyOfRange(args,1,args.length));
 
-				System.out.println();
-				System.out.println("Testing encrypt and decrypt");
-				cipherText  = myCipher.encrypt(demoString);
-				output = myCipher.decrypt(cipherText);
-				//System.out.println(demoString);
-				//System.out.println(output);
-				if (output.equals(demoString))
-					System.out.println("Ok.");
-				else
-					System.out.println("FAIL");
+			System.out.println();
+			System.out.println("Testing encrypt and decrypt");
+			cipherText  = myCipher.encrypt(demoString);
+			output = myCipher.decrypt(cipherText);
+			//System.out.println(demoString);
+			//System.out.println(output);
+			if (output.equals(demoString))
+				System.out.println("Ok.");
+			else
+				System.out.println("FAIL");
 
-				/* Can't actually work, would need to use dynamic instantiation like above and 1 arg constructor
-				System.out.println();
-				System.out.println("Testing Copy Constructor");
-				Cipher myCopy = Cipher(myCipher);
-				String copyCipherText = myCopy.encrypt(demoString);
-				if (copyCipherText == cipherText)
-					System.out.println("Ok.");
-				else
-					System.out.println("FAIL");
-				*/
+			System.out.println();
+			System.out.println("Testing clone");
+			Cipher myCopy = myCipher.clone();
+			String copyCipherText = myCopy.encrypt(demoString);
+			if (copyCipherText == cipherText)
+				System.out.println("Ok.");
+			else
+				System.out.println("FAIL");
 
-				System.out.println();
-				System.out.println("Testing toString()");
-				// When converted to string arrays add "[" and "]" on each side, keep to check for extra spaces
-				String outToString   = "[" + myCipher.toString() + "]";
-				// strip out seperating commas in converted array so matching works
-				String origArgString = Arrays.toString(args).replace(",","");
-				System.out.println(outToString);
-				System.out.println(origArgString);
-				if (outToString.equals(origArgString))
-					System.out.println("Ok.");
-				else
-					System.out.println("FAIL");
-
-			}
-			catch (ClassNotFoundException ex) {
-				System.out.println("Not a valid cipher");
-				return;
-			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			System.out.println();
+			System.out.println("Testing toString()");
+			// When converted to string arrays add "[" and "]" on each side, keep to check for extra spaces
+			String outToString   = "[" + myCipher.toString() + "]";
+			// strip out seperating commas in converted array so matching works
+			String origArgString = Arrays.toString(args).replace(",","");
+			System.out.println(outToString);
+			System.out.println(origArgString);
+			if (outToString.equals(origArgString))
+				System.out.println("Ok.");
+			else
+				System.out.println("FAIL");
 
 		}
 	}
