@@ -3,6 +3,7 @@ package com.julianengel.smsexploratoryprototype;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -28,11 +29,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.parse.ParseException.EMAIL_NOT_FOUND;
+import static com.parse.ParseException.OBJECT_NOT_FOUND;
+import static com.parse.ParseException.TIMEOUT;
 
 /**
  * A login screen that offers login via email/password.
@@ -306,24 +318,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            /* Login code implemented by Julian 11/3/16 */
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            //First, attempt a login.
+            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                        @Override
+                        public void done(ParseUser user, ParseException e) {
+                            if(user != null) {
+                                //TODO: successful login code here
+                            }
+                            else {
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+                                Context context = getApplicationContext();
+                                int duration = Toast.LENGTH_LONG;
+                                CharSequence errorMessage = "An unknown error occurred.";;
+                                Toast errToast;
 
-            // TODO: register the new account here.
+                                //Get error code and see what happened
+                                int loginErrorCode = e.getCode();
+                                switch(loginErrorCode) {
+                                    //If a user with that email wasn't found
+                                    case OBJECT_NOT_FOUND:
+                                        signupHelper();
+                                        break;
+                                    case TIMEOUT:
+                                        //Toast the user and tell them a timeout occurred
+                                        errorMessage = "Error: request timed out.";
+                                        break;
+
+                                    default:
+
+                                }
+                                errToast = Toast.makeText(context, errorMessage, duration);
+                                errToast.show();
+
+                            }
+                        }
+                    });
+
             return true;
         }
 
@@ -344,6 +376,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+
+        private boolean signupHelper() {
+            ParseUser user = new ParseUser();
+            user.setUsername(mEmail);
+            user.setPassword(mPassword);
+
+            user.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e == null) {
+                        //Successful login
+                    }
+                    else {
+                        //TODO: more error catching
+                    }
+                }
+            });
+
+            return true;
         }
     }
 }
