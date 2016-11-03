@@ -1,14 +1,21 @@
 package com.julianengel.smsexploratoryprototype;
 
 import android.os.Handler;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.support.design.widget.NavigationView;
 
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
@@ -23,9 +30,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.julianengel.smsexploratoryprototype.R.id.etMessage;
+import static android.support.design.R.styleable.MenuItem;
 
-public class ChatActivity extends AppCompatActivity {
+
+public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     /* Declare a constant for the name of this class; used when sending things
      * to LogCat
      */
@@ -116,6 +125,19 @@ public class ChatActivity extends AppCompatActivity {
 		 */
         setContentView(R.layout.activity_chat);
 
+        /* Nav drawer and settings menu code implemented by Julian 11/3/16 */
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 		/* The ParseUser class is a local representation of a user's data: name,
 		 * email, sessionToken, etc
 		 */
@@ -144,6 +166,64 @@ public class ChatActivity extends AppCompatActivity {
 
 
     }
+
+    /* If the back button is pressed while in our nav menu, don't exit the app - close the drawer
+    instead.
+     */
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    /* Inflates the right-hand options menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    /* Code that handles when an option menu item is pressed
+     */
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_login) {
+            /* TODO: run actions to log the user in
+             */
+            return true;
+        }
+        else if(id == R.id.action_settings) {
+            /* TODO: implement any settings here
+             */
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        /* TODO: code to run based on what navigation bar button was pressed. Note that this
+            will probably change based on how we implement the Chats drawer
+        */
+
+        /* Code that will close the nav drawer after an item has been selected
+         */
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+
 
     /* If we were managing user accounts, this is where the user information
 	 * would be populated before moving on.
