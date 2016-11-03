@@ -1,5 +1,6 @@
 package com.julianengel.smsexploratoryprototype;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -195,8 +196,11 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_login) {
-            /* TODO: run actions to log the user in
+
+            /* Start the LoginActivity activity
              */
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
         else if(id == R.id.action_settings) {
