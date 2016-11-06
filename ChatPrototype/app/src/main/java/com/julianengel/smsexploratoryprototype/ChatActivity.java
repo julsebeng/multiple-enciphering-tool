@@ -150,16 +150,19 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 * Also note that automatic login will have to be manually enabled if
 		 * we decide to use it; check ParseUser.java for more info.
 		 */
+
         if(ParseUser.getCurrentUser() != null) {
 			/* If there's currently a user logged in, go ahead and run the main
 			 * part of the code.
 			 */
+
             startWithCurrentUser();
         }
         else {
 			/* Otherwise, attempt to log in as an anonymous user.
 			 */
-            login();
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
         }
 
         mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
@@ -195,12 +198,14 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_login) {
+        if(id == R.id.logoutButton) {
 
-            /* Start the LoginActivity activity
+            /* this will log the user out and send the app to the login activity
              */
+            ParseUser.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+
             return true;
         }
         else if(id == R.id.action_settings) {
@@ -377,7 +382,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 	 * mRefreshMessagesRunnable that was run earlier.
 	 */
     void refreshMessages() {
-
+        if (ParseUser.getCurrentUser() != null){
 		/* Create a new ParseQuery object: this will manage querying the
 		 * backend database. Because ParseObjects represent data stored both
 		 * locally and remotely, we will also use our Messages subclass
@@ -412,7 +417,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 					/* Clear the current array of Message objects, presumably
 					 * full of objects from the last query.
 					 */
-					mMessages.clear();
+                   setupMessagePosting();
+                   mMessages.clear();
 
 					/* Reverse the elements provided. Honestly, i'm not sure
 					 * why the example code orders the results by descending
@@ -448,7 +454,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                }
            }
         });
-    }
+    }}
 
 
 }

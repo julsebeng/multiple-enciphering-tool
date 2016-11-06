@@ -22,8 +22,6 @@
 
     <TextView
 
-        android:textSize="18sp"
-
         android:id="@+id/tvBody"
 
         android:padding="20dp"
@@ -34,7 +32,7 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="64dp">
+        android:layout_height="wrap_content">
 
     </TextView>
 
