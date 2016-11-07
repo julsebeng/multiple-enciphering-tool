@@ -36,6 +36,14 @@ import static android.support.design.R.styleable.MenuItem;
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    /* For holding the navMenu that's embedded in our Navigation Drawer; where chats will appear
+     */
+    Menu navMenu;
+    DrawerLayout drawer;
+
+    //TODO: delete this test data string array!
+    String[] testChats = {"Chat 1", "Chat 2", "Chat 3"};
+
     /* Declare a constant for the name of this class; used when sending things
      * to LogCat
      */
@@ -130,14 +138,55 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navMenu = navigationView.getMenu();
+
+        /* Define logic for populating the menu in the nav drawer
+            Implemented by Julian 11/7/16
+         */
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                navMenu.clear(); //Remove existing items
+                /* This is just test data for now, as a proof-of-concept
+                 */
+                for(int i = 0; i < testChats.length; i++) {
+                    /* Note that i in this case is a unique ID for the menu item; this should
+                    probably be that chat's unique ID in the backend DB
+                     */
+                    navMenu.add(Menu.NONE, i, Menu.NONE, testChats[i]);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                //TODO: delete this nonsense! it's just here to show that the items are actually refreshing
+                String temp = testChats[0];
+                testChats[0] = testChats[1];
+                testChats[1] = testChats[2];
+                testChats[2] = temp;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
 
 		/* The ParseUser class is a local representation of a user's data: name,
 		 * email, sessionToken, etc
