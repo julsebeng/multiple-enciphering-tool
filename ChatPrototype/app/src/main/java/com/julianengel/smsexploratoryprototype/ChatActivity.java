@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,13 +37,12 @@ import static android.support.design.R.styleable.MenuItem;
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    /* For holding the navMenu that's embedded in our Navigation Drawer; where chats will appear
-     */
-    Menu navMenu;
-    DrawerLayout drawer;
+    private ListView chatList;
 
-    //TODO: delete this test data string array!
-    String[] testChats = {"Chat 1", "Chat 2", "Chat 3"};
+    /* I'd imagine that this would be changed to ArrayAdapter<some subclass of ParseObject>
+    down the line...
+     */
+    private ArrayAdapter<String> chatListAdapter;
 
     /* Declare a constant for the name of this class; used when sending things
      * to LogCat
@@ -141,8 +141,16 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navMenu = navigationView.getMenu();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        /* Reference to our ListView containing all the chats, inside the Nav Drawer
+         */
+        chatList = (ListView) findViewById(R.id.chatList);
+
+        String[] testChats = {"Chat 1", "Chat 2", "Chat 3"};
+        chatListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testChats);
+        chatList.setAdapter(chatListAdapter);
+
 
         /* Define logic for populating the menu in the nav drawer
             Implemented by Julian 11/7/16
@@ -155,24 +163,12 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                navMenu.clear(); //Remove existing items
-                /* This is just test data for now, as a proof-of-concept
-                 */
-                for(int i = 0; i < testChats.length; i++) {
-                    /* Note that i in this case is a unique ID for the menu item; this should
-                    probably be that chat's unique ID in the backend DB
-                     */
-                    navMenu.add(Menu.NONE, i, Menu.NONE, testChats[i]);
-                }
+
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                //TODO: delete this nonsense! it's just here to show that the items are actually refreshing
-                String temp = testChats[0];
-                testChats[0] = testChats[1];
-                testChats[1] = testChats[2];
-                testChats[2] = temp;
+
             }
 
             @Override
