@@ -208,6 +208,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 			 */
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
+
         }
 
         mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
@@ -247,7 +248,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
             /* this will log the user out and send the app to the login activity
              */
+            mAdapter.clear();
             ParseUser.logOut();
+
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
 
@@ -331,6 +334,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 */
         mMessages = new ArrayList<>();
 
+        String userId = ParseUser.getCurrentUser().getObjectId();
+
+
         /* Scroll to the bottom when a data set change occurs. 1 will set the
 		 * transcript mode of the ListView lvChat to always scroll down to show
 		 * new items.
@@ -347,8 +353,13 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		/* Get the ID of the curretnly logged in. ObjectId + className is
 		 * a unique identifier for an object in a parse application.
 		 */
-        final String userId = ParseUser.getCurrentUser().getObjectId();
 
+        /* refresh the userId when setting up the message list to ensure that we are seeing
+            the correct user if a logout has occurred
+        */
+        /*if(ParseUser.getCurrentUser().getObjectId() != null) {
+            userId = ParseUser.getCurrentUser().getObjectId();
+        }*/
 		/* Create an instance of our ChatListAdapter, tie it to the current
 		 * context, pass it the userId, and pass it the array of messages.
 		 */
