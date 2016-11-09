@@ -23,6 +23,13 @@ public class CipherSequence {
 	public CipherSequence(CipherSequence other) {
 		this.sequence = new Vector<Cipher>(other.sequence);
 	}
+	@Override
+	public Object clone() {
+		return new CipherSequence(this);
+	}
+	public boolean equals(CipherSequence other) {
+		return this.sequence.equals(other.sequence);
+	}
 	public String encrypt(String input) throws Exception {
 		int i;
 		String temp = new String(input);
@@ -77,6 +84,9 @@ public class CipherSequence {
 	}
 	public void removeAt(int i) {
 		sequence.removeElementAt(i);
+	}
+	public void removeLast() {
+		sequence.remove(sequence.size()-1);
 	}
 	public void setAt(Cipher ciph, int i) {
 		sequence.setElementAt(ciph, i);

@@ -10,8 +10,18 @@ public class Rot13Cipher extends Cipher {
 		super(other);
 	}
 	@Override
-	public Cipher clone() {
+	public Object clone() {
 		return new Rot13Cipher(this);
+	}
+	@Override
+	public boolean equals(Cipher other) {
+		try {
+			Rot13Cipher rot13 = (Rot13Cipher)other;
+			return true;
+		}
+		catch (Exception ex) {
+			return false;
+		}
 	}
 	@Override
 	public String encrypt(String input) {

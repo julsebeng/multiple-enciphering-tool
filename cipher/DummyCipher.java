@@ -12,7 +12,7 @@ public class DummyCipher extends Cipher {
 		super(other);
 	}
 	@Override
-	public Cipher clone() {
+	public Object clone() {
 		return new DummyCipher(this);
 	}
 	@Override
@@ -22,5 +22,15 @@ public class DummyCipher extends Cipher {
 	@Override
 	public String decrypt(String input) {
 		return input;
+	}
+	@Override
+	public boolean equals(Cipher other) {
+		try {
+			DummyCipher dummy = (DummyCipher)other;
+			return true;
+		}
+		catch (Exception ex) {
+			return false;
+		}
 	}
 }

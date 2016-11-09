@@ -3,7 +3,9 @@ package cipher;
 // Rotate by N cipher, leaves non alphabetic characters unchanged
 public class RotNCipher extends Cipher {
 	protected int rotN;
-	public RotNCipher(int N) {
+	public RotNCipher(int N) throws Exception {
+		if ((N < 0) || (26 < N))
+			throw new Exception("Invalid rotation, provide integer N such that 0<N<26");
 		rotN = N;
 		name = "RotN";
 		version = 1.0f;
@@ -13,7 +15,7 @@ public class RotNCipher extends Cipher {
 		this.rotN = other.rotN;
 	}
 	@Override
-	public Cipher clone() {
+	public Object clone() {
 		return new RotNCipher(this);
 	}
 	public RotNCipher() {
@@ -21,13 +23,26 @@ public class RotNCipher extends Cipher {
 		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	@Override
-	public void init(String[] args) {
+	public void init(String[] args) throws Exception {
 		assert(args.length == 1);
-		rotN = Integer.parseInt(args[0]);
+		int N = Integer.parseInt(args[0]);
+		if (N < 0 || N > 26)
+			throw new Exception("Invalid rotation, provide integer N such that 0<N<26");
+		rotN = N;
+	}
+	@Override
+	public boolean equals(Cipher other) {
+		try {
+			RotNCipher rotN = (RotNCipher)other;
+			return this.rotN == rotN.rotN;
+		}
+		catch (Exception ex) {
+			return false;
+		}
 	}
 	@Override
 	public String getArgsString() {
-		return new String(Integer.toString(rotN));
+		return Integer.toString(rotN);
 	}
 	public void setN(int n) {
 		rotN = n;

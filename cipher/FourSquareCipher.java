@@ -113,7 +113,7 @@ public class FourSquareCipher extends Cipher {
         super(other);
     }
     @Override
-    public Cipher clone() {
+    public Object clone() {
 	    return new FourSquareCipher(this);
     }
     @Override

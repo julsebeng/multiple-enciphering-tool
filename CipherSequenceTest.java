@@ -45,12 +45,13 @@ class CipherSequenceTest {
 
 		System.out.println();
 		System.out.println("First Build a new sequence from scratch");
+		System.out.println("Tests add() insertAt() and setAt()");
 		CipherSequence newSeq = new CipherSequence();
 		newSeq.add(new DummyCipher());
 		newSeq.add(new DummyCipher());
 		newSeq.insertAt(new Rot13Cipher(), 0);
 		newSeq.insertAt(new RotNCipher(2), 1);
-		newSeq.setAt(new SubstitutionCipher("zyxwvutsrqponmlkjihgfedcba"), 1);
+		newSeq.setAt(new SubstitutionCipher("13579zyxwvutsrqponmlkjihgfedcba02468"), 1);
 
 		/*
 		writer = new PrintWriter("test2.cyph");
@@ -72,8 +73,10 @@ class CipherSequenceTest {
 
 		System.out.println();
 		System.out.println("Copy sequence and delete a few operations");
+		System.out.println("Tests clone() removeLast() and removeAt()");
 		CipherSequence cpySeq = new CipherSequence(newSeq);
-		cpySeq.removeAt(cpySeq.size()-1);
+		//cpySeq.removeAt(cpySeq.size()-1);
+		cpySeq.removeLast();
 		cpySeq.removeAt(0);
 
 		for (int i=0; i<cpySeq.size(); i++)

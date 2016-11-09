@@ -8,17 +8,30 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.CopyOption;
 import java.nio.file.StandardCopyOption;
 
-public class CipherSequenceLibrary {
-	//private Vector<String> fileNames;
+public class CipherSequenceLibrary implements Cloneable {
 	private Path libraryDirectoryPath;
 	public CipherSequenceLibrary(String libraryDirectory) throws Exception {
 		libraryDirectoryPath = Paths.get(libraryDirectory);
+
+		// Make sure library is a valid and accessible directory
 		if (Files.notExists(libraryDirectoryPath))
 			throw new Exception("Library directory not found");
+		if (Files.isRegularFile(libraryDirectoryPath))
+			throw new Exception("Given file not directory!");
+		if (!Files.isReadable(libraryDirectoryPath) || !Files.isWritable(libraryDirectoryPath))
+			throw new Exception("We don't have permission to access that directory!");
 	}
-	// copy constructor
 	public CipherSequenceLibrary(CipherSequenceLibrary other) {
-		this.libraryDirectoryPath = other.libraryDirectoryPath;
+		// Path does not have a clone() method, and is only instatiatied by factories, but we need a new copy
+		// Thus we have to extract the string form of the path and pass that to the factory for a new (and equivalent) object
+		this.libraryDirectoryPath = Paths.get(other.libraryDirectoryPath.toString());
+	}
+	@Override
+	public Object clone() {
+		return new CipherSequenceLibrary(this);
+	}
+	public boolean equals(CipherSequenceLibrary other) {
+		return this.libraryDirectoryPath.equals(other.libraryDirectoryPath);
 	}
 
 	// adds .cyph to file names that dont end in .cyph
@@ -30,6 +43,7 @@ public class CipherSequenceLibrary {
 	}
 
 	// fetch list of files in Library diectory
+	// Choose an easy interface, but DirectoryStream can be iterated over directly
 	public Vector<String> fileNames() throws Exception {
 		Vector<String> names = new Vector<String>();
 

@@ -51,13 +51,32 @@ class CipherTest {
 				System.out.println("FAIL");
 
 			System.out.println();
-			System.out.println("Testing clone");
-			Cipher myCopy = myCipher.clone();
+			System.out.println("Testing clone()");
+			Cipher myCopy = (Cipher)myCipher.clone();
 			String copyCipherText = myCopy.encrypt(demoString);
-			if (copyCipherText == cipherText)
+			if (copyCipherText.equals(cipherText))
 				System.out.println("Ok.");
 			else
 				System.out.println("FAIL");
+
+			System.out.println();
+			System.out.println("Testing equals() with cloned item");
+			if (myCopy.equals(myCipher) && myCipher.equals(myCopy))
+				System.out.println("Ok.");
+			else
+				System.out.println("FAIL");
+
+			// Only run this test if NOT given Dummy as input
+			if (!args[0].equals("Dummy"))
+			{
+				System.out.println();
+				System.out.println("Testing equals() with Dummy");
+				DummyCipher myDummy = new DummyCipher();
+				if (myCopy.equals(myDummy) || myCipher.equals(myDummy))
+					System.out.println("FAIL");
+				else
+					System.out.println("Ok.");
+			}
 
 			System.out.println();
 			System.out.println("Testing toString()");
@@ -71,7 +90,6 @@ class CipherTest {
 				System.out.println("Ok.");
 			else
 				System.out.println("FAIL");
-
 		}
 	}
 }

@@ -3,7 +3,7 @@ package cipher;
 
 // Base class for Ciphers
 // All Ciphers must implement this interface inorder for the CipherSequence class to function
-public abstract class Cipher {
+public abstract class Cipher implements Cloneable {
 	// need to add an init function that accepts the string to be parsed from cyph file
 
 	protected String  name;		// name of the Cipher
@@ -18,11 +18,12 @@ public abstract class Cipher {
 		this.version = other.version;
 		this.unicode = other.unicode;
 	}
-	abstract public Cipher clone();
-	public void init(String[] args) {
+	abstract public Object clone() throws CloneNotSupportedException;
+	abstract public boolean equals(Cipher other);
+	public void init(String[] args) throws Exception {
 	}
 	public String getName() {
-		return new String(name);
+		return name;
 	}
 	public String getArgsString() {
 		return new String("");

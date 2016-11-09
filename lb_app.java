@@ -69,8 +69,8 @@ public class lb_app {
 		//Since only one of -f or -F can be specified, this is a sentinel
 		boolean cyphSpecified = false;
 
-    //Inditates if the cipher specified is with -F or not
-    boolean libCyph = false;
+		//Inditates if the cipher specified is with -F or not
+		boolean libCyph = false;
 		//Can only have enc or dec specified
 		//This is implemented as a bool in the class member data, but
 		//here an additional value is needed to determine if no direction
@@ -157,7 +157,7 @@ public class lb_app {
 						//Make sure a cipher hasn't already been specified
 						if(!cyphSpecified) {
 							cyphSpecified = true;
-              libCyph = true;
+							libCyph = true;
 							//Avoid out-of-bounds error
 							if(args.length > (i + 1)) {
 								locCiphName = args[i+1];
@@ -275,11 +275,11 @@ public class lb_app {
 
 		//check if the library given exists
 		if(locLibPath != null) {
-      //If -F not given, throw an error; no point in specifying lib if its not used
-      if(!libCyph) {
-        error = "Library path set, but cipher given is not for a library cipher.";
-        return false;
-      }
+			//If -F not given, throw an error; no point in specifying lib if its not used
+			if(!libCyph) {
+				error = "Library path set, but cipher given is not for a library cipher.";
+				return false;
+			}
 			//Expand any relative paths
 			if(locLibPath.startsWith("~" + File.separator)) {
 				locLibPath = System.getProperty("user.home") + locLibPath.substring(1);
@@ -300,17 +300,17 @@ public class lb_app {
 			}
 		}
 
-    System.out.println("Path is " + locLibPath + locCiphName); 
+		System.out.println("Path is " + locLibPath + locCiphName); 
 		//Make sure name given in CiphName is actually found in
 		//the library
 		if(locCiphName != null && libCyph) {
-      //Note: a library cipher may or may not have .cyph appended to it
+			//Note: a library cipher may or may not have .cyph appended to it
 			File tempCiphName = new File(locLibPath + locCiphName);
 			if(!tempCiphName.exists()) {
-        if(!(locCiphName.contains(".cyph"))) {
-                error = "Ciph name not found in library.";
-                return false;
-        }
+				if(!(locCiphName.contains(".cyph"))) {
+					error = "Ciph name not found in library.";
+					return false;
+				}
 			}
 			else if(tempCiphName.isDirectory()) {
 				error = "Ciph in library is a directory, not a file.";
