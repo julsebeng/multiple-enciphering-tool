@@ -13,7 +13,7 @@ Repo for CEN4020 2016 project
 ## Compiling Labyrinthine
 ####To compile the CLI
 1. Run `make clean`
-2. Run `make app`
+2. Run `make` or `make app` or `make all` (automatic, explicit, app and ad-hoc-tests programs)
 
 ####To compile the app
 Android Studio doesn't behave well when the project is just cloned from source,
@@ -39,8 +39,8 @@ make testprep
 ```
 Or, to install the JUnit files manually:
 ```
-wget http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar && mv junit-4.12.jar junit.jar
-wget http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar && mv hamcrest-core-1.3.jar hamcrest-core.jar
+wget 'http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit-4.12.jar' -O 'junit.jar'
+wget 'http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar' -O  'hamcrest-core.jar'
 ```
 Next, run `make buildtest` to compile the test cases.
 ####Running the CLI tests
@@ -59,7 +59,7 @@ java lb_app -i input.txt -f test.cyph enc
 ```
 should print this line to the terminal:
 ```
-Zkld ld a qfddaif zkaz vffrd zb gf fvsbrfr.
+Zgsd sd 4 rcdd4ac 1g41 vcced 1b 5c cv6bece.
 ```
 -
 Using the provided `output.txt` and `test.cyph`:
@@ -76,7 +76,7 @@ This is a message that needs to be encoded.
 Using the provided `input2.txt`, which is a large amount of text, and `test.cyph`:
 
 ```
-java lb_app enc -i input.txt -f -o out.txt test.cyph
+java lb_app -i input2.txt -o out.txt -f test.cyph enc
 ```
 
 Should output a lengthy amount of code to the file `out.txt`. `out.txt` does not need to exist prior to running the command. The output should match that of the provided `output2.txt`.
