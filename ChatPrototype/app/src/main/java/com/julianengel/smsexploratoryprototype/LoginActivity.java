@@ -319,6 +319,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             /* Login code implemented by Julian 11/3/16 */
+            /* Modified by Christopher 11/6/16 */
 
             //First, attempt a login.
             ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
@@ -331,8 +332,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                                 Context context = getApplicationContext();
                                 int duration = Toast.LENGTH_LONG;
-                                CharSequence errorMessage = "An unknown error occurred.";;
-                                Toast errToast;
+                                CharSequence accCreatedMessage = "Account Created";;
+                                Toast createdAccountToast;
 
                                 //Get error code and see what happened
                                 int loginErrorCode = e.getCode();
@@ -343,14 +344,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                         break;
                                     case TIMEOUT:
                                         //Toast the user and tell them a timeout occurred
-                                        errorMessage = "Error: request timed out.";
+                                        CharSequence errorMessage = "Error: request timed out.";
                                         break;
 
                                     default:
 
                                 }
-                                errToast = Toast.makeText(context, errorMessage, duration);
-                                errToast.show();
+                                createdAccountToast = Toast.makeText(context, accCreatedMessage, duration);
+                                createdAccountToast.show();
 
                             }
                         }

@@ -15,6 +15,15 @@ Repo for CEN4020 2016 project
 1. Run `make clean`
 2. Run `make app`
 
+####To compile the app
+Android Studio doesn't behave well when the project is just cloned from source,
+so I would recommend cloning the source and opening up the mobile projects
+manually from within Android Studio. Note that there are currently two separate
+Android projects: the original app that contains code for cipher implementation
+and the ChatPrototype project that was used to create a proof-of-concept messaging
+system. Most of the functionality is contained in the ChatPrototype project.
+Normal compilation in Android Studio should be sufficient. 
+
 ## Running Labyrinthine
 ####To run the CLI:
 The CLI is invoked by running `java lb_app`. Please check the wiki for what
@@ -22,7 +31,7 @@ flags are supported.
 
 ## Running the Unit Test Cases
 Building the JUnit test cases relies on two assumptions:
-1. The current JUnit jar is named `junit.jar` and the curren Hamcrest jar is named `hamcrest-core.jar`.
+1. The current JUnit jar is named `junit.jar` and the current Hamcrest jar is named `hamcrest-core.jar`.
 2. Both jar files are located in the same directory as the source files.
 So in order to run the test cases at all, you can just run:
 ```

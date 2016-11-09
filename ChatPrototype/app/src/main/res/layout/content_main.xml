@@ -81,13 +81,13 @@
 
             android:gravity="center_vertical|right"
 
-            android:paddingRight="10dp"
-
             android:layout_alignParentRight="true"
 
             android:text="@string/send"
 
-            android:textSize="18sp" >
+            android:textSize="18sp"
+            android:elevation="0dp"
+            android:paddingRight="22dp">
 
         </Button>
 

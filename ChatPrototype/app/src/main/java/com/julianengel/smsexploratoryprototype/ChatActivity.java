@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,6 +36,13 @@ import static android.support.design.R.styleable.MenuItem;
 
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ListView chatList;
+
+    /* I'd imagine that this would be changed to ArrayAdapter<some subclass of ParseObject>
+    down the line...
+     */
+    private ArrayAdapter<String> chatListAdapter;
 
     /* Declare a constant for the name of this class; used when sending things
      * to LogCat
@@ -130,14 +138,51 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        /* Reference to our ListView containing all the chats, inside the Nav Drawer
+         */
+        chatList = (ListView) findViewById(R.id.chatList);
+
+        String[] testChats = {"Chat 1", "Chat 2", "Chat 3"};
+        chatListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testChats);
+        chatList.setAdapter(chatListAdapter);
+
+
+        /* Define logic for populating the menu in the nav drawer
+            Implemented by Julian 11/7/16
+         */
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
 
 		/* The ParseUser class is a local representation of a user's data: name,
 		 * email, sessionToken, etc
@@ -150,16 +195,20 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 * Also note that automatic login will have to be manually enabled if
 		 * we decide to use it; check ParseUser.java for more info.
 		 */
+
         if(ParseUser.getCurrentUser() != null) {
 			/* If there's currently a user logged in, go ahead and run the main
 			 * part of the code.
 			 */
+
             startWithCurrentUser();
         }
         else {
 			/* Otherwise, attempt to log in as an anonymous user.
 			 */
-            login();
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivity(loginIntent);
+
         }
 
         mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
@@ -195,12 +244,16 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_login) {
+        if(id == R.id.logoutButton) {
 
-            /* Start the LoginActivity activity
+            /* this will log the user out and send the app to the login activity
              */
+            mAdapter.clear();
+            ParseUser.logOut();
+
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+
             return true;
         }
         else if(id == R.id.action_settings) {
@@ -281,6 +334,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 */
         mMessages = new ArrayList<>();
 
+        String userId = ParseUser.getCurrentUser().getObjectId();
+
+
         /* Scroll to the bottom when a data set change occurs. 1 will set the
 		 * transcript mode of the ListView lvChat to always scroll down to show
 		 * new items.
@@ -297,8 +353,13 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		/* Get the ID of the curretnly logged in. ObjectId + className is
 		 * a unique identifier for an object in a parse application.
 		 */
-        final String userId = ParseUser.getCurrentUser().getObjectId();
 
+        /* refresh the userId when setting up the message list to ensure that we are seeing
+            the correct user if a logout has occurred
+        */
+        /*if(ParseUser.getCurrentUser().getObjectId() != null) {
+            userId = ParseUser.getCurrentUser().getObjectId();
+        }*/
 		/* Create an instance of our ChatListAdapter, tie it to the current
 		 * context, pass it the userId, and pass it the array of messages.
 		 */
@@ -377,7 +438,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 	 * mRefreshMessagesRunnable that was run earlier.
 	 */
     void refreshMessages() {
-
+        if (ParseUser.getCurrentUser() != null){
 		/* Create a new ParseQuery object: this will manage querying the
 		 * backend database. Because ParseObjects represent data stored both
 		 * locally and remotely, we will also use our Messages subclass
@@ -412,7 +473,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 					/* Clear the current array of Message objects, presumably
 					 * full of objects from the last query.
 					 */
-					mMessages.clear();
+                   setupMessagePosting();
+                   mMessages.clear();
 
 					/* Reverse the elements provided. Honestly, i'm not sure
 					 * why the example code orders the results by descending
@@ -448,7 +510,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                }
            }
         });
-    }
+    }}
 
 
 }
