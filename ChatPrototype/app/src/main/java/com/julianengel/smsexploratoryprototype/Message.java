@@ -18,6 +18,7 @@ public class Message extends ParseObject {
 	 */
     static final String USER_ID_KEY = "userId";
     static final String BODY_KEY = "body";
+    static final String CHAT_ID_KEY = "chatId";
 
 	/* Getter functions; even though these just call ParseObject functions, they
 	 * are more friendly and easier to use.
@@ -30,6 +31,10 @@ public class Message extends ParseObject {
         return getString(BODY_KEY);
     }
 
+    public String getChatId() {
+        return getString(CHAT_ID_KEY);
+    }
+
 	/* Setter functions: same with the getters, these are just easy-to-use
 	 * interfaces
 	 */
@@ -39,6 +44,10 @@ public class Message extends ParseObject {
 
     public void setBody(String body) {
         put(BODY_KEY, body);
+    }
+
+    public void setChatId(String body) {
+        put(CHAT_ID_KEY, body);
     }
 
 }

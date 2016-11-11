@@ -22,11 +22,31 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true" >
 
-    <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="20dp"/>
+        <Button
+
+            android:id="@+id/btNewChat"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:gravity="center_vertical"
+
+            android:layout_alignParentRight="true"
+
+            android:text="@string/send"
+
+            android:textSize="18sp"
+            android:elevation="0dp"
+            android:paddingTop="40dp">
+
+        </Button>
+
+        <ListView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="50dp"/>
 
     </android.support.design.widget.NavigationView>
 
