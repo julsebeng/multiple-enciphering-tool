@@ -34,11 +34,12 @@
 
             android:layout_alignParentRight="true"
 
-            android:text="@string/send"
+            android:text="New Chat"
 
             android:textSize="18sp"
             android:elevation="0dp"
-            android:paddingTop="40dp">
+            android:paddingTop="40dp"
+            tools:text="">
 
         </Button>
 

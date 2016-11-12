@@ -20,6 +20,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.julianengel.smsexploratoryprototype.R.styleable.View;
 
+import com.parse.ParseUser;
+
 /**
  * Created by Julian and Chris on 10/25/16.
  */
@@ -34,6 +36,7 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
 	/* This class will track the currently logged in user.
 	 */
     private String mUserId;
+    private ParseUser curUser = ParseUser.getCurrentUser();
 
     /* Default constructor for the adapter. This will call the constructor for
      * ArrayAdapter(Context, int, List<T>). Takes the context of the current

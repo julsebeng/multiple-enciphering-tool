@@ -23,6 +23,7 @@ dependencies {
     //These three for working with parse
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.parse:parseinterceptors:0.0.2'
+    compile 'com.parse:parseui-widget-android:0.0.1'
 
     compile fileTree(dir: 'libs', include: '*.jar')
 //    compile 'com.android.support:appcompat-v7:24.4.0'

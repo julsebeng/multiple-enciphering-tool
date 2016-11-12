@@ -28,21 +28,20 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static android.support.design.R.styleable.MenuItem;
 
+import com.parse.ParseQueryAdapter;
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView chatList;
-
-    /* I'd imagine that this would be changed to ArrayAdapter<some subclass of ParseObject>
-    down the line...
-     */
-    private ArrayAdapter<String> chatListAdapter;
+    private ParseQueryAdapter<ParseObject> chatQueryAdapter;
 
     /* Declare a constant for the name of this class; used when sending things
      * to LogCat
@@ -62,8 +61,10 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     EditText etMessage;
     Button btSend;
 
+    Button btNewChat;
+
     /* Will point to the ListView inside of the activity_chat.xml file. this is
-     * where the messages will appear when sent and receieved.
+     * where the messages will appear when sent and received.
      */
     ListView lvChat;
 
@@ -116,7 +117,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 			 * Essentially this thread runs refreshMessages(), then reschedules
 			 * itsef.
 			 */
-            mHandler.postDelayed(this, POLL_INTERVAL);
+           // mHandler.postDelayed(this, POLL_INTERVAL);
         }
     };
 
@@ -147,9 +148,12 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
          */
         chatList = (ListView) findViewById(R.id.chatList);
 
-        String[] testChats = {"Chat 1", "Chat 2", "Chat 3"};
-        chatListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testChats);
-        chatList.setAdapter(chatListAdapter);
+        //String[] testChats = {"Chat 1", "Chat 2", "Chat 3", "Replace_me!"};
+        //chatListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testChats);
+        chatQueryAdapter = new ParseQueryAdapter<ParseObject>(this, "Chat");
+        chatQueryAdapter.setTextKey("chatName");
+        chatList.setAdapter(chatQueryAdapter);
+        chatQueryAdapter.loadObjects();
 
 
         /* Define logic for populating the menu in the nav drawer
@@ -163,7 +167,17 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                /*
+                ParseQuery<ParseObject> curUserQuery = ParseQuery.getQuery("chatUsers");
+                curUserQuery.whereEqualTo("userId", ParseUser.getCurrentUser());
 
+                List<ChatObject> chat_ids = curUserQuery.getFirst().get("chats");
+
+                ParseQuery<ParseObject> chatQuery = ParseQuery.getQuery("Chat");
+                chatQuery.whereContainedIn("objectId", chat_ids);
+                chatQuery.find();
+                */
+                chatQueryAdapter.loadObjects();
             }
 
             @Override
@@ -177,6 +191,23 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        btNewChat = (Button) findViewById(R.id.btNewChat);
+        btNewChat.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View V) {
+
+                                             String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+
+                                             ParseObject newChat = new ChatObject();
+                                             newChat.put("chatName", "Dummy"+currentDateTimeString);
+                                             newChat.put("userId", ParseUser.getCurrentUser());
+                                             newChat.saveInBackground();
+
+                                             chatQueryAdapter.notifyDataSetChanged();
+                                         }
+                                     });
+
+        // This code adds the button to the bar at the top of the screen that allows us to open the menu
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -350,23 +381,23 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 */
         mFirstLoad = true;
 
-		/* Get the ID of the curretnly logged in. ObjectId + className is
+		/* Get the ID of the currently logged in. ObjectId + className is
 		 * a unique identifier for an object in a parse application.
 		 */
 
         /* refresh the userId when setting up the message list to ensure that we are seeing
             the correct user if a logout has occurred
         */
-        /*if(ParseUser.getCurrentUser().getObjectId() != null) {
+        if(ParseUser.getCurrentUser().getObjectId() != null) {
             userId = ParseUser.getCurrentUser().getObjectId();
-        }*/
+        }
 		/* Create an instance of our ChatListAdapter, tie it to the current
 		 * context, pass it the userId, and pass it the array of messages.
 		 */
         mAdapter = new ChatListAdapter(ChatActivity.this, userId, mMessages);
 
 		/* Set ListView to use our own adapter. The idea of the adapter is that
-		 * it is resposible for managing the data within each item in the
+		 * it is responsible for managing the data within each item in the
 		 * ListView.
 		 */
         lvChat.setAdapter(mAdapter);

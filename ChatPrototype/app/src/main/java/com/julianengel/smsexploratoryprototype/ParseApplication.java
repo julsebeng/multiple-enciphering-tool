@@ -33,7 +33,7 @@ public class ParseApplication extends Application {
         super.onCreate();
 
         /*Register custom parse module in Message.java. The ParseObject is 
-	 * the Parse SDK's abstract representaiton of data that is saved and
+	 * the Parse SDK's abstract representation of data that is saved and
 	 * retrieved from the cloud (the exact specification can be found in
 	 * ParseObject.java).
 	 */
@@ -45,6 +45,7 @@ public class ParseApplication extends Application {
 	 * public static void registerSubclass(Class<? extends ParseObject> subclass)
 	 */
         ParseObject.registerSubclass(Message.class);
+        ParseObject.registerSubclass(ChatObject.class);
 
         /* Define our own server information for parse. initialize() takes in
 	 * a Configuration as a parameter. The Configuration class is defined
