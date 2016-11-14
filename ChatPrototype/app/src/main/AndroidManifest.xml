@@ -40,8 +40,15 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".NewLoginActivity">
-
+        <activity android:name=".NewLoginActivity" />
+        <activity
+            android:name=".NewChatActivity"
+            android:label="@string/title_activity_new_chat"
+            android:parentActivityName=".ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.julianengel.smsexploratoryprototype.ChatActivity" />
         </activity>
     </application>
 

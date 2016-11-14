@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -28,10 +27,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static android.support.design.R.styleable.MenuItem;
@@ -68,25 +65,16 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
      */
     ListView lvChat;
 
-    /* mMessages will contain all the messages when the app queries the server
-     * for new messages.
-     */
-    ArrayList<Message> mMessages;
-
-    /* Create an instance of our own ChatListAdapter. This class sits between
+    /* Create an instance of our own MessageListAdapter. This class sits between
      * the data we get from the Parse server - in this case an ArrayList of
      * Messages - and the ListView in our app's layout.
      */
-    ChatListAdapter mAdapter;
+    MessageListAdapter mAdapter;
 
 	/* This value determines if we're loading the app for the first time.
 	 * It will affect the messages that we see upon first loading the app.
 	 */
     boolean mFirstLoad;
-
-	/* How many elements to fetch when querying the Parse database for messages.
-	 */
-    static final int MAX_MESSAGES_TO_SHOW = 50;
 
 	/* How often to poll the DB for new messages. Note that this is a TERRIBLE
 	 * way to handle getting new messages! We should implement something a bit
@@ -124,10 +112,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-		/* Code that executes whenever this Activity is created; runs before
-		 * the Activity begins its execution.
-		 */
-
         super.onCreate(savedInstanceState);
 
 		/* Set the current View to the one we have specified for this app,
@@ -144,12 +128,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        /* Reference to our ListView containing all the chats, inside the Nav Drawer
-         */
+        /* Reference to our ListView containing all the chats, inside the Nav Drawer */
         chatList = (ListView) findViewById(R.id.chatList);
 
-        //String[] testChats = {"Chat 1", "Chat 2", "Chat 3", "Replace_me!"};
-        //chatListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, testChats);
         chatQueryAdapter = new ParseQueryAdapter<ParseObject>(this, "Chat");
         chatQueryAdapter.setTextKey("chatName");
         chatList.setAdapter(chatQueryAdapter);
@@ -196,14 +177,14 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                                          @Override
                                          public void onClick(View V) {
 
-                                             String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-
-                                             ParseObject newChat = new ChatObject();
-                                             newChat.put("chatName", "Dummy"+currentDateTimeString);
-                                             newChat.put("userId", ParseUser.getCurrentUser());
-                                             newChat.saveInBackground();
+                                             Intent i = new Intent(getApplicationContext(), NewChatActivity.class);
+                                             startActivity(i);
 
                                              chatQueryAdapter.notifyDataSetChanged();
+                                             chatQueryAdapter.loadObjects();
+
+                                             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                                             drawer.closeDrawer(GravityCompat.START);
                                          }
                                      });
 
@@ -351,22 +332,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 	 * ever run once at startup.
 	 */
     void setupMessagePosting() {
-
-        /* Find the EditText, Button, and ListView that we defined in
-		 * activity_chat.xml. Note that R is a class that contains definitions
-		 * for all the resources in this application (for those who aren't
-		 * familiar with how Android is structured).
-		 */
         etMessage = (EditText) findViewById(R.id.etMessage);
         btSend = (Button) findViewById(R.id.btSend);
         lvChat = (ListView) findViewById(R.id.lvChat);
-
-		/* Create a new array to hold incoming messages.
-		 */
-        mMessages = new ArrayList<>();
-
-        String userId = ParseUser.getCurrentUser().getObjectId();
-
 
         /* Scroll to the bottom when a data set change occurs. 1 will set the
 		 * transcript mode of the ListView lvChat to always scroll down to show
@@ -385,16 +353,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 * a unique identifier for an object in a parse application.
 		 */
 
-        /* refresh the userId when setting up the message list to ensure that we are seeing
-            the correct user if a logout has occurred
-        */
-        if(ParseUser.getCurrentUser().getObjectId() != null) {
-            userId = ParseUser.getCurrentUser().getObjectId();
-        }
-		/* Create an instance of our ChatListAdapter, tie it to the current
-		 * context, pass it the userId, and pass it the array of messages.
-		 */
-        mAdapter = new ChatListAdapter(ChatActivity.this, userId, mMessages);
+        mAdapter = new MessageListAdapter(ChatActivity.this);
 
 		/* Set ListView to use our own adapter. The idea of the adapter is that
 		 * it is responsible for managing the data within each item in the
@@ -441,11 +400,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void done(ParseException e) {
                         if(e == null) {
-							/* This just notifies us that the message was
-							 * successfully saved via on-screen message.
-							 * Completely unnecessary for the function of the
-							 * app.
-							 */
                             Toast.makeText(ChatActivity.this, "Successfully sent message to DB", Toast.LENGTH_SHORT).show();
                         }
                         else {
@@ -454,9 +408,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-				/* Set the EditText where the user types in their message back
-				 * to being empty.
-				 */
                 etMessage.setText(null);
             }
         });
@@ -464,84 +415,21 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    /* Get messages from Parse and load them into the ListAdapter. Currently,
-	 * this function is being run every second due to the Runnable
-	 * mRefreshMessagesRunnable that was run earlier.
-	 */
     void refreshMessages() {
         if (ParseUser.getCurrentUser() != null){
-		/* Create a new ParseQuery object: this will manage querying the
-		 * backend database. Because ParseObjects represent data stored both
-		 * locally and remotely, we will also use our Messages subclass
-		 * to define the data. getQuery() will take in a class literal and
-		 * create a query for it, to pull matching objects from the DB.
-		 * Note that since getQuery() is not given additional parameters it
-		 * will by default fetch all instances of Message objects it finds
-		 * on the server.
-		 */
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+            mAdapter.notifyDataSetChanged();
+            mAdapter.loadObjects();
 
-        /* Limit how many results are returned from the query. By default this
-		 * limit is 1000; setting to a negative number will remove the limit.
-		 */
-        query.setLimit(MAX_MESSAGES_TO_SHOW);
-
-		/* Sort the results fetched. The key given, "createdAt", is something
-		 * that our Message subclass inherits from ParseObject.
-		 */
-        query.orderByDescending("createdAt");
-
-		/* Run the ParseQuery we made in the background, just like when we
-		 * save the messages to the server.
-		 * A FindCallback is an interface that Parse uses specifically for code
-		 * that is to be executed after a query runs and pulls objects back
-		 * from the server.
-		 */
-        query.findInBackground(new FindCallback<Message>() {
-           public void done(List<Message> messages, ParseException e) {
-               if(e == null) {
-
-					/* Clear the current array of Message objects, presumably
-					 * full of objects from the last query.
-					 */
-                   setupMessagePosting();
-                   mMessages.clear();
-
-					/* Reverse the elements provided. Honestly, i'm not sure
-					 * why the example code orders the results by descending
-					 * order only to flip them here... Querying for them in
-					 * ascending order is functionally the same, but I'm keeping
-					 * the example code intact for now in case it's relevant
-					 * for a reason beyond my comprehension.
-					 */
-					Collections.reverse(messages);
-
-					/* Add all the messages to our array of Message objects.
-					 */
-					mMessages.addAll(messages);
-
-					/* Tell our ListView adapter that the data it's tied to
-					 * has changed.
-					 */
-					mAdapter.notifyDataSetChanged();
-
-					/* If this is the first time the query has run, set the
-					 * selected item in the ListView to the very last one.
-					 * So, when the app is opened for the first time and
-					 * all the messages are fetched, it will select the most
-					 * recent one and scroll to it automatically.
-					 */
-                   if(mFirstLoad) {
-                       lvChat.setSelection(mAdapter.getCount() - 1);
-                       mFirstLoad = false;
-                   }
-               }
-               else {
-                   Log.e("Message", "Error Loading Messages" + e);
+                /* If this is the first time the query has run, set the
+                 * selected item in the ListView to the very last one.
+                 * So, when the app is opened for the first time and
+                 * all the messages are fetched, it will select the most
+                 * recent one and scroll to it automatically.
+                 */
+               if(mFirstLoad) {
+                   lvChat.setSelection(mAdapter.getCount() - 1);
+                   mFirstLoad = false;
                }
            }
-        });
-    }}
-
-
+       }
 }

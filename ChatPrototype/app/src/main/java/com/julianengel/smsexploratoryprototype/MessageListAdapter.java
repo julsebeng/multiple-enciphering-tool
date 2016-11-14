@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigInteger;
@@ -31,33 +34,22 @@ import com.parse.ParseUser;
  * The adapter is responsible for creating a View for the ListView to use for
  * each of the items contained within it.
  */
-public class ChatListAdapter extends ArrayAdapter<Message> {
+public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
+    static final int MAX_MESSAGES_TO_SHOW = 50;
 
-	/* This class will track the currently logged in user.
-	 */
-    private String mUserId;
-    private ParseUser curUser = ParseUser.getCurrentUser();
-
-    /* Default constructor for the adapter. This will call the constructor for
-     * ArrayAdapter(Context, int, List<T>). Takes the context of the current
-     * running state, an int as a resouce ID, and the list of objects that will
-     * be represented in the ListView.
-     */
-    public ChatListAdapter(Context context, String userId, List<Message> messages) {
-
-	/* I beleive the 0 passed in as a resource ID will cause the
-	 * ArrayAdapter to use the default TextView.
-	 */
-        super(context, 0, messages);
-
-        this.mUserId = userId;
+    public MessageListAdapter(Context context) {
+        super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+            public ParseQuery create() {
+                ParseQuery query = new ParseQuery(Message.class);
+                query.setLimit(MAX_MESSAGES_TO_SHOW);
+                query.orderByDescending("createdAt");
+                return query;
+            }
+        });
     }
 
-	/* This function is responsible for creating a View of some data for an
-	 * item in the list.
-	 */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getItemView(ParseObject object, View convertView, ViewGroup parent) {
 
 		/* If an item in the list has already been created (for example, if we
 		 * want to display a message that's already been rendered in the list)
@@ -96,13 +88,9 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
             convertView.setTag(holder);
         }
 
-		/* Create a new message item and set it to the message stored in this
-		 * ArrayAdapter subclass's own internal data. This data is the array
-		 * of messages that's used in ChatActivity.java when fetching new
-		 * messages. So message will equal some Message that is contained in
-		 * ChatActivity.java's mMessages variable.
-		 */
-        final Message message = getItem(position);
+        super.getItemView(object, convertView, parent);
+
+        final Message message = (Message)object;
 
 		/* Get the data that's been associated with that particular message.
 		 * This contains the references for that message item's layout fields:
@@ -113,7 +101,9 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
 		/* We test to see if the message was from our current user or some
 		 * other user. This affects the user image justification.
 		 */
-        final boolean isMe = message.getUserId() != null && message.getUserId().equals(mUserId);
+        final boolean isMe =
+                (message.getUserId() != null) &&
+                 message.getUserId().equals(ParseUser.getCurrentUser().getObjectId());
 
         /* Show/hide image based on logged in user.
          * Justify local user's pic to the right, left to other users.
