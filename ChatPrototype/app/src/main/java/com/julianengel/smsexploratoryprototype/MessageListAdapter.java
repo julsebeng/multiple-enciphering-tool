@@ -5,7 +5,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,8 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.List;
-import java.util.concurrent.Exchanger;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -27,6 +24,7 @@ import com.parse.ParseUser;
 
 /**
  * Created by Julian and Chris on 10/25/16.
+ * Major revisions by Thai on 11/13/16
  */
 
 /* This class defines how our data will interact with the ListView; it
@@ -36,17 +34,23 @@ import com.parse.ParseUser;
  */
 public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
     static final int MAX_MESSAGES_TO_SHOW = 50;
+    String CHAT_ID;
 
-    public MessageListAdapter(Context context) {
+    public MessageListAdapter(Context context, final String chatId) {
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
                 ParseQuery query = new ParseQuery(Message.class);
+                query.whereEqualTo("chatId", chatId);
                 query.setLimit(MAX_MESSAGES_TO_SHOW);
-                query.orderByDescending("createdAt");
+                query.orderByAscending("createdAt");
                 return query;
             }
         });
+
+        CHAT_ID = chatId;
     }
+
+    public String getChatId() { return CHAT_ID ; }
 
     @Override
     public View getItemView(ParseObject object, View convertView, ViewGroup parent) {
@@ -102,6 +106,7 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
 		 * other user. This affects the user image justification.
 		 */
         final boolean isMe =
+                (message != null) &&
                 (message.getUserId() != null) &&
                  message.getUserId().equals(ParseUser.getCurrentUser().getObjectId());
 

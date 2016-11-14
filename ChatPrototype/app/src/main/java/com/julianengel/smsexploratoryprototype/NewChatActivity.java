@@ -1,5 +1,7 @@
 package com.julianengel.smsexploratoryprototype;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class NewChatActivity extends AppCompatActivity {
 
@@ -45,12 +49,23 @@ public class NewChatActivity extends AppCompatActivity {
 
                 String input = etName.getText().toString();
 
-                ParseObject newChat = new ChatObject();
+                final ParseObject newChat = new ChatObject();
                 newChat.put("chatName", input);
                 newChat.put("userId", ParseUser.getCurrentUser().getObjectId());
-                newChat.saveInBackground();
+                newChat.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            String chatId = newChat.getObjectId();
 
-                finish();
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("chatId", chatId);
+                            setResult(Activity.RESULT_OK, resultIntent);
+
+                            finish();
+                        }
+                    }
+                });
              }
         });
         if (getSupportActionBar() != null)

@@ -21,6 +21,8 @@ public class ChatObject extends ParseObject {
         return getString(CHAT_NAME_KEY);
     }
 
+    public String getChatId() { return getObjectId(); }
+
     public void setUserId(String userId) {
         put(USER_ID_KEY, userId);
     }
