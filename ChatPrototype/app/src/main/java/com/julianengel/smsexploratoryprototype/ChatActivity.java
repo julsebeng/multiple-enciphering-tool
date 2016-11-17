@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.design.widget.NavigationView;
 
@@ -121,7 +123,18 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         /* Reference to our ListView containing all the chats, inside the Nav Drawer */
         chatList = (ListView) findViewById(R.id.chatList);
 
-        chatQueryAdapter = new ParseQueryAdapter<ParseObject>(this, "Chat");
+        chatQueryAdapter = new ParseQueryAdapter<ParseObject>(this, "Chat") {
+            @Override
+            public View getItemView(ParseObject object, View v, ViewGroup parent) {
+                if(v == null) {
+                    v = View.inflate(getContext(), R.layout.chat_list_item, null);
+                }
+                super.getItemView(object, v, parent);
+                TextView descriptionView = (TextView) v.findViewById(R.id.chatItemBody);
+                descriptionView.setText(object.getString("chatName"));
+                return v;
+            }
+        };
         chatQueryAdapter.setTextKey("chatName");
         chatQueryAdapter.loadObjects();
 
