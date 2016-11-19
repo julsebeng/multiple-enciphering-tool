@@ -62,6 +62,12 @@ public class NewChatActivity extends AppCompatActivity {
                             resultIntent.putExtra("chatId", chatId);
                             setResult(Activity.RESULT_OK, resultIntent);
 
+                            /*
+                            ParseUser curUser = ParseUser.getCurrentUser();
+                            curUser.addChatId(chatId);
+                            curUser.saveInBackground();
+                            */
+
                             finish();
                         }
                     }

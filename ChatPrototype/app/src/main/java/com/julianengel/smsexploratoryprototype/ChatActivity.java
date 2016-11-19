@@ -33,6 +33,7 @@ import static android.support.design.R.styleable.MenuItem;
 import static android.text.InputType.TYPE_CLASS_TEXT;
 
 import com.parse.ParseQueryAdapter;
+import com.parse.ui.ParseLoginBuilder;
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -225,8 +226,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         } else {
 			/* Otherwise, attempt to log in as an anonymous user.
 			 */
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivity(loginIntent);
+            ParseLoginBuilder builder = new ParseLoginBuilder(ChatActivity.this);
+            startActivityForResult(builder.build(), 0);
         }
 
         if (messagePostingSetup)
@@ -266,8 +267,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             //mAdapter.clear();
             ParseUser.logOut();
 
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            ParseLoginBuilder builder = new ParseLoginBuilder(ChatActivity.this);
+            startActivityForResult(builder.build(), 0);
 
             return true;
         } else if (id == R.id.action_settings) {
