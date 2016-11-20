@@ -272,8 +272,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
             return true;
         } else if (id == R.id.action_settings) {
-            /* TODO: implement any settings here
-             */
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

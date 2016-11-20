@@ -14,4 +14,11 @@
 
     <string name="title_activity_new_chat">New Chat</string>
     <string name="reset_password">Reset password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="inline_preferences">Inline Preferences</string>
+    <string name="title_checkbox_preference">Title Checkbox Preferences</string>
+    <string name="summary_checkbox_preference">Summary Checkbox Preferences</string>
 </resources>
