@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/inline_preferences">
-        <CheckBoxPreference
-            android:key="checkbox_preference"
-            android:title="@string/title_checkbox_preference"
-            android:summary="@string/summary_checkbox_preference"/>
+    <PreferenceCategory android:title="@string/encipher_settings">
+       <ListPreference
+           android:key="list_key"
+           android:title="@string/cipher_list_title"
+           android:summary="@string/cipher_list_summary"
+           android:entries="@array/cipher_list"
+           android:entryValues="@array/cipher_list_values"
+           android:dialogTitle="@string/cipher_list_dialog_title"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
