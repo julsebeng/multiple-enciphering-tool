@@ -30,6 +30,9 @@ all: app ad-hoc-tests
 app: lib lb_app.java
 	$(JC) lb_app.java
 
+jar: lb_app.class
+	jar cfe labyrinthine.jar lb_app lb_app.class
+
 # Make sure each .class associated with each .java is present
 # Take class names in LIB-CLASSES and substitute .java for .class
 # No body, b/c it uses the default target defined above
@@ -62,3 +65,4 @@ ad-hoc-tests: $(AHT-CLASSES:.java=.class)
 clean:
 	$(RM) *.class
 	$(RM) ./cipher/*.class
+	$(RM) *.jar
