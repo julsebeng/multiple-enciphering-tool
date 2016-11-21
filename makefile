@@ -30,8 +30,8 @@ all: app ad-hoc-tests
 app: lib lb_app.java
 	$(JC) lb_app.java
 
-jar: lb_app.class
-	jar cfe labyrinthine.jar lb_app lb_app.class
+jar: lib
+	jar cf labyrinthine.jar cipher/
 
 # Make sure each .class associated with each .java is present
 # Take class names in LIB-CLASSES and substitute .java for .class
