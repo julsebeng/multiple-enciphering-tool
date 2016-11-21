@@ -117,6 +117,11 @@ public class FourSquareCipher extends Cipher {
 	    return new FourSquareCipher(this);
     }
     @Override
+    public boolean equals(Cipher other) {
+	    //TODO: define this function! Dummy function is here only to compile
+	   return true; 
+    }
+    @Override
     public String encrypt(String input) throws Exception {
         StringBuilder cipherOutput = new StringBuilder();
         // replace J's in the input as they are not supported by the cipher
