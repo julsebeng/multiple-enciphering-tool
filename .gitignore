@@ -13,3 +13,7 @@ hs_err_pid*
 
 # Vim backup files
 *.swp
+
+#Exceptions
+#jar file for Android Project
+!ChatPrototype/libs/labyrinthine.jar
