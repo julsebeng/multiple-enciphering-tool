@@ -267,8 +267,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             //mAdapter.clear();
             ParseUser.logOut();
 
-            ParseLoginBuilder builder = new ParseLoginBuilder(ChatActivity.this);
-            startActivityForResult(builder.build(), 0);
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 
             return true;
         } else if (id == R.id.action_settings) {
