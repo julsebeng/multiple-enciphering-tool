@@ -217,17 +217,11 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 * we decide to use it; check ParseUser.java for more info.
 		 */
 
-        if (ParseUser.getCurrentUser() != null) {
-			/* If there's currently a user logged in, go ahead and run the main
-			 * part of the code.
-			 */
-
+        if (ParseUser.getCurrentUser() != null)
             startWithCurrentUser();
-        } else {
-			/* Otherwise, attempt to log in as an anonymous user.
-			 */
-            ParseLoginBuilder builder = new ParseLoginBuilder(ChatActivity.this);
-            startActivityForResult(builder.build(), 0);
+        else {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
         }
 
         if (messagePostingSetup)
