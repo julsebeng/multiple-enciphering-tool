@@ -1,5 +1,6 @@
 JFLAGS = -g
 JC = javac
+android-dir = ChatPrototype
 
 # clear default targets for building .java and .class files
 .SUFFIXES: .java .class
@@ -25,7 +26,7 @@ LIB-CLASSES = \
 default: app
 
 .phony: all;
-all: app ad-hoc-tests
+all: app ad-hoc-tests jar
 
 app: lib lb_app.java
 	$(JC) lb_app.java
@@ -66,3 +67,8 @@ clean:
 	$(RM) *.class
 	$(RM) ./cipher/*.class
 	$(RM) *.jar
+
+android-prep: jar
+	cp labyrinthine.jar ./$(android-dir)/libs/
+	mkdir -p $(android-dir)/assets/cipher-library/
+	cp ./test-library/* $(android-dir)/assets/cipher-library/
