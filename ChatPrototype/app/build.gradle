@@ -1,10 +1,10 @@
 
 
 apply plugin: 'com.android.application'
-//public class StartupActiity extends AppCompatActivity {
- //   @Override
-  //  protected Class<?> getTargetClass() {
-    //    return ChatActivity.class;}
+public class StartupActiity extends AppCompatActivity {//intended to include the startup activity
+    @Override
+    protected Class<?> getTargetClass() {
+        return ChatActivity.class;}
 }
 android {
     compileSdkVersion 24
