@@ -48,6 +48,9 @@ public class CipherSequence {
 	}
 	public void loadFromFile(String fileName) throws Exception {
 		FileReader fr = new FileReader(fileName); // load file as stream
+		loadFromFile(fr);
+	}
+	public void loadFromFile(FileReader fr) throws Exception {
 		BufferedReader reader = new BufferedReader(fr); // allow for quick line (block) loading
 		
 		String line; // raw input of line
@@ -72,6 +75,9 @@ public class CipherSequence {
 	}
 	public void saveToFile(String fileName) throws Exception {
 		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
+		saveToFile(writer);
+	}
+	public void saveToFile(Writer writer) throws Exception {
 		for (Cipher c: sequence) {
 			//System.out.println(c.getName() + " " + c.getArgsString());
 			writer.write(c.toString());
