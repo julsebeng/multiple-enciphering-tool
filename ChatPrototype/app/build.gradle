@@ -1,3 +1,5 @@
+//import android.content.res.AssetManager;
+
 apply plugin: 'com.android.application'
 
 android {
@@ -10,6 +12,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+       // AssetManager mngr=getAssets();
+       // InputStream is2=mngr.open("Ciphers/*.cyph");
         jackOptions {
             enabled true
         }
