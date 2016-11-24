@@ -1,7 +1,11 @@
 
 
 apply plugin: 'com.android.application'
-
+//public class StartupActiity extends AppCompatActivity {
+ //   @Override
+  //  protected Class<?> getTargetClass() {
+    //    return ChatActivity.class;}
+}
 android {
     compileSdkVersion 24
     buildToolsVersion "25.0.0"
