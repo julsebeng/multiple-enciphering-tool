@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 
 /**
@@ -32,28 +35,40 @@ public class StartupActivity extends AppCompatActivity {
         //supposed to take stuff out of apk into phone if first time
         //if (prefs.getBoolean("FIRST_RUN", true)) {
 
-            AssetManager mngr = getAssets();
-
             try {
+                AssetManager mngr = getAssets();
                 String[] cyphFiles = mngr.list("cipher-library");
+                String destPath =
+                        context.getFilesDir().getPath()
+                        + File.separator
+                        + "cipher-library";
+                File destDir = new File(destPath);
+                if (!destDir.exists())
+                    destDir.mkdirs();
                 for (int i = 0; i < cyphFiles.length; i++) {
-                    String destPath =
-                            context.getFilesDir().getPath()
-                            + File.separator
-                            + cyphFiles[i];
-                    if (!new File(destPath).exists()) {
-                        FileOutputStream OS = null;
-                        FileInputStream IS = null;
+                    String destFile =
+                        destPath
+                        + File.separator
+                        + cyphFiles[i];
+                    if ( !(new File(destFile).exists()) ) {
+                        OutputStream OS = null;
+                        InputStream IS = null;
                         try {
                             IS = mngr.openFd(
-                                "cipher-library"
-                                + File.separator
-                                + cyphFiles[i])
+                                    "cipher-library"
+                                    + File.separator
+                                    + cyphFiles[i])
                                 .createInputStream();
-                            OS = new FileOutputStream(destPath);
+                            if (IS == null) {
+                                throw new IOException("IS is null");
+                            }
+                            OS = new FileOutputStream(new File(destFile));
+                            if (OS == null) {
+                                throw new IOException("OS is null");
+                            }
 
-                            FileChannel inChan = IS.getChannel();
-                            FileChannel ouChan = OS.getChannel();
+                            FileChannel inChan = (FileChannel)Channels.newChannel(IS);
+                            FileChannel ouChan = (FileChannel)Channels.newChannel(OS);
 
                             long position = 0;
                             long size = inChan.size();
@@ -66,21 +81,24 @@ public class StartupActivity extends AppCompatActivity {
                                     size -= count;
                                 }
                             }
-
-                            OS.flush();
                         }
                         catch (IOException ex) {
+                            ex.printStackTrace();
                             throw ex;
                         }
                         finally {
-                            OS.close();
-                            IS.close();
+                            if (OS != null)
+                                OS.close();
+                            if (IS != null)
+                                IS.close();
                         }
                     }
                 }
             }
             catch(IOException ex){
+                Log.e(TAG, ex.getMessage());
                 Log.e(TAG, "Failed to install files properly");
+                finish();
             }
 
             prefs.edit().putBoolean("FIRST_RUN", false).commit();
