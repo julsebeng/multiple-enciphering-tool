@@ -37,11 +37,14 @@ public class StartupActivity extends AppCompatActivity {
 
             try {
                 AssetManager mngr = getAssets();
+                // get list of files in the cipher-library subdirectory of assets
                 String[] cyphFiles = mngr.list("cipher-library");
+                // destination path, something like /data/data/<package_name>/files/
                 String destPath =
                         context.getFilesDir().getPath()
                         + File.separator
                         + "cipher-library";
+                // Make File out of string, and make sure the File represents a directory
                 File destDir = new File(destPath);
                 if (!destDir.exists())
                     destDir.mkdirs();
@@ -54,6 +57,8 @@ public class StartupActivity extends AppCompatActivity {
                         OutputStream OS = null;
                         InputStream IS = null;
                         try {
+                            // Use asset manager to fetch a file-descriptor for the new file
+                            // and use that to open an InputStream (needed by most copy methods)
                             IS = mngr.openFd(
                                     "cipher-library"
                                     + File.separator

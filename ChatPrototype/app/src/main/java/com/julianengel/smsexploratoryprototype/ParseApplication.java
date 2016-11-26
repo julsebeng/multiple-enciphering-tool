@@ -47,7 +47,6 @@ public class ParseApplication extends Application {
 	 */
         ParseObject.registerSubclass(Message.class);
         ParseObject.registerSubclass(ChatObject.class);
-        ParseUser.registerSubclass(ChatUserObject.class);
 
         /* Define our own server information for parse. initialize() takes in
 	 * a Configuration as a parameter. The Configuration class is defined
