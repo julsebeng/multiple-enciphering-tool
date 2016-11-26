@@ -73,4 +73,4 @@ clean:
 android-prep: jar
 	cp labyrinthine.jar ./$(android-dir)/libs/
 	mkdir -p $(android-dir)/app/src/assets/cipher-library/
-	cp ./test-library/* $(android-dir)/app/src/assets/cipher-library/
+	cp ./test-library/* $(android-dir)/app/src/main/assets/cipher-library/
