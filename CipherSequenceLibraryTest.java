@@ -3,7 +3,7 @@ import java.util.Vector;
 
 class CipherSequenceLibraryTest {
 	public static void main(String[] args) throws Exception {
-		CipherSequenceLibrary myLibrary = new CipherSequenceLibrary("./test-library");
+		CipherSequenceLibrary myLibrary = new CipherSequenceLibrary_File("./test-library");
 		System.out.println("List of .cyph files in ./test-library");
 		Vector<String> lib_files = myLibrary.fileNames();
 		for (String file : lib_files)
@@ -55,7 +55,7 @@ class CipherSequenceLibraryTest {
 		// fail, given file not path
 		try {
 			System.out.println("Testing invalid directory (given file)");
-			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary("./test.cyph");
+			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary_File("./test.cyph");
 			System.out.println("Not Okay\n");
 		}
 		catch (Exception ex) {
@@ -66,7 +66,7 @@ class CipherSequenceLibraryTest {
 		// fail, given invalid path
 		try {
 			System.out.println("Testing invalid directory (given bad path)");
-			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary("./cyph/");
+			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary_File("./cyph/");
 			System.out.println("Not Okay\n");
 		}
 		catch (Exception ex) {
@@ -77,7 +77,7 @@ class CipherSequenceLibraryTest {
 		// fail, given inaccessible path
 		try {
 			System.out.println("Testing invalid directory (given inaccessible path)");
-			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary("/");
+			CipherSequenceLibrary failLibrary = new CipherSequenceLibrary_File("/");
 			System.out.println("Not Okay\n");
 		}
 		catch (Exception ex) {

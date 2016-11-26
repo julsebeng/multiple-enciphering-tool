@@ -20,6 +20,8 @@ LIB-CLASSES = \
 	./cipher/SubstitutionCipher.java \
 	./cipher/CipherSequence.java \
 	./cipher/CipherSequenceLibrary.java \
+	./cipher/CipherSequenceLibrary_Path.java \
+	./cipher/CipherSequenceLibrary_File.java \
 	./cipher/CoreCipherClassLibrary.java
 
 # typing 'make' will compile app, otherwise first listed target is used
@@ -70,5 +72,5 @@ clean:
 
 android-prep: jar
 	cp labyrinthine.jar ./$(android-dir)/libs/
-	mkdir -p $(android-dir)/assets/cipher-library/
-	cp ./test-library/* $(android-dir)/assets/cipher-library/
+	mkdir -p $(android-dir)/app/src/assets/cipher-library/
+	cp ./test-library/* $(android-dir)/app/src/assets/cipher-library/
