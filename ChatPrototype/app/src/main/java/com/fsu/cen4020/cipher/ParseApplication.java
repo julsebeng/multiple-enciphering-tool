@@ -1,10 +1,9 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 import com.parse.interceptors.ParseLogInterceptor;
 
 /**

@@ -1,4 +1,4 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +52,11 @@ public class StartupActivity extends AppCompatActivity {
                         destPath
                         + File.separator
                         + cyphFiles[i];
-                    if ( !(new File(destFile).exists()) ) {
+                    if ( (new File(destFile).exists()) )
+                        Log.i(TAG, destFile + " Exists");
+                    else {
+                        Log.i(TAG, "Creating " + destFile);
+
                         OutputStream OS = null;
                         InputStream IS = null;
                         try {
@@ -72,20 +75,16 @@ public class StartupActivity extends AppCompatActivity {
                                 throw new IOException("OS is null");
                             }
 
-                            FileChannel inChan = (FileChannel)Channels.newChannel(IS);
-                            FileChannel ouChan = (FileChannel)Channels.newChannel(OS);
+                            // Apparently only the crappy primitive method works here
+                            byte[] buf = new byte[1024];
+                            int len;
 
-                            long position = 0;
-                            long size = inChan.size();
-                            // transferTo may fail for files > 1 MB in size (like book files)
-                            // use loop to transfer by chunks
-                            while (position < size) {
-                                long count = inChan.transferTo(position, size, ouChan);
-                                if (count > 0) {
-                                    position += count;
-                                    size -= count;
-                                }
+                            while ((len = IS.read(buf)) > 0) {
+                                OS.write(buf, 0, len);
                             }
+
+                            IS.close();
+                            OS.close();
                         }
                         catch (IOException ex) {
                             ex.printStackTrace();
@@ -101,8 +100,8 @@ public class StartupActivity extends AppCompatActivity {
                 }
             }
             catch(IOException ex){
-                Log.e(TAG, ex.getMessage());
                 Log.e(TAG, "Failed to install files properly");
+                Log.e(TAG, ex.getMessage());
                 finish();
             }
 

@@ -1,4 +1,4 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

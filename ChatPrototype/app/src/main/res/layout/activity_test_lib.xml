@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.julianengel.smsexploratoryprototype.TestLibActivity">
+    tools:context="com.fsu.cen4020.cipher.TestLibActivity">
 
     <TextView
         android:text="Message to encipher"

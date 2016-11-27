@@ -1,4 +1,4 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.app.Activity;
 import android.content.Context;
@@ -151,7 +151,7 @@ public class NewChatActivity extends AppCompatActivity {
                    users = emailQuery.find();
                 }
                 catch (ParseException ex){
-                    Log.d(TAG, "Parse database error");
+                    Log.e(TAG, "Parse database error");
                     return;
                 }
 
@@ -167,7 +167,7 @@ public class NewChatActivity extends AppCompatActivity {
                 newChat.put("chatName", chatName);
                 newChat.put("userId", ParseUser.getCurrentUser().getObjectId());
                 newChat.put("partnerId", users.get(0).getObjectId());
-                newChat.put("cipherFileNmae", cipherNm);
+                newChat.put("cipherFileName", cipherNm);
                 newChat.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {

@@ -1,4 +1,4 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

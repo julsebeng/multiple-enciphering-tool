@@ -1,4 +1,4 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,20 +22,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.design.widget.NavigationView;
 
-import com.parse.LogInCallback;
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import static android.support.design.R.styleable.MenuItem;
 import static android.text.InputType.TYPE_CLASS_TEXT;
 
 import com.parse.ParseQueryAdapter;
-import com.parse.ui.ParseLoginBuilder;
+
+import java.io.File;
+import java.io.FileReader;
+import java.util.List;
+
+import cipher.CipherSequence;
 
 public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private CipherSequence cipherSequence;
+    private String partnerId;
+    private String chatUserId;
 
     private ListView chatList;
     private ParseQueryAdapter<ParseObject> chatQueryAdapter;
@@ -90,14 +97,61 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     Runnable mRefreshMessagesRunnable;
 
     private void swapMessageAdapter(String chatId) {
+        if (!loadChatData(chatId))
+            return;
         if (!messagePostingSetup)
             setupMessagePosting(chatId);
         else {
-            MessageListAdapter replacement = new MessageListAdapter(ChatActivity.this, chatId);
+            MessageListAdapter replacement = new MessageListAdapter(ChatActivity.this, chatId, partnerId, cipherSequence);
             lvChat.setAdapter(replacement);
             mAdapter = replacement;
             mAdapter.loadObjects();
+            etMessage.setText("");
+            etMessage.setInputType(TYPE_CLASS_TEXT);
+            btSend.setVisibility(View.VISIBLE);
         }
+        // TODO: disable editing + error message for chats user is not privy too
+        String curUser = ParseUser.getCurrentUser().getObjectId();
+        if (!curUser.equals(partnerId) && !curUser.equals(chatUserId)) {
+            etMessage.setText("Private");
+            etMessage.setInputType(0);
+            btSend.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean loadChatData(String chatId) {
+        ParseQuery<ParseObject> chatQuery = ParseQuery.getQuery("Chat");
+        chatQuery.whereEqualTo("objectId", chatId);
+        List<ParseObject> results;
+        try {
+            results = chatQuery.find();
+        }
+        catch (ParseException ex){
+            Log.e(TAG, "Parse database error", ex);
+            return false;
+        }
+
+        if (results.size() != 1)
+            return false;
+
+        partnerId  = (String)results.get(0).get("partnerId");
+        chatUserId = (String)results.get(0).get("userId");
+        String cipherSeqName = (String)results.get(0).get("cipherFileName");
+
+        // This code must be edited when fully migrated to internal storage
+        // For now it fetches from assets via a file descriptor then converts to filereader
+        try {
+            File cipherDir = new File(getApplicationContext().getFilesDir().toString() + File.separator + "cipher-library");
+            FileReader fr = new FileReader(new File(cipherDir, cipherSeqName));
+            cipherSequence = new CipherSequence();
+            cipherSequence.loadFromFile(fr);
+        }
+        catch (Exception ex) {
+            Log.e(TAG, "CipherSequence file error", ex);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -152,16 +206,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        /*
-        etMessage.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus && messagePostingSetup)
-                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
-        });
-        */
-
         /* Define logic for populating the menu in the nav drawer
             Implemented by Julian 11/7/16
          */
@@ -191,10 +235,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
                 Intent i = new Intent(getApplicationContext(), NewChatActivity.class);
                 startActivityForResult(i, 100);
-
-                chatQueryAdapter.notifyDataSetChanged();
-                chatQueryAdapter.loadObjects();
-
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
@@ -277,7 +317,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
         /* Code that will close the nav drawer after an item has been selected
@@ -298,33 +337,9 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
         /* Instead use this location to set up an empty chat screen */
         btSend.setVisibility(View.GONE);
+        // TODO: make this a resource text
         etMessage.setText("No Chat Selected");
-        //etMessage.setFocusable(false);
         etMessage.setInputType(0);
-    }
-
-
-	/* If there isn't a user logged in, log in. In this demo, we're using an
-	 * anonymous user here, which is why the class ParseAnonymousUtils is being
-	 * called to log a new user in.
-	 * See ParseAnonymousUtils.java for more information.
-	 */
-
-    /* The anonymous user is created in the background, on a separate thread.
-	 * This is why it takes a Callback as a parameter; it will execute the code
-	 * in done() once the thread code for logging in the user is complete.
-	 */
-    void login() {
-        ParseAnonymousUtils.logIn(new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Anonymous login failed: ", e);
-                } else {
-                    startWithCurrentUser();
-                }
-            }
-        });
     }
 
     /* Sets up the button event handler that will post the message to the parse
@@ -338,7 +353,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 
         btSend.setVisibility(View.VISIBLE);
         etMessage.setText(null);
-        //etMessage.setFocusable(true);
         etMessage.setInputType(TYPE_CLASS_TEXT);
 
         mRefreshMessagesRunnable = new Runnable() {
@@ -367,11 +381,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 */
         mFirstLoad = true;
 
-		/* Get the ID of the currently logged in. ObjectId + className is
-		 * a unique identifier for an object in a parse application.
-		 */
-
-        mAdapter = new MessageListAdapter(ChatActivity.this, chatId); /* will be broken until default and setting chats is implemented */
+        mAdapter = new MessageListAdapter(ChatActivity.this, chatId, partnerId, cipherSequence);
 
 		/* Set ListView to use our own adapter. The idea of the adapter is that
 		 * it is responsible for managing the data within each item in the
@@ -402,7 +412,17 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 				 */
 				/* This would be a good place to encipher the outgoing message.
 				 */
-                message.setBody(data);
+
+                String messBody;
+                try {
+                    messBody = cipherSequence.encrypt(data);
+                }
+                catch (Exception ex) {
+                    Log.e(TAG, "Error in cipherSequence in ChatActivity send button callback", ex);
+                    return;
+                }
+
+                message.setBody(messBody);
                 message.setUserId(ParseUser.getCurrentUser().getObjectId());
                 message.setChatId(mAdapter.getChatId());
 

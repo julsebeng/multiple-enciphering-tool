@@ -1,6 +1,7 @@
-package com.julianengel.smsexploratoryprototype;
+package com.fsu.cen4020.cipher;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,10 @@ import java.security.MessageDigest;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.julianengel.smsexploratoryprototype.R.styleable.View;
 
 import com.parse.ParseUser;
+
+import cipher.CipherSequence;
 
 /**
  * Created by Julian and Chris on 10/25/16.
@@ -33,10 +35,14 @@ import com.parse.ParseUser;
  * each of the items contained within it.
  */
 public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
+    static final String TAG = ChatActivity.class.getSimpleName();
+    private CipherSequence cipherSequence;
     static final int MAX_MESSAGES_TO_SHOW = 50;
-    String CHAT_ID;
+    private String CHAT_ID;
+    private String userId;
+    private String partnerId;
 
-    public MessageListAdapter(Context context, final String chatId) {
+    public MessageListAdapter(Context context, final String chatId, final String partnerId, final CipherSequence cipherSequence) {
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
                 ParseQuery query = new ParseQuery(Message.class);
@@ -48,9 +54,13 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
         });
 
         CHAT_ID = chatId;
+        userId = ParseUser.getCurrentUser().getObjectId();
+        this.partnerId = partnerId;
+        this.cipherSequence = cipherSequence;
     }
 
     public String getChatId() { return CHAT_ID ; }
+    public void setCipherSequence(CipherSequence cipherSequence) { this.cipherSequence = cipherSequence; }
 
     @Override
     public View getItemView(ParseObject object, View convertView, ViewGroup parent) {
@@ -108,7 +118,7 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
         final boolean isMe =
                 (message != null) &&
                 (message.getUserId() != null) &&
-                 message.getUserId().equals(ParseUser.getCurrentUser().getObjectId());
+                 message.getUserId().equals(userId);
 
         /* Show/hide image based on logged in user.
          * Justify local user's pic to the right, left to other users.
@@ -152,11 +162,23 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
 		 */
         Picasso.with(getContext()).load(getProfileUrl(message.getUserId())).into(profileView);
 
+        // Fetch and decrypt message text
+        String messUserId = message.getUserId();
+        String messBody = message.getBody();
+        if (messUserId.equals(userId) || messUserId.equals(partnerId)) {
+            try {
+                messBody = cipherSequence.decrypt(messBody);
+            }
+            catch (Exception ex) {
+                Log.e(TAG, "Error in cipherSequence in MessageListAdapter");
+            }
+        }
+
 		/* Set the text of the message View's TextView to the body of the stored
 		 * Message object.
 		 */
-        holder.body.setText(message.getBody());
 
+        holder.body.setText(messBody);
         return convertView;
 
     }
