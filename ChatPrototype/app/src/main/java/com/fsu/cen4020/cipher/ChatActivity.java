@@ -109,6 +109,10 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             etMessage.setText("");
             etMessage.setInputType(TYPE_CLASS_TEXT);
             btSend.setVisibility(View.VISIBLE);
+            setupMessagePosting(chatId);
+            Log.i("swapMessageAdapter", "Restarting the refresh runnable.");
+            mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
+
         }
         // TODO: disable editing + error message for chats user is not privy too
         String curUser = ParseUser.getCurrentUser().getObjectId();
@@ -345,20 +349,24 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 	 */
     void setupMessagePosting(String chatId) {
 
+
         messagePostingSetup = true;
 
         btSend.setVisibility(View.VISIBLE);
         etMessage.setText(null);
         etMessage.setInputType(TYPE_CLASS_TEXT);
 
+        Log.i("setupMessagePosting", "Setting up runnable.");
+
         mRefreshMessagesRunnable = new Runnable() {
             /* The run() method is a part of the Runnable interface and is the
             *  code that is to be executed in a thread.
             */
+            private String currChatId = null;
             @Override
             public void run() {
-                refreshMessages();
 
+                refreshMessages();
                 mHandler.postDelayed(this, POLL_INTERVAL);
             }
         };
@@ -448,6 +456,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void refreshMessages() {
+
+        Log.i("refreshMessages", "Refreshing messages.");
         if (ParseUser.getCurrentUser() != null) {
             mAdapter.notifyDataSetChanged();
             mAdapter.loadObjects();
