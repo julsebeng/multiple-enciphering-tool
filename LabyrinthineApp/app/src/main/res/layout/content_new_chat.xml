@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_new_chat"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.fsu.cen4020.cipher.NewChatActivity"
+    tools:showIn="@layout/activity_new_chat">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="111dp"
+        android:id="@+id/etChatName" />
+
+    <Button
+        android:text="Submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/NewChatSubmit"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Set Chat Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/etChatName"
+        android:layout_alignStart="@+id/etChatName"
+        android:layout_marginBottom="47dp"
+        android:id="@+id/textView"
+        tools:text="Set Chat Name"
+        android:layout_alignEnd="@+id/etChatName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/etChatEmail"
+        android:layout_below="@+id/etChatName"
+        android:layout_alignStart="@+id/etChatName"
+        android:layout_marginTop="45dp" />
+
+    <TextView
+        android:text="Input Partner Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/etChatName"
+        android:layout_alignStart="@+id/etChatEmail"
+        android:layout_alignEnd="@+id/etChatEmail" />
+
+    <TextView
+        android:text="Choose cypher sequence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/etChatEmail"
+        android:layout_alignStart="@+id/etChatEmail"
+        android:layout_alignEnd="@+id/etChatEmail" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/spChatCipher"
+        android:spinnerMode="dialog" />
+</RelativeLayout>

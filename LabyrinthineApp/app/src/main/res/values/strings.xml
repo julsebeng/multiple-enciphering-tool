@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Labyrinthine</string>
+    <string name="message_hint">Type your message here</string>
+    <string name="send">Send</string>
+    <string name="profile_me">My Profile Pic</string>
+    <string name="profile_other">Other profile pic</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_login">Login</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="title_activity_new_chat">New Chat</string>
+    <string name="reset_password">Reset password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Resources for preferences menu -->
+    <string name="encipher_settings">Encipher Settings</string>
+    <string name="cipher_list_title">List of Ciphers</string>
+    <string name="cipher_list_summary">List of available ciphers</string>
+    <string name="cipher_list_dialog_title">Dialog Title</string>
+</resources>
