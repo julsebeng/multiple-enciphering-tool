@@ -18,7 +18,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 
 /**
- * Created by crow(gridnaught) on 11/24/16.
+ * Created by crow(gridnaught) ((Joseph)) on 11/24/16.
  */
 
 public class StartupActivity extends AppCompatActivity {

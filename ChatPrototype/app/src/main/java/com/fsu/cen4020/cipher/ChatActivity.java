@@ -309,10 +309,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             return true;
         }
-        else if (id == R.id.action_test_lib) {
-           Intent intent = new Intent(this, TestLibActivity.class);
-            startActivity(intent);
-        }
 
         return super.onOptionsItemSelected(item);
     }

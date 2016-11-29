@@ -69,7 +69,6 @@
                 android:value="true" />
         </activity>
         <activity android:name="com.fsu.cen4020.cipher.SettingsActivity" />
-        <activity android:name="com.fsu.cen4020.cipher.TestLibActivity"></activity>
     </application>
 
 </manifest>
