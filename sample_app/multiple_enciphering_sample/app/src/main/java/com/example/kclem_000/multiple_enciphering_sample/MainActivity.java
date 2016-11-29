@@ -37,11 +37,12 @@ public class MainActivity extends Activity {
                     h = DateFormat.format("MM-dd-yyyyy-h-mmssaa", System.currentTimeMillis()).toString();
                     // this will create a new name everytime
                     File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+                    File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
                     // if external memory exists and folder with name Notes
                     if(!root.exists()){
                         root.mkdirs(); // will create folder
                     }
-                    File filepath = new File(root, h + ".txt"); // file path to save
+                    File filepath = new File(dir, h + ".txt"); // file path to save
                     FileWriter writer = new FileWriter(filepath);
                     writer.append(ed.getText().toString());
                     writer.flush();

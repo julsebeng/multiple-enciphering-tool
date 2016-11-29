@@ -65,6 +65,8 @@ ad-hoc-tests: $(AHT-CLASSES:.java=.class)
 	@echo "	java CipherTest <Cipher Name> <Cipher args>"
 	@echo "	java CipherSequenceTest"
 
+fetchProj:
+	wget https://raw.githubusercontent.com/jse13/multiple-enciphering-tool/master/labyrinthine.zip
 clean:
 	$(RM) *.class
 	$(RM) ./cipher/*.class
