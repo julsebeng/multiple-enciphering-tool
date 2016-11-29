@@ -16,4 +16,4 @@ hs_err_pid*
 
 #Exceptions
 #jar file for Android Project
-!ChatPrototype/libs/labyrinthine.jar
+!LabyrinthineApp/libs/labyrinthine.jar

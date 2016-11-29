@@ -1,6 +1,6 @@
 JFLAGS = -g
 JC = javac
-android-dir = ChatPrototype
+android-dir = LabyrinthineApp
 
 # clear default targets for building .java and .class files
 .SUFFIXES: .java .class
@@ -73,6 +73,7 @@ clean:
 	$(RM) *.jar
 
 android-prep: jar
+	mkdir -p $(android-dir)/libs/
 	cp labyrinthine.jar ./$(android-dir)/libs/
 	mkdir -p $(android-dir)/app/src/assets/cipher-library/
 	cp ./test-library/* $(android-dir)/app/src/main/assets/cipher-library/
