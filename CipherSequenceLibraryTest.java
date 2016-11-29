@@ -85,7 +85,21 @@ class CipherSequenceLibraryTest {
 			System.out.println("Okay\n");
 		}
 
+		//System.out.println();
+		//System.out.println("***Testing the file movement functions***");
+
 		System.out.println();
-		System.out.println("***Testing the file movement functions***");
+		System.out.println("Testing fileNames()");
+		try {
+			System.out.println("Check By Hand");
+			System.out.println("** ** ** ** ** **");
+			for (String file : myLibrary.fileNames())
+				System.out.println(file);
+			System.out.println("** ** ** ** ** **");
+		}
+		catch (Exception ex) {
+			System.out.println(ex.toString());
+			System.out.println("Not Okay\n");
+		}
 	}
 }
