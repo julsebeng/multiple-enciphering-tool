@@ -20,7 +20,7 @@ public class RotNCipher extends Cipher {
 	}
 	public RotNCipher() {
 		name = "RotN";
-		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+		//System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	@Override
 	public void init(String[] args) throws Exception {
