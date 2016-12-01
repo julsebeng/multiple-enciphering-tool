@@ -24,7 +24,7 @@ public class SubstitutionCipher extends Cipher {
 	}
 	public SubstitutionCipher() {
 		name = "Substitution";
-		System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
+		//System.err.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	@Override
 	public void init(String[] args) throws Exception {
