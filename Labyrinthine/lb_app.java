@@ -41,7 +41,7 @@ public class lb_app {
 	private static String input = null;
 	private static String ciphPath = null;
 
-	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/";
+	private static String libPath = System.getProperty("user.home") + "/Labyrinthine";
 
 	//Generic error message holder
 	private static String error = "An error has occurred.";
@@ -57,8 +57,6 @@ public class lb_app {
 
 		if(!runCipherSequence()) {
 			throw new Exception(error);
-
-			//System.out.println(error);
 		}
 
 	}
@@ -300,17 +298,18 @@ public class lb_app {
 			}
 		}
 
-		System.out.println("Path is " + locLibPath + locCiphName); 
 		//Make sure name given in CiphName is actually found in
 		//the library
 		if(locCiphName != null && libCyph) {
 			//Note: a library cipher may or may not have .cyph appended to it
+      if(locLibPath == null)
+				locLibPath = libPath;
+      if(!locCiphName.endsWith(".cyph"))
+        locCiphName = locCiphName + ".cyph";
 			File tempCiphName = new File(locLibPath + locCiphName);
 			if(!tempCiphName.exists()) {
-				if(!(locCiphName.contains(".cyph"))) {
 					error = "Ciph name not found in library.";
 					return false;
-				}
 			}
 			else if(tempCiphName.isDirectory()) {
 				error = "Ciph in library is a directory, not a file.";
@@ -368,13 +367,15 @@ public class lb_app {
 			input = locInput;
 
 		//If specific path given, use that, else use the library path
-		if(locCiphPath != null)
-			ciphPath = locCiphPath;
-		else if(locCiphName != null)
-			ciphPath = locLibPath + locCiphName;
-
 		if(locLibPath != null)
 			libPath = locLibPath;
+
+		if(locCiphPath != null)
+			ciphPath = locCiphPath;
+		else if(locCiphName != null) {
+			ciphPath = libPath + locCiphName;
+    }
+
 
 		return true;
 	}
@@ -393,7 +394,7 @@ public class lb_app {
 		/*************************************************************/
 		CipherSequence cSeq = null;
 		try {
-			cSeq = new CipherSequence();
+			cSeq = new CipherSequence(libPath);
 		}
 		catch(Exception e) {
 			error = e.getMessage();
