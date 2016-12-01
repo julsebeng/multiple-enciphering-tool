@@ -40,9 +40,9 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
     static final int MAX_MESSAGES_TO_SHOW = 50;
     private String CHAT_ID;
     private String userId;
-    private String partnerId;
+    private Boolean privy;
 
-    public MessageListAdapter(Context context, final String chatId, final String partnerId, final CipherSequence cipherSequence) {
+    public MessageListAdapter(Context context, final String chatId, final Boolean privy, final CipherSequence cipherSequence) {
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
                 ParseQuery query = new ParseQuery(Message.class);
@@ -55,8 +55,8 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
 
         CHAT_ID = chatId;
         userId = ParseUser.getCurrentUser().getObjectId();
-        this.partnerId = partnerId;
         this.cipherSequence = cipherSequence;
+        this.privy = privy;
     }
 
     public String getChatId() { return CHAT_ID ; }
@@ -162,10 +162,8 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
         Picasso.with(getContext()).load(getProfileUrl(message.getUserId())).into(profileView);
 
         // Fetch and decrypt message text
-        String userId = ParseUser.getCurrentUser().getObjectId();
-        String messUserId = message.getUserId();
         String messBody = message.getBody();
-        if (messUserId.equals(userId) || partnerId.equals(userId)) {
+        if (privy) {
             try {
                 messBody = cipherSequence.decrypt(messBody);
             }

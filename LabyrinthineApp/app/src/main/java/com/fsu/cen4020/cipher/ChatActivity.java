@@ -44,6 +44,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     private String partnerId;
     private String chatUserId;
 
+    private Boolean privy;
+
     private ListView chatList;
     private ParseQueryAdapter<ParseObject> chatQueryAdapter;
 
@@ -106,12 +108,19 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             btSend.setVisibility(View.GONE);
             return;
         }
+        String curUser = ParseUser.getCurrentUser().getObjectId();
+        if (curUser.equals(partnerId) || curUser.equals(chatUserId)) {
+            privy = true;
+        }
+        else {
+            privy = false;
+        }
         if (!messagePostingSetup) {
             setupMessagePosting(chatId);
             mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
         }
         else {
-            MessageListAdapter replacement = new MessageListAdapter(ChatActivity.this, chatId, partnerId, cipherSequence);
+            MessageListAdapter replacement = new MessageListAdapter(ChatActivity.this, chatId, privy, cipherSequence);
             lvChat.setAdapter(replacement);
             mAdapter = replacement;
             mAdapter.loadObjects();
@@ -123,9 +132,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
 
         }
-        // TODO: disable editing + error message for chats user is not privy too
-        String curUser = ParseUser.getCurrentUser().getObjectId();
-        if (!curUser.equals(partnerId) && !curUser.equals(chatUserId)) {
+        if (!privy) {
             etMessage.setText("Private");
             etMessage.setInputType(0);
             btSend.setVisibility(View.GONE);
@@ -170,6 +177,8 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        privy = false;
 
 		/* Set the current View to the one we have specified for this app,
 		 * in activity_chat.xml
@@ -393,7 +402,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
 		 */
         mFirstLoad = true;
 
-        mAdapter = new MessageListAdapter(ChatActivity.this, chatId, partnerId, cipherSequence);
+        mAdapter = new MessageListAdapter(ChatActivity.this, chatId, privy, cipherSequence);
 
 		/* Set ListView to use our own adapter. The idea of the adapter is that
 		 * it is responsible for managing the data within each item in the
