@@ -147,7 +147,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
         try {
             File cipherDir = new File(getApplicationContext().getFilesDir().toString() + File.separator + "cipher-library");
             FileReader fr = new FileReader(new File(cipherDir, cipherSeqName));
-            cipherSequence = new CipherSequence();
+            cipherSequence = new CipherSequence(cipherDir.toString());
             cipherSequence.loadFromFile(fr);
         }
         catch (Exception ex) {
