@@ -97,10 +97,19 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
     Runnable mRefreshMessagesRunnable;
 
     private void swapMessageAdapter(String chatId) {
-        if (!loadChatData(chatId))
+        partnerId = null;
+        chatUserId = null;
+
+        if (!loadChatData(chatId)) {
+            etMessage.setText("Error");
+            etMessage.setInputType(0);
+            btSend.setVisibility(View.GONE);
             return;
-        if (!messagePostingSetup)
+        }
+        if (!messagePostingSetup) {
             setupMessagePosting(chatId);
+            mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
+        }
         else {
             MessageListAdapter replacement = new MessageListAdapter(ChatActivity.this, chatId, partnerId, cipherSequence);
             lvChat.setAdapter(replacement);
@@ -109,7 +118,7 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             etMessage.setText("");
             etMessage.setInputType(TYPE_CLASS_TEXT);
             btSend.setVisibility(View.VISIBLE);
-            setupMessagePosting(chatId);
+            //setupMessagePosting(chatId);
             Log.i("swapMessageAdapter", "Restarting the refresh runnable.");
             mHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
 
@@ -362,7 +371,6 @@ public class ChatActivity extends AppCompatActivity implements NavigationView.On
             /* The run() method is a part of the Runnable interface and is the
             *  code that is to be executed in a thread.
             */
-            private String currChatId = null;
             @Override
             public void run() {
 

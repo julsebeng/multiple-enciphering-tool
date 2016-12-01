@@ -60,7 +60,6 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
     }
 
     public String getChatId() { return CHAT_ID ; }
-    public void setCipherSequence(CipherSequence cipherSequence) { this.cipherSequence = cipherSequence; }
 
     @Override
     public View getItemView(ParseObject object, View convertView, ViewGroup parent) {
@@ -163,9 +162,10 @@ public class MessageListAdapter extends ParseQueryAdapter<ParseObject> {
         Picasso.with(getContext()).load(getProfileUrl(message.getUserId())).into(profileView);
 
         // Fetch and decrypt message text
+        String userId = ParseUser.getCurrentUser().getObjectId();
         String messUserId = message.getUserId();
         String messBody = message.getBody();
-        if (messUserId.equals(userId) || messUserId.equals(partnerId)) {
+        if (messUserId.equals(userId) || partnerId.equals(userId)) {
             try {
                 messBody = cipherSequence.decrypt(messBody);
             }

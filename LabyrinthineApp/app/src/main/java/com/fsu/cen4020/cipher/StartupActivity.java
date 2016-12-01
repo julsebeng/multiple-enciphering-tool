@@ -14,8 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
 
 /**
  * Created by crow(gridnaught) ((Joseph)) on 11/24/16.
@@ -52,50 +50,45 @@ public class StartupActivity extends AppCompatActivity {
                         destPath
                         + File.separator
                         + cyphFiles[i];
-                    if ( (new File(destFile).exists()) )
-                        Log.i(TAG, destFile + " Exists");
-                    else {
-                        Log.i(TAG, "Creating " + destFile);
 
-                        OutputStream OS = null;
-                        InputStream IS = null;
-                        try {
-                            // Use asset manager to fetch a file-descriptor for the new file
-                            // and use that to open an InputStream (needed by most copy methods)
-                            IS = mngr.openFd(
-                                    "cipher-library"
-                                    + File.separator
-                                    + cyphFiles[i])
-                                .createInputStream();
-                            if (IS == null) {
-                                throw new IOException("IS is null");
-                            }
-                            OS = new FileOutputStream(new File(destFile));
-                            if (OS == null) {
-                                throw new IOException("OS is null");
-                            }
+                    OutputStream OS = null;
+                    InputStream IS = null;
+                    try {
+                        // Use asset manager to fetch a file-descriptor for the new file
+                        // and use that to open an InputStream (needed by most copy methods)
+                        IS = mngr.openFd(
+                                "cipher-library"
+                                + File.separator
+                                + cyphFiles[i])
+                            .createInputStream();
+                        if (IS == null) {
+                            throw new IOException("IS is null");
+                        }
+                        OS = new FileOutputStream(new File(destFile));
+                        if (OS == null) {
+                            throw new IOException("OS is null");
+                        }
 
-                            // Apparently only the crappy primitive method works here
-                            byte[] buf = new byte[1024];
-                            int len;
+                        // Apparently only the crappy primitive method works here
+                        byte[] buf = new byte[1024];
+                        int len;
 
-                            while ((len = IS.read(buf)) > 0) {
-                                OS.write(buf, 0, len);
-                            }
+                        while ((len = IS.read(buf)) > 0) {
+                            OS.write(buf, 0, len);
+                        }
 
-                            IS.close();
+                        IS.close();
+                        OS.close();
+                    }
+                    catch (IOException ex) {
+                        ex.printStackTrace();
+                        throw ex;
+                    }
+                    finally {
+                        if (OS != null)
                             OS.close();
-                        }
-                        catch (IOException ex) {
-                            ex.printStackTrace();
-                            throw ex;
-                        }
-                        finally {
-                            if (OS != null)
-                                OS.close();
-                            if (IS != null)
-                                IS.close();
-                        }
+                        if (IS != null)
+                            IS.close();
                     }
                 }
             }
