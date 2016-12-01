@@ -16,12 +16,16 @@ public class CipherSequence {
 	String name;
 	String author;
 	float version;
+
+	String resourcePath;
 	
-	public CipherSequence() {
+	public CipherSequence(String resourcePath) {
 		sequence = new Vector<Cipher>();
+		this.resourcePath = resourcePath;
 	}
 	public CipherSequence(CipherSequence other) {
 		this.sequence = new Vector<Cipher>(other.sequence);
+		this.resourcePath = resourcePath;
 	}
 	@Override
 	public Object clone() {
@@ -70,6 +74,8 @@ public class CipherSequence {
 			//System.out.println(curCipher.encrypt(line));
 
 			sequence.add(curCipher);
+			if (curCipher.needsResources())
+				curCipher.setResourcePath(resourcePath);
 		}
 		reader.close();
 	}
@@ -106,4 +112,6 @@ public class CipherSequence {
 	public int size() {
 		return sequence.size();
 	}
+
+	public void setResourcePath(String path) { resourcePath = path; }
 }

@@ -126,7 +126,7 @@ public class CipherSequenceLibrary_File implements CipherSequenceLibrary, Clonea
 		if (!source.exists())
 			throw new Exception("File not in library");
 
-		CipherSequence result = new CipherSequence();
+		CipherSequence result = new CipherSequence(libraryDirectoryPath.toString());
 		result.loadFromFile(source.toString());
 			
 		return result;

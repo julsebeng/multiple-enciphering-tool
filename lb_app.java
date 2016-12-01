@@ -41,7 +41,7 @@ public class lb_app {
 	private static String input = null;
 	private static String ciphPath = null;
 
-	private static String libPath = System.getProperty("user.home") + "/Labyrinthine/";
+	private static String libPath = System.getProperty("user.home") + "/Labyrinthine";
 
 	//Generic error message holder
 	private static String error = "An error has occurred.";
@@ -57,8 +57,6 @@ public class lb_app {
 
 		if(!runCipherSequence()) {
 			throw new Exception(error);
-
-			//System.out.println(error);
 		}
 
 	}
@@ -393,7 +391,7 @@ public class lb_app {
 		/*************************************************************/
 		CipherSequence cSeq = null;
 		try {
-			cSeq = new CipherSequence();
+			cSeq = new CipherSequence(libPath);
 		}
 		catch(Exception e) {
 			error = e.getMessage();

@@ -8,29 +8,10 @@ import java.util.Arrays;
 
 class CipherTest {
 	public static void main(String[] args) throws Exception {
+		String resourcePath = "./test-library";
 		String demoString = new String("Hello "+args[0]);
 		String cipherText = new String();
 		String output = new String();
-
-		/*
-		System.out.println("Running Dummy");
-		Cipher dCipher = new DummyCipher();
-		cipherText  = dCipher.encrypt("Hello Dummy");
-		output = dCipher.decrypt(cipherText);
-		System.out.println(output);
-
-		System.out.println("Running Rot 10");
-		Cipher rCipher = new RotNCipher(10);
-		cipherText  = rCipher.encrypt("Hello Rot 10");
-		output = rCipher.decrypt(cipherText);
-		System.out.println(output);
-
-		System.out.println("Running Substition qwertyiopasdfghjklzxcvbnm");
-		Cipher sCipher = new SubstitutionCipher("qwertyuiopasdfghjklzxcvbnm");
-		cipherText  = sCipher.encrypt("Running Substition qwertyiopasdfghjklzxcvbnm");
-		output = sCipher.decrypt(cipherText);
-		System.out.println(output);
-		*/
 
 		if (args.length > 0) {
 			System.out.println("Testing "+args[0]);
@@ -38,6 +19,8 @@ class CipherTest {
 			Cipher myCipher = null; // here to allow access outside try block
 			// load the cipher
 			myCipher = CoreCipherClassLibrary.instantiateFromString(args[0], Arrays.copyOfRange(args,1,args.length));
+			if (myCipher.needsResources())
+				myCipher.setResourcePath(resourcePath);
 
 			System.out.println();
 			System.out.println("Testing encrypt and decrypt");
@@ -88,8 +71,11 @@ class CipherTest {
 			System.out.println(origArgString);
 			if (outToString.equals(origArgString))
 				System.out.println("Ok.");
-			else
+			else {
 				System.out.println("FAIL");
+				if (myCipher.needsResources())
+					System.out.println("OR ADDED EXTENSION");
+			}
 		}
 	}
 }

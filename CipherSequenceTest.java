@@ -8,11 +8,13 @@ import java.io.PrintWriter;
 
 class CipherSequenceTest {
 	public static void main(String[] args) throws Exception {
+		String resourcePath = "./test-library";
+
 		System.out.println();
 		System.out.println("Testing loading and encrypt/decrypt");
 
-		CipherSequence tstSeq = new CipherSequence();
-		tstSeq.loadFromFile("example1.cyph");
+		CipherSequence tstSeq = new CipherSequence(resourcePath);
+		tstSeq.loadFromFile("test.cyph");
 
 		String source = new String("Hello World");
 		String test = tstSeq.encrypt(source);
@@ -28,13 +30,13 @@ class CipherSequenceTest {
 		System.out.println();
 		System.out.println("Testing Saving to file");
 		// clear contents so previous test doesn't disturb current
-		PrintWriter writer = new PrintWriter("test.cyph");
+		PrintWriter writer = new PrintWriter("test2.cyph");
 		writer.print("");
 		writer.close();
-		tstSeq.saveToFile("test.cyph");
+		tstSeq.saveToFile("test2.cyph");
 
-		byte[] f1 = Files.readAllBytes(Paths.get("./example1.cyph"));
-		byte[] f2 = Files.readAllBytes(Paths.get("./test.cyph"));
+		byte[] f1 = Files.readAllBytes(Paths.get("./test.cyph"));
+		byte[] f2 = Files.readAllBytes(Paths.get("./test2.cyph"));
 		if (Arrays.equals(f1,f2))
 			System.out.println("Ok.");
 		else
@@ -46,7 +48,7 @@ class CipherSequenceTest {
 		System.out.println();
 		System.out.println("First Build a new sequence from scratch");
 		System.out.println("Tests add() insertAt() and setAt()");
-		CipherSequence newSeq = new CipherSequence();
+		CipherSequence newSeq = new CipherSequence(resourcePath);
 		newSeq.add(new DummyCipher());
 		newSeq.add(new DummyCipher());
 		newSeq.insertAt(new Rot13Cipher(), 0);

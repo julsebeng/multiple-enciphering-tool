@@ -9,9 +9,12 @@ public abstract class Cipher implements Cloneable {
 	protected String  name;		// name of the Cipher
 	protected float   version;	// version of the Cipher
 	protected Boolean unicode;	// true if this Cipher supports unicode data
+	protected Boolean resources;	// set to true if the concrete cipher needs a resource path
+	protected String resourcePath;
 
 	public Cipher() {
 		unicode = false;
+		resources = false;
 	}
 	public Cipher(Cipher other) {
 		this.name = other.name;
@@ -37,4 +40,7 @@ public abstract class Cipher implements Cloneable {
 	}
 	abstract public String encrypt(String input) throws Exception;
 	abstract public String decrypt(String input) throws Exception;
+
+	public boolean needsResources() { return resources; }
+	public void setResourcePath(String path) { this.resourcePath = path; }
 }

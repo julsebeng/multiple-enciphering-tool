@@ -3,6 +3,7 @@ package cipher;
 import java.util.Vector;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.File;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -12,22 +13,27 @@ import java.util.regex.Matcher;
 // Also, assumes all needed chars are in the given book
 // That is if your book is Dante's Inferno in English, you can't handle Chinese with it
 public class BookCipher extends Cipher{
-	private String filepath;	// path to file / filename
+	private String fileName;	// path to file / filename
 	private int numCollumns=80;	// collumns per page/rows
 	private int numRows=100;	// rows per page
 	public BookCipher() {
 		name = "Book";
+		resources = true;
 		System.out.println("Warning: using 0 arg construtor, make sure to follow with init() with valid args array before use!");
 	}
 	public BookCipher(String arg) {
 		name = "Book";
 		version = 1.0f;
 		unicode = false;
-		filepath = arg;
+		resources = true;
+		fileName = arg;
+		if (!fileName.endsWith(".txt"))
+			fileName = fileName + ".txt";
 	}
 	public BookCipher(BookCipher other) {
 		super(other);
-		filepath = other.filepath;
+		fileName = other.fileName;
+		resourcePath = other.resourcePath;
 	}
 	@Override
 	public Object clone() {
@@ -35,13 +41,15 @@ public class BookCipher extends Cipher{
 	}
 	@Override
 	public void init(String[] args) {
-		filepath = args[0];
+		fileName = args[0];
+		if (!fileName.endsWith(".txt"))
+			fileName = fileName + ".txt";
 	}
 	@Override
 	public boolean equals(Cipher other) {
 		try {
 			BookCipher book = (BookCipher)other;
-			return this.filepath.equals(book.filepath);
+			return this.fileName.equals(book.fileName);
 		}
 		catch (Exception ex) {
 			return false;
@@ -49,11 +57,13 @@ public class BookCipher extends Cipher{
 	}
 	@Override
 	public String getArgsString() {
-		return filepath;
+		return fileName;
 	}
 	@Override
 	public String encrypt(String input) throws Exception {
-		try (RandomAccessFile reader = new RandomAccessFile(filepath, "r"))
+		String filePath = resourcePath+File.separator+fileName;
+
+		try (RandomAccessFile reader = new RandomAccessFile(filePath, "r"))
 		{
 			StringBuilder output= new StringBuilder("");
 			for(int i=0; i<input.length(); i++) {
@@ -88,7 +98,9 @@ public class BookCipher extends Cipher{
 	}
 	@Override
 	public String decrypt(String input) throws Exception {
-		try (RandomAccessFile reader = new RandomAccessFile(filepath, "r"))
+		String filePath = resourcePath+File.separator+fileName;
+
+		try (RandomAccessFile reader = new RandomAccessFile(filePath, "r"))
 		{
 			StringBuilder output = new StringBuilder();
 
